@@ -25,7 +25,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
     compileOnly "io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT"
-    compileOnly "dev.jorel:commandapi-bukkit-core:9.1.0"
+    implementation "dev.jorel:commandapi-bukkit-shade:9.2.0"
 }
 
 def targetJavaVersion = 17
@@ -35,14 +35,6 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
 }
-
-/*
-tasks.withType(JavaCompile).configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release = targetJavaVersion
-    }
-}
-*/
 
 tasks {
     runServer {
