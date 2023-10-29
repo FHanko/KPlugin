@@ -1,0 +1,4 @@
+name: KPlugin
+version: '${version}'
+main: io.github.fhanko.kplugin.KPlugin
+api-version: '1.20'
