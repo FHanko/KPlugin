@@ -3,18 +3,13 @@ package io.github.fhanko.kplugin.zones
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.DoubleArgument
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
-import io.github.fhanko.kplugin.items.ItemFactory
-import io.github.fhanko.kplugin.items.ItemListener
+import io.github.fhanko.kplugin.items.ItemBase
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.ItemStack
 
 object ZoneCommands {
     fun register() {
-        ItemListener.registerAction(0, ::zoneItem)
-
         CommandAPICommand("cubezone")
             .withArguments(listOf(DoubleArgument("x1"), DoubleArgument("y1"), DoubleArgument("z1"),
                 DoubleArgument("x2"), DoubleArgument("y2"), DoubleArgument("z2")))
@@ -24,28 +19,8 @@ object ZoneCommands {
             }).register()
 
         CommandAPICommand("cubezone")
-            .executesPlayer(PlayerCommandExecutor { p, a ->
-                p.inventory.addItem(ItemFactory.create(Material.STICK, "Cube Stick", listOf("Creates cube zones"), 1, 0))
+            .executesPlayer(PlayerCommandExecutor { p, _ ->
+                ItemBase.give(p, ZoneItem)
             }).register()
-    }
-
-    val zoneItemMap = mutableMapOf<Player, Location>()
-    fun zoneItem(e: PlayerInteractEvent) {
-        if (e.action.isLeftClick) {
-            zoneItemMap.remove(e.player)
-            e.player.sendMessage("Location reset.")
-        } else {
-            val firstLoc = zoneItemMap[e.player]
-            if (firstLoc != null) {
-                val secondLoc = e.clickedBlock?.location ?: return
-                ZoneMap.addZone(ZoneCube(firstLoc, secondLoc))
-                e.player.sendMessage("Zone added ${firstLoc.x} ${firstLoc.y} ${firstLoc.z} " +
-                        "to ${secondLoc.x} ${secondLoc.y} ${secondLoc.z}.")
-                zoneItemMap.remove(e.player)
-            } else {
-                zoneItemMap[e.player] = e.clickedBlock?.location ?: return
-                e.player.sendMessage("Location set.")
-            }
-        }
     }
 }

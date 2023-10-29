@@ -27,11 +27,10 @@ data class ZoneCube(var start: Location, var end: Location): Zone() {
         val set = mutableSetOf<Chunk>()
         // Block coordinate shr 4 is the chunk coordinate
         for (x in (start.x.toInt() shr 4) toward (end.x.toInt() shr 4)) {
-            for (z in (start.z.toInt() shr 4) toward  (end.z.toInt() shr 4)) {
+            for (z in (start.z.toInt() shr 4) toward (end.z.toInt() shr 4)) {
                 set.add(start.world.getChunkAt(x, z))
             }
         }
-        println(set.size)
         return set.toList()
     }
 }
