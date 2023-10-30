@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin
 
+import com.jeff_media.customblockdata.CustomBlockData
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.fhanko.kplugin.items.ItemInit
@@ -20,6 +21,7 @@ class KPlugin : JavaPlugin() {
         Commands.register()
         Bukkit.getPluginManager().registerEvents(ZoneListener(), this)
         Bukkit.getPluginManager().registerEvents(EventListener(), this)
+        CustomBlockData.registerListener(this)
         ItemInit
     }
 

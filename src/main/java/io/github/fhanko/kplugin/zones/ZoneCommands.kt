@@ -8,7 +8,7 @@ import org.bukkit.Location
 
 object ZoneCommands {
     fun register() {
-        CommandAPICommand("cubezone")
+        CommandAPICommand("cube zone")
             .withArguments(listOf(DoubleArgument("x1"), DoubleArgument("y1"), DoubleArgument("z1"),
                 DoubleArgument("x2"), DoubleArgument("y2"), DoubleArgument("z2")))
             .executesPlayer(PlayerCommandExecutor { p, a ->
@@ -16,7 +16,7 @@ object ZoneCommands {
                     , Location(p.world, a[3] as Double, a[4] as Double, a[5] as Double)))
             }).register()
 
-        CommandAPICommand("cubezone")
+        CommandAPICommand("cube zone")
             .executesPlayer(PlayerCommandExecutor { p, _ ->
                 ItemBase.give(p, ZoneItem)
             }).register()

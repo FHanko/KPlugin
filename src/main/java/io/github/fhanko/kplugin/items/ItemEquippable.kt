@@ -7,8 +7,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerItemHeldEvent
 
 interface ItemEquippable: Listener, ItemComparable {
-    open fun equip(p: Player) {}
-    open fun unequip(p: Player) {}
+    fun equip(p: Player) { }
+    fun unequip(p: Player) { }
     @EventHandler
     fun onHeld(e: PlayerItemHeldEvent) {
         if (compareId(e.player.inventory.getItem(e.newSlot))) equip(e.player)

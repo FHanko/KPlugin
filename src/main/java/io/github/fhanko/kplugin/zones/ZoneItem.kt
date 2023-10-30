@@ -13,24 +13,23 @@ import org.bukkit.event.player.PlayerInteractEvent
 object ZoneItem : ItemBase(0, Material.STICK, "Cube Stick", listOf("Creates cube zones")), ItemClickable, ItemEquippable {
     private val zoneItemMap = mutableMapOf<Player, Location>()
 
-    override fun click(e: PlayerInteractEvent) {
-        if (e.action.isLeftClick) {
+    override fun leftClick(e: PlayerInteractEvent) {
+        zoneItemMap.remove(e.player)
+        e.player.sendMessage("Location reset.")
+    }
+
+    override fun rightClick(e: PlayerInteractEvent) {
+        val firstLoc = zoneItemMap[e.player]
+        if (firstLoc != null) {
+            val secondLoc = e.interactionPoint ?: return
+            ZoneMap.addZone(ZoneCube(firstLoc, secondLoc))
+            e.player.sendMessage("Zone added ${firstLoc.x} ${firstLoc.y} ${firstLoc.z} " +
+                    "to ${secondLoc.x} ${secondLoc.y} ${secondLoc.z}.")
             zoneItemMap.remove(e.player)
-            e.player.sendMessage("Location reset.")
         } else {
-            val firstLoc = zoneItemMap[e.player]
-            if (firstLoc != null) {
-                val secondLoc = e.interactionPoint ?: return
-                ZoneMap.addZone(ZoneCube(firstLoc, secondLoc))
-                e.player.sendMessage("Zone added ${firstLoc.x} ${firstLoc.y} ${firstLoc.z} " +
-                        "to ${secondLoc.x} ${secondLoc.y} ${secondLoc.z}.")
-                zoneItemMap.remove(e.player)
-            } else {
-                zoneItemMap[e.player] = e.interactionPoint ?: return
-                e.player.sendMessage("Location set.")
-            }
+            zoneItemMap[e.player] = e.interactionPoint ?: return
+            e.player.sendMessage("Location set.")
         }
-        return
     }
 
     private val visualisationTaskMap = mutableMapOf<Player, Int>()

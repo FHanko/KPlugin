@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
-abstract class ItemBase(private var id: Int,material: Material, name: String, description: List<String> = listOf()): Listener, ItemComparable {
+abstract class ItemBase(private val id: Int,material: Material, name: String, description: List<String> = listOf()): Listener, ItemComparable, ItemDisableCrafting {
     companion object {
-        private val KEY = NamespacedKey.fromString("kplugin_item")!!
+        val KEY = NamespacedKey.fromString("kplugin_item")!!
         val itemList = mutableListOf<ItemBase>()
 
         /**
