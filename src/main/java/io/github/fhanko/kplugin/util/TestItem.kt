@@ -1,4 +1,4 @@
-package io.github.fhanko.kplugin.zones
+package io.github.fhanko.kplugin.util
 
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemDroppable
@@ -7,16 +7,16 @@ import org.bukkit.Material
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 
-class TestItem: ItemBase(1, Material.DIAMOND, "test", listOf("Test")), ItemEquippable, ItemDroppable {
+object TestItem: ItemBase(1, Material.DIAMOND, "Test", listOf()), ItemEquippable, ItemDroppable {
     override fun equip(p: Player) {
-        println("E2")
+        p.sendMessage("Equipped test")
     }
 
     override fun unequip(p: Player) {
-        println("U2")
+        p.sendMessage("Unequipped test")
     }
 
     override fun drop(p: Player, i: Item) {
-        println("Dropped")
+        p.sendMessage("Dropped test")
     }
 }

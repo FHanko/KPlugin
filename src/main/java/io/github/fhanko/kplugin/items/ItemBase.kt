@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.items
 
+import io.github.fhanko.kplugin.KPlugin
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Bukkit.getServer
@@ -14,6 +15,7 @@ import org.bukkit.persistence.PersistentDataType
 abstract class ItemBase(private var id: Int,material: Material, name: String, description: List<String> = listOf()): Listener, ItemComparable {
     companion object {
         private val KEY = NamespacedKey.fromString("kplugin_item")!!
+        val itemList = mutableListOf<ItemBase>()
 
         /**
          * Adds given item to given Player.
@@ -21,6 +23,12 @@ abstract class ItemBase(private var id: Int,material: Material, name: String, de
         fun give(player: Player, item: ItemBase, amount: Int = 1) {
             val i = item.item
             i.amount = amount
+            player.inventory.addItem(i)
+        }
+
+
+        fun give(player: Player, id: Int, amount: Int = 1) {
+            val i = itemList.find { it.id == id }?.item ?: return
             player.inventory.addItem(i)
         }
 
@@ -43,7 +51,8 @@ abstract class ItemBase(private var id: Int,material: Material, name: String, de
         meta.lore(description.map { Component.text(it) })
         item.setItemMeta(meta)
         markItem(item, id)
-        Bukkit.getPluginManager().registerEvents(this, getServer().pluginManager.getPlugin("KPlugin")!!)
+        Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)
+        itemList.add(this);
     }
 
     override fun compareId(other: ItemStack?) =

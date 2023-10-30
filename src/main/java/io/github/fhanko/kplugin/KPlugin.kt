@@ -10,9 +10,16 @@ import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("Unused")
 class KPlugin : JavaPlugin() {
+    companion object {
+        lateinit var instance: JavaPlugin;
+    }
+
     override fun onEnable() {
+        instance = this;
         CommandAPI.onEnable()
+        Commands.register()
         Bukkit.getPluginManager().registerEvents(ZoneListener(), this)
+        Bukkit.getPluginManager().registerEvents(EventListener(), this)
         ItemInit
     }
 
