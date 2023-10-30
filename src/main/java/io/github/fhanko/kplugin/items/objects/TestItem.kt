@@ -1,4 +1,4 @@
-package io.github.fhanko.kplugin.util
+package io.github.fhanko.kplugin.items.objects
 
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemDroppable

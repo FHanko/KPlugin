@@ -1,9 +1,11 @@
-package io.github.fhanko.kplugin.zones
+package io.github.fhanko.kplugin.items.objects
 
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemClickable
 import io.github.fhanko.kplugin.items.ItemEquippable
+import io.github.fhanko.kplugin.zones.ZoneCube
+import io.github.fhanko.kplugin.zones.ZoneMap
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -35,7 +37,7 @@ object ZoneItem : ItemBase(0, Material.STICK, "Cube Stick", listOf("Creates cube
     private val visualisationTaskMap = mutableMapOf<Player, Int>()
     override fun equip(p: Player) {
         val tid = KPlugin.instance.server.scheduler.scheduleSyncRepeatingTask(KPlugin.instance, {
-            ZoneMap.getZones(p.chunk)?.forEach {z ->
+            ZoneMap.getZones(p.chunk)?.forEach { z ->
                 z.borders.forEach {
                     p.world.spawnParticle(Particle.REDSTONE, it,3, Particle.DustOptions(org.bukkit.Color.fromRGB(255, 0, 0), 0.5f))
                 }
