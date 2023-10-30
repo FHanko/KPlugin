@@ -44,6 +44,9 @@ data class ZoneCylinder(var center: Location, var radius: Int, var height: Int):
     }
 }
 
+/**
+ * Map Zones to their holding Chunks to allow efficient collision detection via Chunk key.
+ */
 object ZoneMap {
     private val grid = mutableMapOf<Chunk, MutableList<Zone>>()
 
@@ -61,11 +64,11 @@ object ZoneMap {
     fun removeZone(zone: Zone) {
         val chunkList = zone.chunkList()
         chunkList.forEach {
-            grid[it]!!.remove(zone);
+            grid[it]!!.remove(zone)
         }
     }
 
     fun getZones(chunk: Chunk): List<Zone>? {
-        return grid[chunk];
+        return grid[chunk]
     }
 }

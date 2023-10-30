@@ -5,8 +5,6 @@ import dev.jorel.commandapi.arguments.DoubleArgument
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
 import io.github.fhanko.kplugin.items.ItemBase
 import org.bukkit.Location
-import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerInteractEvent
 
 object ZoneCommands {
     fun register() {

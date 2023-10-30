@@ -7,9 +7,9 @@ import org.bukkit.event.player.PlayerMoveEvent
 class ZoneListener : Listener {
     @EventHandler
     fun onPlayerMove(e: PlayerMoveEvent) {
-        var zoneCollisions = mutableListOf<Zone>();
+        val zoneCollisions = mutableListOf<Zone>()
         ZoneMap.getZones(e.player.chunk)?.forEach { if (it.isIn(e.player.location)) zoneCollisions.add(it) }
 
-        zoneCollisions.forEach { println("Is in"); }
+        zoneCollisions.forEach { _ -> println("Is in"); }
     }
 }
