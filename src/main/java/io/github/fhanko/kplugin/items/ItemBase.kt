@@ -3,7 +3,6 @@ package io.github.fhanko.kplugin.items
 import io.github.fhanko.kplugin.KPlugin
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.Bukkit.getServer
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player

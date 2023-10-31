@@ -3,7 +3,7 @@ package io.github.fhanko.kplugin
 import com.jeff_media.customblockdata.CustomBlockData
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
-import io.github.fhanko.kplugin.items.ItemInit
+import io.github.fhanko.kplugin.util.Init
 import io.github.fhanko.kplugin.zones.ZoneCommands
 import io.github.fhanko.kplugin.zones.ZoneListener
 import org.bukkit.Bukkit
@@ -22,7 +22,7 @@ class KPlugin : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(ZoneListener(), this)
         Bukkit.getPluginManager().registerEvents(EventListener(), this)
         CustomBlockData.registerListener(this)
-        ItemInit
+        Init
     }
 
     override fun onLoad()
