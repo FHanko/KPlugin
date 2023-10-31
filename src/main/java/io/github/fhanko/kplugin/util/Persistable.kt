@@ -9,7 +9,7 @@ import java.io.Serializable
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
-interface Persistable<T> {
+interface Persistable<T:Serializable> {
     fun save(path: String, item: T): Boolean {
         val out = BukkitObjectOutputStream(GZIPOutputStream(FileOutputStream(path)))
         out.writeObject(item)
