@@ -2,7 +2,10 @@ package io.github.fhanko.kplugin.zones
 
 import io.github.fhanko.kplugin.util.toward
 import org.bukkit.Chunk
+import org.bukkit.Color
 import org.bukkit.Location
+import org.bukkit.entity.Player
+import org.w3c.dom.css.RGBColor
 import java.io.Serializable
 import kotlin.math.max
 import kotlin.math.min
@@ -19,13 +22,23 @@ abstract class Zone: Serializable {
     abstract fun chunkList(): Set<Chunk>
 
     /**
+     * Called when a player enters this Zone
+     */
+    open fun enter(p: Player) { }
+
+    /**
+     * Called when a player leaves this Zone
+     */
+    open fun leave(p: Player) { }
+
+    /**
      * Borders of the zone
      */
     abstract val borders: List<Location>
+    abstract val borderColor: Color
 }
-
-data class ZoneCube(var start: Location, var end: Location): Zone() {
-    override val borders = mutableListOf<Location>()
+ open class ZoneCube(private var start: Location, private var end: Location): Zone() {
+    final override val borders = mutableListOf<Location>()
 
     init {
         for (x in 0 toward (end.x - start.x).toInt()) {
@@ -62,4 +75,6 @@ data class ZoneCube(var start: Location, var end: Location): Zone() {
     override fun isIn(that: Location) =
         (that.x > min(start.x, end.x) && that.z > min(start.z, end.z) && that.y > min(start.y, end.y) &&
                 that.x < max(start.x, end.x) && that.z < max(start.z, end.z) && that.y < max(start.y, end.y))
+
+     override val borderColor: Color = Color.RED
 }

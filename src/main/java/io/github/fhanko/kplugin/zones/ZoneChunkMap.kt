@@ -6,8 +6,8 @@ import org.bukkit.Chunk
 /**
  * Map Zones to their holding Chunks to allow efficient collision detection via Chunk key.
  */
-object ZoneMap: Persistable<HashSet<Zone>> {
-    private val grid = mutableMapOf<Chunk, MutableList<Zone>>()
+object ZoneChunkMap: Persistable<HashSet<Zone>> {
+    private val grid = mutableMapOf<Chunk, HashSet<Zone>>()
 
     init {
         load("Zones.data")?.forEach { addZone(it, false) }
@@ -19,7 +19,7 @@ object ZoneMap: Persistable<HashSet<Zone>> {
             if (grid.containsKey(it)) {
                 grid[it]!!.add(zone)
             } else {
-                grid[it] = mutableListOf(zone)
+                grid[it] = mutableSetOf(zone).toHashSet()
             }
         }
         if (save) save("Zones.data", getZones())
@@ -32,7 +32,7 @@ object ZoneMap: Persistable<HashSet<Zone>> {
         }
     }
 
-    fun getZones(chunk: Chunk): List<Zone>? {
+    fun getZones(chunk: Chunk): HashSet<Zone>? {
         return grid[chunk]
     }
 

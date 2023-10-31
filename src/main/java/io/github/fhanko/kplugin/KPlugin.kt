@@ -5,7 +5,7 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.fhanko.kplugin.util.Init
 import io.github.fhanko.kplugin.zones.ZoneCommands
-import io.github.fhanko.kplugin.zones.ZoneListener
+import io.github.fhanko.kplugin.zones.ZonePlayerMap
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -19,7 +19,7 @@ class KPlugin : JavaPlugin() {
         instance = this;
         CommandAPI.onEnable()
         Commands.register()
-        Bukkit.getPluginManager().registerEvents(ZoneListener(), this)
+        Bukkit.getPluginManager().registerEvents(ZonePlayerMap(), this)
         Bukkit.getPluginManager().registerEvents(EventListener(), this)
         CustomBlockData.registerListener(this)
         Init
