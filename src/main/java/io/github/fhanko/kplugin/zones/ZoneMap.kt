@@ -6,11 +6,11 @@ import org.bukkit.Chunk
 /**
  * Map Zones to their holding Chunks to allow efficient collision detection via Chunk key.
  */
-object ZoneMap: Persistable {
+object ZoneMap: Persistable<Set<Zone>> {
     private val grid = mutableMapOf<Chunk, MutableList<Zone>>()
 
     init {
-        load<Set<Zone>>("Zones.data")?.forEach { addZone(it, false) }
+        load("Zones.data")?.forEach { addZone(it, false) }
     }
 
     fun addZone(zone: Zone, save: Boolean = true) {
