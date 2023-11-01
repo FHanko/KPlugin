@@ -13,32 +13,34 @@ import org.bukkit.persistence.PersistentDataType
 @Suppress("LeakingThis")
 abstract class ItemBase(private val id: Int,material: Material, name: String, description: List<String> = listOf()): Listener, ItemComparable, ItemDisableCrafting {
     companion object {
-        val KEY = NamespacedKey.fromString("kplugin_item")!!
+        val KEY = NamespacedKey("kplugin", "itembase")
         val itemList = mutableListOf<ItemBase>()
 
         /**
-         * Adds given item to given Player.
+         * Adds item with id to given Players inventory.
          */
-        fun give(player: Player, item: ItemBase, amount: Int = 1) {
-            val i = item.item
-            i.amount = amount
-            player.inventory.addItem(i)
-        }
-
-
         fun give(player: Player, id: Int, amount: Int = 1) {
-            val i = itemList.find { it.id == id }?.item ?: return
-            player.inventory.addItem(i)
+            val i = itemList.find { it.id == id } ?: return
+            i.give(player, amount)
         }
 
         /**
          * Marks an Item with a PDC ID.
          */
-        fun markItem(item: ItemStack, id: Int) {
+        fun markItem(item: ItemStack, key: NamespacedKey, id: Int) {
             val meta = item.itemMeta
-            meta.persistentDataContainer.set(KEY, PersistentDataType.INTEGER, id)
+            meta.persistentDataContainer.set(key, PersistentDataType.INTEGER, id)
             item.setItemMeta(meta)
         }
+    }
+
+    /**
+     * Adds this item to given Players inventory.
+     */
+    open fun give(player: Player, amount: Int = 1) {
+        val i = item
+        i.amount = amount
+        player.inventory.addItem(i)
     }
 
     protected var item: ItemStack
@@ -49,9 +51,11 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
         meta.displayName(Component.text(name))
         meta.lore(description.map { Component.text(it) })
         item.setItemMeta(meta)
-        markItem(item, id)
+        markItem(item, KEY, id)
         Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)
         itemList.add(this);
+
+        KPlugin.instance.logger.info("Init BaseItem ${name}")
     }
 
     override fun compareId(other: ItemStack?) =

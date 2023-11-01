@@ -4,7 +4,6 @@ import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemClickable
 import io.github.fhanko.kplugin.items.ItemEquippable
-import io.github.fhanko.kplugin.zones.ZoneCube
 import io.github.fhanko.kplugin.zones.ZoneChunkMap
 import io.github.fhanko.kplugin.zones.objects.ZoneHeal
 import org.bukkit.Location
@@ -13,7 +12,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 
-object ZoneItem : ItemBase(0, Material.STICK, "Cube Stick", listOf("Creates cube zones")), ItemClickable, ItemEquippable {
+object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube zones")), ItemClickable, ItemEquippable {
     private val zoneItemMap = mutableMapOf<Player, Location>()
 
     override fun leftClick(e: PlayerInteractEvent) {

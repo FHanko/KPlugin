@@ -7,7 +7,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 
-object TestItem: ItemBase(1, Material.DIAMOND, "Test"), ItemEquippable, ItemDroppable {
+object TestItem: ItemBase(0, Material.DIAMOND, "Test"), ItemEquippable, ItemDroppable {
     override fun equip(p: Player) {
         p.sendMessage("Equipped test")
     }

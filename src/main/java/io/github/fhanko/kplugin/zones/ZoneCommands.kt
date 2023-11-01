@@ -3,7 +3,6 @@ package io.github.fhanko.kplugin.zones
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.DoubleArgument
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
-import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.objects.ZoneItem
 import org.bukkit.Location
 
@@ -19,7 +18,7 @@ object ZoneCommands {
 
         CommandAPICommand("zonecube")
             .executesPlayer(PlayerCommandExecutor { p, _ ->
-                ItemBase.give(p, ZoneItem)
+                ZoneItem.give(p)
             }).register()
     }
 }

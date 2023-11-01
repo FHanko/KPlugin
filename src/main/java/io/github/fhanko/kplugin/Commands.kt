@@ -8,9 +8,9 @@ import io.github.fhanko.kplugin.items.ItemBase
 object Commands {
     fun register() {
         CommandAPICommand("givekp")
-            .withArguments(IntegerArgument("id"))
+            .withArguments(listOf(IntegerArgument("id"), IntegerArgument("amount")))
             .executesPlayer(PlayerCommandExecutor { p, a ->
-                ItemBase.give(p, a[0] as Int)
+                ItemBase.give(p, a[0] as Int, a[1] as Int)
             }).register()
     }
 }

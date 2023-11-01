@@ -3,23 +3,29 @@ package io.github.fhanko.kplugin.blocks
 import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
+import io.github.fhanko.kplugin.util.copyPdc
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
 abstract class BlockBase(private val id: Int,material: Material, name: String, description: List<String> = listOf())
     : ItemBase(id, material, name, description), Listener, BlockComparable {
+
+    companion object {
+        fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
+    }
 
     open fun place(e: BlockPlaceEvent) { }
     @EventHandler
     fun onPlace(e: BlockPlaceEvent) {
         if (compareId(e.itemInHand)) {
             val blockData = CustomBlockData(e.blockPlaced, KPlugin.instance)
-            blockData.set(KEY, PersistentDataType.INTEGER, id)
+            copyPdc(e.itemInHand.itemMeta.persistentDataContainer, blockData)
             place(e)
         }
     }
