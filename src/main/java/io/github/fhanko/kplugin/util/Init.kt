@@ -12,7 +12,7 @@ object Init {
         reflections.getSubTypesOf(ItemBase::class.java).forEach {
             it.kotlin.objectInstance
         }
-        reflections.getSubTypesOf(Persistable::class.java).forEach {
+        reflections.getSubTypesOf(FilePersistable::class.java).forEach {
             it.kotlin.objectInstance
         }
     }

@@ -19,9 +19,9 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
         /**
          * Adds item with id to given Players inventory.
          */
-        fun give(player: Player, id: Int, amount: Int = 1) {
+        fun give(player: Player, id: Int, amount: Int = 1, vararg args: String) {
             val i = itemList.find { it.id == id } ?: return
-            i.give(player, amount)
+            i.give(player, amount, *args)
         }
 
         /**
@@ -37,7 +37,7 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
     /**
      * Adds this item to given Players inventory.
      */
-    open fun give(player: Player, amount: Int = 1) {
+    open fun give(player: Player, amount: Int = 1, vararg args: String) {
         val i = item
         i.amount = amount
         player.inventory.addItem(i)

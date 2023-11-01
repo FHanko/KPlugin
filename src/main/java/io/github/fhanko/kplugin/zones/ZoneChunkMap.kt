@@ -1,16 +1,18 @@
 package io.github.fhanko.kplugin.zones
 
-import io.github.fhanko.kplugin.util.Persistable
+import io.github.fhanko.kplugin.util.FilePersistable
 import org.bukkit.Chunk
+
+private const val SAVE_FILE = "Zones.data"
 
 /**
  * Map Zones to their holding Chunks to allow efficient collision detection via Chunk key.
  */
-object ZoneChunkMap: Persistable<HashSet<Zone>> {
+object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
     private val grid = mutableMapOf<Chunk, HashSet<Zone>>()
 
     init {
-        load("Zones.data")?.forEach { addZone(it, false) }
+        load(SAVE_FILE)?.forEach { addZone(it, false) }
     }
 
     fun addZone(zone: Zone, save: Boolean = true) {
@@ -22,7 +24,7 @@ object ZoneChunkMap: Persistable<HashSet<Zone>> {
                 grid[it] = mutableSetOf(zone).toHashSet()
             }
         }
-        if (save) save("Zones.data", getZones())
+        if (save) save(SAVE_FILE, getZones())
     }
 
     fun removeZone(zone: Zone) {

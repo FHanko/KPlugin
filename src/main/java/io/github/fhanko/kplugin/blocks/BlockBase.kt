@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
@@ -35,7 +36,11 @@ abstract class BlockBase(private val id: Int,material: Material, name: String, d
     fun onBreak(e: BlockBreakEvent) {
         if (compareBlockId(e.block)) {
             e.isDropItems = false
-            e.block.world.dropItemNaturally(e.block.location, item)
+            val i = ItemStack(item)
+            val im = i.itemMeta
+            copyPdc(CustomBlockData(e.block, KPlugin.instance), im.persistentDataContainer)
+            i.itemMeta = im
+            e.block.world.dropItemNaturally(e.block.location, i)
             destroy(e)
         }
     }
