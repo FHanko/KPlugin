@@ -60,4 +60,6 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
 
     override fun compareId(other: ItemStack?) =
         other?.itemMeta?.persistentDataContainer?.get(KEY, PersistentDataType.INTEGER) == id
+
+
 }

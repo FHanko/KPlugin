@@ -8,11 +8,11 @@ import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 
 object TestItem: ItemBase(0, Material.DIAMOND, "Test"), ItemEquippable, ItemDroppable {
-    override fun equip(p: Player) {
+    override fun equip(p: Player, e: ItemEquippable.EquipType) {
         p.sendMessage("Equipped test")
     }
 
-    override fun unequip(p: Player) {
+    override fun unequip(p: Player, e: ItemEquippable.EquipType) {
         p.sendMessage("Unequipped test")
     }
 

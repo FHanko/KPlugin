@@ -40,6 +40,7 @@ abstract class BlockBase(private val id: Int,material: Material, name: String, d
             val im = i.itemMeta
             copyPdc(CustomBlockData(e.block, KPlugin.instance), im.persistentDataContainer)
             i.itemMeta = im
+            i.amount = 1
             e.block.world.dropItemNaturally(e.block.location, i)
             destroy(e)
         }

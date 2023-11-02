@@ -35,7 +35,7 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
     }
 
     private val visualisationTaskMap = mutableMapOf<Player, Int>()
-    override fun equip(p: Player) {
+    override fun equip(p: Player, e: ItemEquippable.EquipType) {
         val tid = KPlugin.instance.server.scheduler.scheduleSyncRepeatingTask(KPlugin.instance, {
             ZoneChunkMap.getZones(p.chunk)?.forEach { z ->
                 z.borders.forEach {
@@ -47,7 +47,7 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
         println(tid)
     }
 
-    override fun unequip(p: Player) {
+    override fun unequip(p: Player, e: ItemEquippable.EquipType) {
         if (!visualisationTaskMap.containsKey(p)) return
         KPlugin.instance.server.scheduler.cancelTask(visualisationTaskMap[p]!!)
     }
