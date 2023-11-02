@@ -1,10 +1,12 @@
 package io.github.fhanko.kplugin.util
 
 import io.github.fhanko.kplugin.KPlugin
+import org.h2.engine.SessionLocal.Savepoint
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.Transaction
 import org.hibernate.cfg.Configuration
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider
 import java.io.Serializable
 
 object HibernateUtil {
@@ -61,5 +63,22 @@ object HibernateUtil {
             session.close()
         }
         return false
+    }
+
+    fun execute(unit: () -> Unit) {
+        val session: Session = fac.openSession()
+
+        var transaction: Transaction? = null
+        try {
+            transaction = session.beginTransaction()
+            unit()
+            transaction.commit()
+        } catch (e: Exception) {
+            transaction?.rollback()
+            KPlugin.instance.logger.warning(e.message)
+            e.printStackTrace()
+        } finally {
+            session.close()
+        }
     }
 }
