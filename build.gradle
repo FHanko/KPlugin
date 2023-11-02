@@ -1,10 +1,20 @@
+buildscript {
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-noarg:1.9.0"
+    }
+}
+
 plugins {
     id 'java'
-    id("xyz.jpenilla.run-paper") version "2.2.0"
+    id 'xyz.jpenilla.run-paper' version '2.2.0'
     id 'org.jetbrains.kotlin.jvm' version '1.9.20-RC2'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id 'io.papermc.paperweight.userdev'  version '1.5.5'
+    id "org.jetbrains.kotlin.plugin.jpa" version "1.9.20"
+    id "org.jetbrains.kotlin.plugin.allopen" version "1.9.20"
 }
+
+apply plugin: "kotlin-jpa"
 
 group = 'io.github.fhanko'
 version = '1.0-SNAPSHOT'
@@ -29,6 +39,8 @@ dependencies {
     implementation 'org.reflections:reflections:0.10.2'
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.9.20-RC2"
     implementation 'com.jeff-media:custom-block-data:2.2.2'
+    implementation 'com.h2database:h2:2.1.214'
+    implementation 'org.hibernate:hibernate-core:4.3.11.Final'
 }
 
 shadowJar {

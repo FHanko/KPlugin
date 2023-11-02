@@ -2,7 +2,8 @@ package io.github.fhanko.kplugin.blocks.objects
 
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.blocks.BlockClickable
-import io.github.fhanko.kplugin.util.FilePersistable
+import io.github.fhanko.kplugin.util.HibernateUtil
+import io.github.fhanko.kplugin.util.converter.InventoryConverter
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
@@ -14,22 +15,23 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import javax.persistence.*
 
 private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
-private const val SAVE_FILE = "ConnectedChest.data"
 
 /**
  * Connected chest are a set of chests that all share the same content at possibly different locations.
  */
-object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), BlockClickable, FilePersistable<HashMap<Int, HashMap<String, Any>>>, InventoryHolder {
-    private var inventoryMap = HashMap<Int, Inventory>()
+object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), BlockClickable, InventoryHolder {
+    private var inventoryMap: InventoryMap =
+        HibernateUtil.loadEntity(InventoryMap::class.java, 0) ?: InventoryMap(0, mutableListOf())
 
     init {
-        inventoryMap = deserialize(load(SAVE_FILE))
+        if (inventoryMap.inventory.isEmpty()) HibernateUtil.saveEntity(inventoryMap, HibernateUtil.Operation.Save)
     }
 
     private fun chestId(): Int {
-        return inventoryMap.maxByOrNull { it.key }?.key?.plus(1) ?: 0
+        return inventoryMap.inventory.maxOfOrNull { it.invid }?.plus(1) ?: 0
     }
 
     /**
@@ -41,8 +43,9 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         markItem(i, CHEST_KEY, cid)
         var invSize = 9
         if (args.isNotEmpty() && args[0].toIntOrNull() != null && args[0].toInt() in 9..54 step 9) invSize = args[0].toInt()
-        inventoryMap[cid] = CraftInventoryCustom(this, invSize)
-        save(SAVE_FILE, serialize())
+        val inv = KInventory(cid, inventoryMap,CraftInventoryCustom(this, invSize))
+        inventoryMap.inventory.add(inv)
+        HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Save)
 
         i.amount = amount
         player.inventory.addItem(i)
@@ -52,37 +55,26 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         e.isCancelled = true
 
         val ci: Int = getBlockPdc(e.clickedBlock!!).get(CHEST_KEY, PersistentDataType.INTEGER)!!
-        e.player.openInventory(inventoryMap[ci] ?: return)
+        e.player.openInventory(inventoryMap.inventory.find { it.invid == ci }?.inventory ?: return)
     }
 
     @EventHandler
     fun onInventoryClose(e: InventoryCloseEvent) {
         if (e.inventory.holder == this) {
-            save(SAVE_FILE, serialize())
+            HibernateUtil.saveEntity(inventoryMap.inventory.find { it.inventory == e.inventory }!!, HibernateUtil.Operation.Update)
         }
     }
 
     override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest inventories are stored in inventoryMap.") }
-
-    private fun serialize(): HashMap<Int, HashMap<String, Any>> {
-        val map = HashMap<Int, HashMap<String, Any>>()
-        inventoryMap.forEach { (k, v) ->
-            map[k] = HashMap<String, Any>()
-            map[k]!!["size"] = v.size
-            map[k]!!["content"] = v.contents
-        }
-
-        return map
-    }
-
-    private fun deserialize(map: HashMap<Int, HashMap<String, Any>>?): HashMap<Int, Inventory> {
-        val ret = HashMap<Int, Inventory>();
-        map?.forEach { (k, v) ->
-            val inv = CraftInventoryCustom(this, v["size"] as Int)
-            inv.contents = v["content"] as Array<out ItemStack?>
-            ret[k] = inv
-        }
-        return ret
-    }
 }
 
+@Entity
+class InventoryMap(@Id var id: Int = 0,
+                   @OneToMany(fetch = FetchType.EAGER, mappedBy = "invmap")
+                   val inventory: MutableList<KInventory>)
+
+@Entity
+class KInventory(@Id var invid: Int = 0,
+                 @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "mapid") var invmap: InventoryMap,
+                 @Column(columnDefinition = "CLOB") @Convert(converter = InventoryConverter::class)
+                 var inventory: Inventory)

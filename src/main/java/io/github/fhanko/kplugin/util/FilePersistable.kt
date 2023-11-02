@@ -17,11 +17,10 @@ interface FilePersistable<T: Serializable> {
         return true
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun load(filePath: String): T? {
         if (!File(filePath).exists()) return null
         val item = BukkitObjectInputStream(GZIPInputStream(FileInputStream(filePath)))
-        val data: T = item.readObject() as T
+        @Suppress("UNCHECKED_CAST") val data: T = item.readObject() as T
         item.close()
         return data
     }
