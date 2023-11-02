@@ -5,6 +5,7 @@ import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.copyPdc
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -18,7 +19,11 @@ abstract class BlockBase(private val id: Int,material: Material, name: String, d
     : ItemBase(id, material, name, description), Listener, BlockComparable {
 
     companion object {
-        fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
+        private fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
+
+        fun <T, Z> readBlock(block: Block, key: NamespacedKey, type: PersistentDataType<T, Z>): Z {
+            @Suppress("Unchecked_Cast") return getBlockPdc(block).get(key, type) as Z
+        }
     }
 
     open fun place(e: BlockPlaceEvent) { }

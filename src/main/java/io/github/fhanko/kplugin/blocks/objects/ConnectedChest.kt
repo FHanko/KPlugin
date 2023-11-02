@@ -27,7 +27,7 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         HibernateUtil.loadEntity(InventoryMap::class.java, 0) ?: InventoryMap(0, mutableListOf())
 
     init {
-        if (inventoryMap.inventory.isEmpty()) HibernateUtil.saveEntity(inventoryMap, HibernateUtil.Operation.Save)
+        HibernateUtil.saveEntity(inventoryMap, HibernateUtil.Operation.SaveOrUpdate)
     }
 
     private fun chestId(): Int {
@@ -40,7 +40,7 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
     override fun give(player: Player, amount: Int, vararg args: String) {
         val i = ItemStack(item)
         val cid = chestId()
-        markItem(i, CHEST_KEY, cid)
+        markItem(i, CHEST_KEY, PersistentDataType.INTEGER, cid)
         var invSize = 9
         if (args.isNotEmpty() && args[0].toIntOrNull() != null && args[0].toInt() in 9..54 step 9) invSize = args[0].toInt()
         val inv = KInventory(cid, inventoryMap,CraftInventoryCustom(this, invSize))
@@ -54,7 +54,7 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
     override fun rightClick(e: PlayerInteractEvent) {
         e.isCancelled = true
 
-        val ci: Int = getBlockPdc(e.clickedBlock!!).get(CHEST_KEY, PersistentDataType.INTEGER)!!
+        val ci: Int = readBlock(e.clickedBlock!!, CHEST_KEY, PersistentDataType.INTEGER)
         e.player.openInventory(inventoryMap.inventory.find { it.invid == ci }?.inventory ?: return)
     }
 

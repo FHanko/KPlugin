@@ -18,5 +18,7 @@
 
         <mapping class="io.github.fhanko.kplugin.blocks.objects.InventoryMap"/>
         <mapping class="io.github.fhanko.kplugin.blocks.objects.KInventory"/>
+        <mapping class="io.github.fhanko.kplugin.util.PlayerData"/>
+        <mapping class="io.github.fhanko.kplugin.util.PlayerCard"/>
     </session-factory>
 </hibernate-configuration>

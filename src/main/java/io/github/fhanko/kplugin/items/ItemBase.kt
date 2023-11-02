@@ -27,10 +27,15 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
         /**
          * Marks an Item with a PDC ID.
          */
-        fun markItem(item: ItemStack, key: NamespacedKey, id: Int) {
+        fun <T, Z : Any> markItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
             val meta = item.itemMeta
-            meta.persistentDataContainer.set(key, PersistentDataType.INTEGER, id)
+            meta.persistentDataContainer.set(key, type, value)
             item.setItemMeta(meta)
+        }
+
+        fun <T, Z> readItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>): Z {
+            val meta = item.itemMeta
+            @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
         }
     }
 
@@ -51,7 +56,7 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
         meta.displayName(Component.text(name))
         meta.lore(description.map { Component.text(it) })
         item.setItemMeta(meta)
-        markItem(item, KEY, id)
+        markItem(item, KEY, PersistentDataType.INTEGER, id)
         Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)
         itemList.add(this);
 

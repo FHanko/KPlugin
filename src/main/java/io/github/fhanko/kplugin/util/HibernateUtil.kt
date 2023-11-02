@@ -38,14 +38,19 @@ object HibernateUtil {
         return null
     }
 
-    enum class Operation { Save, Update }
+    enum class Operation { Save, Update, SaveOrUpdate, Persist }
     fun saveEntity(obj: Any, operation: Operation): Boolean {
         val session: Session = fac.openSession()
         var transaction: Transaction? = null
 
         try {
             transaction = session.beginTransaction()
-            if(operation == Operation.Save) session.save(obj) else session.update(obj)
+            when(operation) {
+                Operation.Save -> session.save(obj)
+                Operation.Update -> session.update(obj)
+                Operation.SaveOrUpdate -> session.saveOrUpdate(obj)
+                Operation.Persist -> session.persist(obj)
+            }
             transaction.commit()
             return true
         } catch (e: Exception) {
