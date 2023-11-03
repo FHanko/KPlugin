@@ -16,9 +16,7 @@
         <property name="hbm2ddl.auto">update</property>
         <property name="hibernate.current_session_context_class">thread</property>
 
-        <mapping class="io.github.fhanko.kplugin.blocks.objects.InventoryMap"/>
         <mapping class="io.github.fhanko.kplugin.blocks.objects.KInventory"/>
-        <mapping class="io.github.fhanko.kplugin.util.PlayerData"/>
         <mapping class="io.github.fhanko.kplugin.util.PlayerCard"/>
     </session-factory>
 </hibernate-configuration>

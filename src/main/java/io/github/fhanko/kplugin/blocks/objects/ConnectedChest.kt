@@ -11,7 +11,6 @@ import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.world.WorldSaveEvent
 import org.bukkit.inventory.Inventory
@@ -25,29 +24,21 @@ private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
  * Connected chest are a set of chests that all share the same content at possibly different locations.
  */
 object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), BlockClickable, InventoryHolder {
-    private var inventoryMap: InventoryMap =
-        HibernateUtil.loadEntity(InventoryMap::class.java, 0) ?: InventoryMap(0, mutableListOf())
-
-    init {
-        HibernateUtil.emplaceEntity(inventoryMap, 0)
-    }
-
-    private fun chestId(): Int {
-        return inventoryMap.inventory.maxOfOrNull { it.invid }?.plus(1) ?: 0
-    }
+    private var inventoryMap = HibernateUtil.loadAll(KInventory::class.java)?.toMutableList() ?: mutableListOf<KInventory>()
 
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */
     override fun give(player: Player, amount: Int, vararg args: String) {
-        val i = ItemStack(item)
-        val cid = chestId()
-        markItem(i, CHEST_KEY, PersistentDataType.INTEGER, cid)
         var invSize = 9
         if (args.isNotEmpty() && args[0].toIntOrNull() != null && args[0].toInt() in 9..54 step 9) invSize = args[0].toInt()
-        val inv = KInventory(cid, inventoryMap,CraftInventoryCustom(this, invSize))
-        inventoryMap.inventory.add(inv)
+
+        val i = ItemStack(item)
+        val inv = KInventory(CraftInventoryCustom(this, invSize))
         HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Persist)
+
+        markItem(i, CHEST_KEY, PersistentDataType.INTEGER, inv.id)
+        inventoryMap.add(inv)
 
         i.amount = amount
         player.inventory.addItem(i)
@@ -57,24 +48,18 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         e.isCancelled = true
 
         val ci: Int = readBlock(e.clickedBlock!!, CHEST_KEY, PersistentDataType.INTEGER)
-        e.player.openInventory(inventoryMap.inventory.find { it.invid == ci }?.inventory ?: return)
+        e.player.openInventory(inventoryMap.find { it.id == ci }?.inventory ?: return)
     }
 
     @EventHandler
-    fun onWorldSave(e: WorldSaveEvent) = HibernateUtil.saveCollection(inventoryMap.inventory, HibernateUtil.Operation.Merge)
+    fun onWorldSave(e: WorldSaveEvent) = HibernateUtil.saveCollection(inventoryMap, HibernateUtil.Operation.Merge)
 
     override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest inventories are stored in inventoryMap.") }
 }
 
 @Entity
-class InventoryMap(
-    @Id var id: Int = 0,
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "invmap")
-    val inventory: MutableList<KInventory>)
-
-@Entity
 class KInventory(
-    @Id var invid: Int = 0,
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "mapid") var invmap: InventoryMap,
     @Column(columnDefinition = "CLOB") @Convert(converter = InventoryConverter::class)
-    var inventory: Inventory)
+    var inventory: Inventory) {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int = 0
+}

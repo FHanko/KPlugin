@@ -1,47 +1,31 @@
 @file:Suppress("unused")
 package io.github.fhanko.kplugin.util
 
+import io.github.fhanko.kplugin.blocks.objects.ConnectedChest
 import jakarta.persistence.*
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.world.WorldSaveEvent
 import java.math.BigDecimal
 import java.util.*
 
-object PlayerStorage {
-    private val playerList = HibernateUtil.loadEntity(PlayerData::class.java, 0) ?: PlayerData()
+object PlayerStorage: Listener {
+    private val playerList = HibernateUtil.loadAll(PlayerCard::class.java)?.toMutableList() ?: mutableListOf<PlayerCard>()
 
-    init {
-        HibernateUtil.emplaceEntity(playerList, 0)
-    }
+    fun register(p: Player) =
+        HibernateUtil.emplaceEntity(PlayerCard(p.identity().uuid(), p.name, BigDecimal(0)), p.identity().uuid())
 
-    fun register(p: Player) {
-        if (!playerList.playerData.containsKey(p.identity().uuid())) {
-            playerList.playerData[p.identity().uuid()] =
-                PlayerCard(p.identity().uuid(), p.name, BigDecimal(0), playerList)
-            playerList.playerData[p.identity().uuid()]?.update()
-        }
-    }
+    fun getCard(p: Player): PlayerCard? = playerList.find { it.uuid == p.identity().uuid() }
 
-    fun getCard(p: Player): PlayerCard? = playerList.playerData[p.identity().uuid()]
-}
-
-@Entity
-class PlayerData {
-    @Id val id = 0
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "playerData")
-    @MapKey(name = "uuid")
-    val playerData : MutableMap<UUID, PlayerCard> = HashMap<UUID, PlayerCard>()
+    @EventHandler
+    fun onWorldSave(e: WorldSaveEvent) = HibernateUtil.saveCollection(playerList, HibernateUtil.Operation.Merge)
 }
 
 @Entity @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 class PlayerCard(
     @Id val uuid: UUID,
     @Column val name: String,
-    @Column var balance: BigDecimal,
-    @ManyToOne val playerData: PlayerData) {
-    fun update() = HibernateUtil.saveEntity(this, HibernateUtil.Operation.Merge)
-
-    fun addBalance(value: BigDecimal) {
-        balance = balance.add(value)
-        update()
-    }
+    @Column var balance: BigDecimal) {
+    fun addBalance(value: BigDecimal) { balance = balance.add(value) }
 }

@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory
 import org.hibernate.Transaction
 import org.hibernate.boot.MetadataSources
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder
-import org.hibernate.mapping.PrimaryKey
 import org.hibernate.service.ServiceRegistry
 import java.io.Serializable
 import java.util.concurrent.LinkedBlockingQueue
@@ -51,6 +50,15 @@ object HibernateUtil {
             return@execute true
         }
         return ret ?: false
+    }
+
+    fun <T> loadAll(obj: Class<out T>): List<T>? {
+        return execute { session ->
+            val builder = session.criteriaBuilder
+            val criteria = builder.createQuery(obj)
+            criteria.from(obj)
+            return@execute session.createQuery(criteria).resultList
+        }
     }
 
     fun saveCollection(obj: Collection<Any>, operation: Operation): Boolean {
