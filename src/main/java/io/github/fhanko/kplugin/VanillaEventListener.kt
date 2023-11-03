@@ -3,25 +3,26 @@ package io.github.fhanko.kplugin
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.PlayerStorage
-import io.papermc.paper.event.player.PlayerPickItemEvent
+import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
-import org.bukkit.event.*
+import org.bukkit.event.Event
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.CraftingInventory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 
 /**
  * Addresses event efficiency concerns by handling them once and firing custom Events
@@ -36,14 +37,14 @@ class VanillaEventListener: Listener {
     fun onInteract(e: PlayerInteractEvent) {
         if (e is KPluginInteractItemEvent || e is KPluginInteractBlockEvent) return
         if (e.action == Action.PHYSICAL) return
-        if (e.item != null && ItemBase.isMarked(e.item!!)) {
+        if (ItemBase.isMarked(e.item)) {
             val event = KPluginInteractItemEvent(e.player, e.action, e.item, e.clickedBlock,
                                                  e.blockFace, e.hand!!)
             Bukkit.getPluginManager().callEvent(event)
             if (event.useItemInHand() == Event.Result.DENY) e.isCancelled = true
         }
 
-        if (e.clickedBlock != null && BlockBase.isMarked(e.clickedBlock!!)) {
+        if (BlockBase.isMarked(e.clickedBlock)) {
             val event = KPluginInteractBlockEvent(e.player, e.action, e.item, e.clickedBlock,
                                                   e.blockFace, e.hand!!)
             Bukkit.getPluginManager().callEvent(event)
@@ -80,15 +81,33 @@ class VanillaEventListener: Listener {
             e.isCancelled = event.isCancelled
         }
     }
+
+    @EventHandler
+    fun onHeld(e: PlayerItemHeldEvent) {
+        if (e is KPluginPlayerItemHeldEvent) return
+        if (ItemBase.isMarked(e.player.inventory.getItem(e.newSlot)) || ItemBase.isMarked(e.player.inventory.getItem(e.newSlot))) {
+            val event = KPluginPlayerItemHeldEvent(e.player, e.previousSlot, e.newSlot)
+            Bukkit.getPluginManager().callEvent(event)
+            e.isCancelled = event.isCancelled
+        }
+    }
+
+    @EventHandler
+    fun onSlotChange(e: PlayerInventorySlotChangeEvent) {
+        if (e is KPluginPlayerInventorySlotChangeEvent) return
+        if (ItemBase.isMarked(e.oldItemStack) || ItemBase.isMarked(e.newItemStack)) {
+            val event = KPluginPlayerInventorySlotChangeEvent(e.player, e.rawSlot, e.oldItemStack, e.newItemStack)
+            Bukkit.getPluginManager().callEvent(event)
+        }
+    }
 }
 
 class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot):
     PlayerInteractEvent(p, a, i, b, bf, e)
-
 class KPluginInteractBlockEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot):
     PlayerInteractEvent(p, a, i, b, bf, e)
-
 class KPluginPrepareItemCraftEvent(c: CraftingInventory, i: InventoryView, ir: Boolean): PrepareItemCraftEvent(c, i, ir)
-
 class KPluginPlayerDropItemEvent(p: Player, i: Item): PlayerDropItemEvent(p, i)
 class KPluginPlayerPickupItemEvent(p: Player, i: Item, r: Int): EntityPickupItemEvent(p, i, r)
+class KPluginPlayerItemHeldEvent(p: Player, pr: Int, c: Int): PlayerItemHeldEvent(p, pr, c)
+class KPluginPlayerInventorySlotChangeEvent(p: Player, r: Int, o: ItemStack, n: ItemStack): PlayerInventorySlotChangeEvent(p, r, o, n)

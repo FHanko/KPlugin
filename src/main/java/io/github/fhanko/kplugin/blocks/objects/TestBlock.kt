@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin.blocks.objects
 
-import io.github.fhanko.kplugin.KPluginInteractBlockEvent
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.blocks.BlockClickable
 import org.bukkit.Material

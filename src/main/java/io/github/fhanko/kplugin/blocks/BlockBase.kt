@@ -25,7 +25,10 @@ abstract class BlockBase(private val id: Int,material: Material, name: String, d
             @Suppress("Unchecked_Cast") return getBlockPdc(block).get(key, type) as Z
         }
 
-        fun isMarked(block: Block) = readBlock(block, KEY, PersistentDataType.INTEGER) != null
+        fun isMarked(block: Block?): Boolean {
+           block ?: return false
+           return readBlock(block, KEY, PersistentDataType.INTEGER) != null
+        }
     }
 
     open fun place(e: BlockPlaceEvent) { }

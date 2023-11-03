@@ -39,7 +39,10 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
             @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
         }
 
-        fun isMarked(item: ItemStack) = readItem(item, KEY, PersistentDataType.INTEGER) != null
+        fun isMarked(item: ItemStack?) : Boolean {
+            item ?: return false
+            return readItem(item, KEY, PersistentDataType.INTEGER) != null
+        }
     }
 
     /**
