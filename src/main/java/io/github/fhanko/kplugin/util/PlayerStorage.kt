@@ -23,7 +23,7 @@ class PlayerCard(
     @Id val uuid: UUID,
     @Column val name: String,
     @Column var balance: BigDecimal) {
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "cooldown", joinColumns = [JoinColumn(name = "player_uuid")])
     val cooldowns = mutableListOf<Cooldown>()
 

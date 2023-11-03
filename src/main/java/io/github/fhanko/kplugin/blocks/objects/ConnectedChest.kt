@@ -10,8 +10,6 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
