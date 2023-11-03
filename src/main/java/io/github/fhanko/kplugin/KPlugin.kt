@@ -23,7 +23,7 @@ class KPlugin : JavaPlugin() {
         CommandAPI.onEnable()
         Commands.register()
         Bukkit.getPluginManager().registerEvents(ZonePlayerMap(), this)
-        Bukkit.getPluginManager().registerEvents(EventListener(), this)
+        Bukkit.getPluginManager().registerEvents(VanillaEventListener(), this)
         CustomBlockData.registerListener(this)
         PlayerStorage
         Init

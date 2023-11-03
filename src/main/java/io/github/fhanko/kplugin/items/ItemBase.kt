@@ -11,7 +11,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
-abstract class ItemBase(private val id: Int,material: Material, name: String, description: List<String> = listOf()): Listener, ItemComparable, ItemDisableCrafting {
+abstract class ItemBase(private val id: Int,material: Material, name: String, description: List<String> = listOf()):
+    Listener, ItemComparable {
     companion object {
         val KEY = NamespacedKey("kplugin", "itembase")
         val itemList = mutableListOf<ItemBase>()
@@ -65,6 +66,4 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
 
     override fun compareId(other: ItemStack?) =
         other?.itemMeta?.persistentDataContainer?.get(KEY, PersistentDataType.INTEGER) == id
-
-
 }

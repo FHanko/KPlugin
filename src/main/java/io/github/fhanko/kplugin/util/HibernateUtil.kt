@@ -15,9 +15,10 @@ object HibernateUtil {
 
     fun createSessionFactory() {
         val configuration = Configuration()
+        val configured = configuration.configure("hibernate.cfg.xml");
         val serviceRegistry: ServiceRegistry = StandardServiceRegistryBuilder().applySettings(
             configuration.properties).build()
-        fac = configuration.configure().buildSessionFactory(serviceRegistry)
+        fac = configured.buildSessionFactory(serviceRegistry)
     }
 
     fun shutdown() {

@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.items.objects
 
+import io.github.fhanko.kplugin.KPluginInteractItemEvent
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemClickable
 import io.github.fhanko.kplugin.util.PlayerStorage
