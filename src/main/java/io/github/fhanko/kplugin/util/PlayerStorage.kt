@@ -4,6 +4,7 @@ package io.github.fhanko.kplugin.util
 import jakarta.persistence.*
 import org.bukkit.entity.Player
 import java.math.BigDecimal
+import java.sql.Timestamp
 import java.util.*
 
 object PlayerStorage {
@@ -22,6 +23,25 @@ class PlayerCard(
     @Id val uuid: UUID,
     @Column val name: String,
     @Column var balance: BigDecimal) {
+    @ElementCollection
+    @CollectionTable(name = "cooldown", joinColumns = [JoinColumn(name = "player_uuid")])
+    val cooldowns = mutableListOf<Cooldown>()
+
     fun update() { HibernateUtil.saveEntity(this, HibernateUtil.Operation.Merge) }
     fun addBalance(value: BigDecimal) { balance = balance.add(value); update() }
+
+    fun getCooldown(hash: String) = cooldowns.find{ it ->
+        it.hash == hash && it.time > Timestamp(System.currentTimeMillis())}?.time?.time?.minus(System.currentTimeMillis())
+
+    fun setCooldown(hash: String, milliseconds: Long) {
+        cooldowns.removeIf { it.hash == hash }
+        cooldowns.add(Cooldown(hash, Timestamp(System.currentTimeMillis().plus(milliseconds))))
+        if (milliseconds > 60000) update()
+    }
 }
+
+@Embeddable
+class Cooldown(
+    @Column val hash: String,
+    @Column var time: Timestamp
+)

@@ -36,6 +36,10 @@ object HibernateUtil: Listener {
     }
 
     fun shutdown() {
+        val session: Session = fac.currentSession
+        session.flush()
+        transaction.commit()
+        KPlugin.instance.logger.info("Database saved.")
         fac.close()
     }
 
@@ -62,7 +66,8 @@ object HibernateUtil: Listener {
             val builder = session.criteriaBuilder
             val criteria = builder.createQuery(obj)
             criteria.from(obj)
-            return@execute session.createQuery(criteria).resultList
+            val ret = session.createQuery(criteria).resultList
+            return@execute ret
         }
     }
 

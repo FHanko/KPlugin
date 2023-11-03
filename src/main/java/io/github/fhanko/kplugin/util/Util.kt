@@ -4,6 +4,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
+import java.math.BigInteger
+import java.security.MessageDigest
 
 infix fun Int.toward(to: Int): IntProgression {
     val step = if (this > to) -1 else 1
@@ -44,3 +46,8 @@ fun <T : Any> PersistentDataContainer.setAlt(key: NamespacedKey, type: Persisten
     set(key, type, type.complexType.cast(data))
 
 var mm = MiniMessage.miniMessage()
+
+fun hash(input:String): String {
+    val md = MessageDigest.getInstance("MD5")
+    return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
+}
