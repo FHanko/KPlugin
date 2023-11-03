@@ -11,6 +11,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.world.WorldSaveEvent
 import org.bukkit.inventory.Inventory
@@ -52,7 +53,10 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
     }
 
     @EventHandler
-    fun onWorldSave(e: WorldSaveEvent) = HibernateUtil.saveCollection(inventoryMap, HibernateUtil.Operation.Merge)
+    fun openInventory(e: InventoryOpenEvent) {
+        if (e.inventory.holder == this)
+            HibernateUtil.saveEntity(inventoryMap.find { it.inventory == e.inventory }!!, HibernateUtil.Operation.Merge)
+    }
 
     override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest inventories are stored in inventoryMap.") }
 }

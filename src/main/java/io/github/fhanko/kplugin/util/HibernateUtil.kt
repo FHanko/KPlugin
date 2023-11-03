@@ -1,6 +1,10 @@
 package io.github.fhanko.kplugin.util
 
 import io.github.fhanko.kplugin.KPlugin
+import org.bukkit.World
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.world.WorldSaveEvent
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.Transaction
@@ -10,7 +14,7 @@ import org.hibernate.service.ServiceRegistry
 import java.io.Serializable
 import java.util.concurrent.LinkedBlockingQueue
 
-object HibernateUtil {
+object HibernateUtil: Listener {
     private lateinit var fac: SessionFactory
 
     fun createSessionFactory() {
@@ -28,6 +32,7 @@ object HibernateUtil {
         t.start()
 
         fac = queue.take()
+        startTransaction()
     }
 
     fun shutdown() {
@@ -72,30 +77,45 @@ object HibernateUtil {
         return ret ?: false
     }
 
-    fun emplaceEntity(obj: Any, key: Any) {
-        execute { session ->
-            if (session.find(obj::class.java, key) == null) {
-                session.persist(obj)
-            }
-        }
-    }
-
     fun <T> execute(unit: (s: Session) -> T): T? {
-        val session: Session = fac.openSession()
+        val session: Session = fac.currentSession
 
-        var transaction: Transaction? = null
         try {
-            transaction = session.beginTransaction()
-            val ret = unit(session)
-            transaction.commit()
-            return ret
+            return unit(session)
         } catch (e: Exception) {
-            transaction?.rollback()
-            KPlugin.instance.logger.warning(e.message)
-            e.printStackTrace()
-        } finally {
-            session.close()
+            rollbackTransaction(e)
+            startTransaction()
         }
         return null
+    }
+
+    private lateinit var transaction: Transaction
+    private fun startTransaction() {
+        val session: Session = fac.currentSession
+        transaction = session.beginTransaction()
+    }
+
+    private fun rollbackTransaction(e: Exception) {
+        transaction.rollback()
+        KPlugin.instance.logger.warning(e.message)
+        e.printStackTrace()
+    }
+
+    @EventHandler
+    fun onWorldSave(e: WorldSaveEvent) {
+        if (e.world.environment != World.Environment.NORMAL) return
+
+        val session: Session = fac.currentSession
+        try {
+            session.flush()
+            transaction.commit()
+            KPlugin.instance.logger.info("Database saved.")
+        } catch (e: Exception) {
+            rollbackTransaction(e)
+        } finally {
+            session.close()
+            fac.openSession()
+            startTransaction()
+        }
     }
 }
