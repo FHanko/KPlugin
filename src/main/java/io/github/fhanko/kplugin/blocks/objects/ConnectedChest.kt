@@ -5,6 +5,7 @@ import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.blocks.BlockClickable
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.converter.InventoryConverter
+import jakarta.persistence.*
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
@@ -12,11 +13,11 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.world.WorldSaveEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import javax.persistence.*
 
 private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
 
@@ -28,7 +29,7 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         HibernateUtil.loadEntity(InventoryMap::class.java, 0) ?: InventoryMap(0, mutableListOf())
 
     init {
-        HibernateUtil.saveEntity(inventoryMap, HibernateUtil.Operation.SaveOrUpdate)
+        HibernateUtil.emplaceEntity(inventoryMap, 0)
     }
 
     private fun chestId(): Int {
@@ -46,7 +47,7 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         if (args.isNotEmpty() && args[0].toIntOrNull() != null && args[0].toInt() in 9..54 step 9) invSize = args[0].toInt()
         val inv = KInventory(cid, inventoryMap,CraftInventoryCustom(this, invSize))
         inventoryMap.inventory.add(inv)
-        HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Save)
+        HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Persist)
 
         i.amount = amount
         player.inventory.addItem(i)
@@ -60,11 +61,7 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
     }
 
     @EventHandler
-    fun onInventoryClose(e: InventoryCloseEvent) {
-        if (e.inventory.holder == this) {
-            HibernateUtil.saveEntity(inventoryMap.inventory.find { it.inventory == e.inventory }!!, HibernateUtil.Operation.Update)
-        }
-    }
+    fun onWorldSave(e: WorldSaveEvent) = HibernateUtil.saveCollection(inventoryMap.inventory, HibernateUtil.Operation.Merge)
 
     override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest inventories are stored in inventoryMap.") }
 }

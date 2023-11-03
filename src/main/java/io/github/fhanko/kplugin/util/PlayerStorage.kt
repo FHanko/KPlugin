@@ -1,17 +1,16 @@
 @file:Suppress("unused")
 package io.github.fhanko.kplugin.util
 
+import jakarta.persistence.*
 import org.bukkit.entity.Player
-import org.hibernate.annotations.Type
 import java.math.BigDecimal
 import java.util.*
-import javax.persistence.*
 
 object PlayerStorage {
     private val playerList = HibernateUtil.loadEntity(PlayerData::class.java, 0) ?: PlayerData()
 
     init {
-        HibernateUtil.saveEntity(playerList, HibernateUtil.Operation.SaveOrUpdate)
+        HibernateUtil.emplaceEntity(playerList, 0)
     }
 
     fun register(p: Player) {
@@ -35,11 +34,11 @@ class PlayerData {
 
 @Entity @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 class PlayerCard(
-    @Id @Type(type="uuid-char") val uuid: UUID,
+    @Id val uuid: UUID,
     @Column val name: String,
     @Column var balance: BigDecimal,
     @ManyToOne val playerData: PlayerData) {
-    fun update() = HibernateUtil.saveEntity(this, HibernateUtil.Operation.SaveOrUpdate)
+    fun update() = HibernateUtil.saveEntity(this, HibernateUtil.Operation.Merge)
 
     fun addBalance(value: BigDecimal) {
         balance = balance.add(value)

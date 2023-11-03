@@ -2,11 +2,11 @@ package io.github.fhanko.kplugin.util.converter
 
 import io.github.fhanko.kplugin.blocks.objects.ConnectedChest
 import io.github.fhanko.kplugin.util.YamlUtil
+import jakarta.persistence.AttributeConverter
+import jakarta.persistence.Converter
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import javax.persistence.AttributeConverter
-import javax.persistence.Converter
 
 @Converter
 class InventoryConverter: AttributeConverter<Inventory, String> {
