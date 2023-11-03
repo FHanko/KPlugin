@@ -66,8 +66,7 @@ object HibernateUtil: Listener {
             val builder = session.criteriaBuilder
             val criteria = builder.createQuery(obj)
             criteria.from(obj)
-            val ret = session.createQuery(criteria).resultList
-            return@execute ret
+            return@execute session.createQuery(criteria).resultList
         }
     }
 

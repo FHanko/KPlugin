@@ -48,13 +48,9 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         e.isCancelled = true
 
         val ci: Int = readBlock(e.clickedBlock!!, CHEST_KEY, PersistentDataType.INTEGER)
-        e.player.openInventory(inventoryMap.find { it.id == ci }?.inventory ?: return)
-    }
-
-    @EventHandler
-    fun openInventory(e: InventoryOpenEvent) {
-        if (e.inventory.holder == this)
-            HibernateUtil.saveEntity(inventoryMap.find { it.inventory == e.inventory }!!, HibernateUtil.Operation.Merge)
+        val inv = inventoryMap.find { it.id == ci } ?: return
+        e.player.openInventory(inv.inventory)
+        HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Merge)
     }
 
     override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest inventories are stored in inventoryMap.") }
