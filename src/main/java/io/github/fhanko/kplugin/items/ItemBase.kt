@@ -12,7 +12,7 @@ import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
 abstract class ItemBase(private val id: Int,material: Material, name: String, description: List<String> = listOf()):
-    Listener, ItemComparable {
+    Listener, ItemComparable, ItemDisableCrafting {
     companion object {
         val KEY = NamespacedKey("kplugin", "itembase")
         val itemList = mutableListOf<ItemBase>()
@@ -38,6 +38,8 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
             val meta = item.itemMeta
             @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
         }
+
+        fun isMarked(item: ItemStack) = readItem(item, KEY, PersistentDataType.INTEGER) != null
     }
 
     /**
