@@ -23,9 +23,11 @@ import org.bukkit.inventory.CraftingInventory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
+import org.bukkit.util.Vector
 
 /**
  * Addresses event efficiency concerns by handling them once and firing custom Events
+ * instead of firing all events on all items.
  */
 class VanillaEventListener: Listener {
     @EventHandler
@@ -36,17 +38,16 @@ class VanillaEventListener: Listener {
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
         if (e is KPluginInteractItemEvent || e is KPluginInteractBlockEvent) return
-        if (e.action == Action.PHYSICAL) return
         if (ItemBase.isMarked(e.item)) {
             val event = KPluginInteractItemEvent(e.player, e.action, e.item, e.clickedBlock,
-                                                 e.blockFace, e.hand!!)
+                                                 e.blockFace, e.hand, e.clickedPosition)
             Bukkit.getPluginManager().callEvent(event)
             if (event.useItemInHand() == Event.Result.DENY) e.isCancelled = true
         }
 
         if (BlockBase.isMarked(e.clickedBlock)) {
             val event = KPluginInteractBlockEvent(e.player, e.action, e.item, e.clickedBlock,
-                                                  e.blockFace, e.hand!!)
+                                                  e.blockFace, e.hand, e.clickedPosition)
             Bukkit.getPluginManager().callEvent(event)
             if (event.useInteractedBlock() == Event.Result.DENY) e.isCancelled = true
         }
@@ -85,7 +86,7 @@ class VanillaEventListener: Listener {
     @EventHandler
     fun onHeld(e: PlayerItemHeldEvent) {
         if (e is KPluginPlayerItemHeldEvent) return
-        if (ItemBase.isMarked(e.player.inventory.getItem(e.newSlot)) || ItemBase.isMarked(e.player.inventory.getItem(e.newSlot))) {
+        if (ItemBase.isMarked(e.player.inventory.getItem(e.newSlot)) || ItemBase.isMarked(e.player.inventory.getItem(e.previousSlot))) {
             val event = KPluginPlayerItemHeldEvent(e.player, e.previousSlot, e.newSlot)
             Bukkit.getPluginManager().callEvent(event)
             e.isCancelled = event.isCancelled
@@ -102,10 +103,10 @@ class VanillaEventListener: Listener {
     }
 }
 
-class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot):
-    PlayerInteractEvent(p, a, i, b, bf, e)
-class KPluginInteractBlockEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot):
-    PlayerInteractEvent(p, a, i, b, bf, e)
+class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
+    PlayerInteractEvent(p, a, i, b, bf, e, v)
+class KPluginInteractBlockEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
+    PlayerInteractEvent(p, a, i, b, bf, e, v)
 class KPluginPrepareItemCraftEvent(c: CraftingInventory, i: InventoryView, ir: Boolean): PrepareItemCraftEvent(c, i, ir)
 class KPluginPlayerDropItemEvent(p: Player, i: Item): PlayerDropItemEvent(p, i)
 class KPluginPlayerPickupItemEvent(p: Player, i: Item, r: Int): EntityPickupItemEvent(p, i, r)

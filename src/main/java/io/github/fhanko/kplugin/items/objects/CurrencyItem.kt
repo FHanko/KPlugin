@@ -26,7 +26,7 @@ object CurrencyItem: ItemBase(3, Material.PAPER, "$$$", listOf("Use to add to ba
     }
 
     override fun rightClick(e: PlayerInteractEvent) {
-        val cash = readItem(e.player.inventory.itemInMainHand, CURRENCY_KEY, PersistentDataType.FLOAT).toBigDecimal()
+        val cash = readItem(e.player.inventory.itemInMainHand, CURRENCY_KEY, PersistentDataType.FLOAT)!!.toBigDecimal()
         PlayerStorage.getCard(e.player)?.addBalance(cash)
         e.player.inventory.itemInMainHand.amount--
         e.player.sendMessage(mm.deserialize("Added <green>$cash$<reset> to your balance."))
