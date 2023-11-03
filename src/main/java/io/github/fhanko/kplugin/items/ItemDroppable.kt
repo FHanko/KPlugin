@@ -19,7 +19,7 @@ interface ItemDroppable: Listener, ItemComparable {
     fun onPickup(e: EntityPickupItemEvent) {
         if (e.entity !is Player) return
         if (compareId(e.item.itemStack)) {
-            pickup(e.entity as Player);
+            pickup(e.entity as Player)
         }
     }
 }

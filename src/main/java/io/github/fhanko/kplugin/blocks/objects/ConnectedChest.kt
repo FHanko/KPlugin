@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package io.github.fhanko.kplugin.blocks.objects
 
 import io.github.fhanko.kplugin.blocks.BlockBase
@@ -69,12 +70,14 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
 }
 
 @Entity
-class InventoryMap(@Id var id: Int = 0,
-                   @OneToMany(fetch = FetchType.EAGER, mappedBy = "invmap")
-                   val inventory: MutableList<KInventory>)
+class InventoryMap(
+    @Id var id: Int = 0,
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "invmap")
+    val inventory: MutableList<KInventory>)
 
 @Entity
-class KInventory(@Id var invid: Int = 0,
-                 @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "mapid") var invmap: InventoryMap,
-                 @Column(columnDefinition = "CLOB") @Convert(converter = InventoryConverter::class)
-                 var inventory: Inventory)
+class KInventory(
+    @Id var invid: Int = 0,
+    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "mapid") var invmap: InventoryMap,
+    @Column(columnDefinition = "CLOB") @Convert(converter = InventoryConverter::class)
+    var inventory: Inventory)

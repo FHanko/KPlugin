@@ -6,7 +6,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 
 class ZonePlayerMap : Listener {
-    val map = mutableMapOf<Player, HashSet<Zone>>()
+    private val map = mutableMapOf<Player, HashSet<Zone>>()
 
     @EventHandler
     fun onPlayerMove(e: PlayerMoveEvent) {

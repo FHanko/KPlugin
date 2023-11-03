@@ -58,9 +58,9 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
         item.setItemMeta(meta)
         markItem(item, KEY, PersistentDataType.INTEGER, id)
         Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)
-        itemList.add(this);
+        itemList.add(this)
 
-        KPlugin.instance.logger.info("Init BaseItem ${name}")
+        KPlugin.instance.logger.info("Init BaseItem $name")
     }
 
     override fun compareId(other: ItemStack?) =

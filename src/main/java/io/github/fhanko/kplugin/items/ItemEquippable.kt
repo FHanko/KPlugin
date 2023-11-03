@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package io.github.fhanko.kplugin.items
 
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent

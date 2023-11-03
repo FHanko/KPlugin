@@ -9,6 +9,6 @@ import org.bukkit.inventory.ItemStack
 interface ItemDisableCrafting: Listener, ItemComparable {
     @EventHandler
     fun onCraft(e: PrepareItemCraftEvent) {
-        if (e.inventory.any() { compareId(it) }) e.inventory.result = ItemStack(Material.AIR)
+        if (e.inventory.any { compareId(it) }) e.inventory.result = ItemStack(Material.AIR)
     }
 }

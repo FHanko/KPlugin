@@ -1,15 +1,9 @@
 package io.github.fhanko.kplugin.items.objects
 
-import dev.jorel.commandapi.arguments.ChatColorArgument
-import dev.jorel.commandapi.arguments.ChatComponentArgument
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemClickable
 import io.github.fhanko.kplugin.util.PlayerStorage
 import io.github.fhanko.kplugin.util.mm
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import org.bukkit.ChatColor
-import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player

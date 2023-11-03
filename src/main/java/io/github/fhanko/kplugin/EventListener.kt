@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin
 
-import io.github.fhanko.kplugin.items.objects.FeatherBoots
 import io.github.fhanko.kplugin.util.PlayerStorage
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

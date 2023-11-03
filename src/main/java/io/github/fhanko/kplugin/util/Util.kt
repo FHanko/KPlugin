@@ -43,4 +43,4 @@ fun copyPdc(pdcSource: PersistentDataContainer, pdcTarget: PersistentDataContain
 fun <T : Any> PersistentDataContainer.setAlt(key: NamespacedKey, type: PersistentDataType<*, T>, data: Any) =
     set(key, type, type.complexType.cast(data))
 
-var mm = MiniMessage.miniMessage();
+var mm = MiniMessage.miniMessage()

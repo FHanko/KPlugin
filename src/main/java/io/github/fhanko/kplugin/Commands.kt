@@ -10,8 +10,6 @@ import io.github.fhanko.kplugin.items.objects.CurrencyItem
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.PlayerStorage
 import io.github.fhanko.kplugin.util.mm
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import java.math.BigDecimal
 import java.math.RoundingMode
 

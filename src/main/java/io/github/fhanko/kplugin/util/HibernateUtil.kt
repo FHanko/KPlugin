@@ -1,20 +1,23 @@
 package io.github.fhanko.kplugin.util
 
 import io.github.fhanko.kplugin.KPlugin
-import org.h2.engine.SessionLocal.Savepoint
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.Transaction
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder
 import org.hibernate.cfg.Configuration
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider
+import org.hibernate.service.ServiceRegistry
 import java.io.Serializable
+
 
 object HibernateUtil {
     private lateinit var fac: SessionFactory
 
     fun createSessionFactory() {
         val configuration = Configuration()
-        fac = configuration.configure().buildSessionFactory()
+        val serviceRegistry: ServiceRegistry = StandardServiceRegistryBuilder().applySettings(
+            configuration.properties).build()
+        fac = configuration.configure().buildSessionFactory(serviceRegistry)
     }
 
     fun shutdown() {

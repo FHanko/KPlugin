@@ -14,11 +14,11 @@ import org.bukkit.plugin.java.JavaPlugin
 @Suppress("Unused")
 class KPlugin : JavaPlugin() {
     companion object {
-        lateinit var instance: JavaPlugin;
+        lateinit var instance: JavaPlugin
     }
 
     override fun onEnable() {
-        instance = this;
+        instance = this
         HibernateUtil.createSessionFactory()
         CommandAPI.onEnable()
         Commands.register()

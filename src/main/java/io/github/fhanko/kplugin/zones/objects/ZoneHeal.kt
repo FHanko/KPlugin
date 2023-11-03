@@ -22,7 +22,7 @@ class ZoneHeal(start: Location, end: Location): ZoneCube(start, end) {
 
     override fun leave(p: Player) {
         tidMap[p] ?: return
-        KPlugin.instance.server.scheduler.cancelTask(tidMap[p]!!);
+        KPlugin.instance.server.scheduler.cancelTask(tidMap[p]!!)
     }
 
     override val borderColor: Color = Color.TEAL
