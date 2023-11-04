@@ -20,12 +20,12 @@ object PlayerStorage {
 
 @Entity @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 open class PlayerCard(
-    @Id val uuid: UUID,
-    @Column val name: String,
-    @Column var balance: BigDecimal) {
+    @Id open val uuid: UUID,
+    @Column open val name: String,
+    @Column open var balance: BigDecimal) {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "cooldown", joinColumns = [JoinColumn(name = "player_uuid")])
-    val cooldowns = mutableListOf<Cooldown>()
+    open val cooldowns = mutableListOf<Cooldown>()
 
     fun update() { HibernateUtil.saveEntity(this, HibernateUtil.Operation.Merge) }
     fun addBalance(value: BigDecimal) { balance = balance.add(value); update() }

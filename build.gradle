@@ -40,9 +40,8 @@ dependencies {
     implementation 'org.bstats:bstats-bukkit:3.0.2'
 
     implementation 'com.h2database:h2:2.2.220'
-    implementation 'org.hibernate:hibernate-core:6.2.0.Final'
+    implementation 'org.hibernate:hibernate-core:6.3.0.CR1'
 }
-
 
 def targetJavaVersion = 17
 java {
@@ -69,14 +68,6 @@ tasks {
     }
 }
 
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
-}
 
 kotlin {
     jvmToolchain(17)

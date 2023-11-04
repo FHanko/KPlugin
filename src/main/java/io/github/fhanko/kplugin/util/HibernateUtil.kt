@@ -1,6 +1,9 @@
 package io.github.fhanko.kplugin.util
 
 import io.github.fhanko.kplugin.KPlugin
+import jakarta.persistence.EntityManager
+import jakarta.persistence.Persistence
+import jakarta.persistence.PersistenceContext
 import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -8,44 +11,37 @@ import org.bukkit.event.world.WorldSaveEvent
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.Transaction
-import org.hibernate.boot.MetadataSources
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder
-import org.hibernate.service.ServiceRegistry
 import java.io.Serializable
 import java.util.concurrent.LinkedBlockingQueue
 
+
 object HibernateUtil: Listener {
-    private lateinit var fac: SessionFactory
+    private lateinit var em: EntityManager
 
     fun createSessionFactory() {
-        val queue = LinkedBlockingQueue<SessionFactory>()
         // https://sjhannah.com/blog/2018/11/21/jaxb-hell-on-jdk-9/
+        val queue = LinkedBlockingQueue<EntityManager>()
         val t = Thread {
-            val serviceRegistry: ServiceRegistry =
-                StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build()
-            val metadata = MetadataSources(serviceRegistry).metadataBuilder.build()
-            fac = metadata.sessionFactoryBuilder.build()
-            queue.add(fac)
+            val emf = Persistence.createEntityManagerFactory("PUnit")
+            queue.add(emf.createEntityManager())
         }
-
         t.setContextClassLoader(javaClass.getClassLoader())
         t.start()
 
-        fac = queue.take()
-        startTransaction()
+        em = queue.take()
+        em.transaction.begin()
     }
 
     fun shutdown() {
-        val session: Session = fac.currentSession
-        session.flush()
-        transaction.commit()
+        em.flush()
+        em.transaction.commit()
         KPlugin.instance.logger.info("Database saved.")
-        fac.close()
+        em.close()
     }
 
     fun <T> loadEntity(obj: Class<out T>, id: Serializable): T? {
-        return execute { session ->
-            return@execute session.get(obj, id)
+        return execute { em ->
+            return@execute em.find(obj, id)
         }
     }
 
@@ -62,11 +58,11 @@ object HibernateUtil: Listener {
     }
 
     fun <T> loadAll(obj: Class<out T>): List<T>? {
-        return execute { session ->
-            val builder = session.criteriaBuilder
+        return execute { em ->
+            val builder = em.criteriaBuilder
             val criteria = builder.createQuery(obj)
             criteria.from(obj)
-            return@execute session.createQuery(criteria).resultList
+            return@execute em.createQuery(criteria).resultList
         }
     }
 
@@ -81,26 +77,18 @@ object HibernateUtil: Listener {
         return ret ?: false
     }
 
-    fun <T> execute(unit: (s: Session) -> T): T? {
-        val session: Session = fac.currentSession
-
+    fun <T> execute(unit: (s: EntityManager) -> T): T? {
         try {
-            return unit(session)
+            return unit(em)
         } catch (e: Exception) {
             rollbackTransaction(e)
-            startTransaction()
+            em.transaction.begin()
         }
         return null
     }
 
-    private lateinit var transaction: Transaction
-    private fun startTransaction() {
-        val session: Session = fac.currentSession
-        transaction = session.beginTransaction()
-    }
-
     private fun rollbackTransaction(e: Exception) {
-        transaction.rollback()
+        em.transaction.rollback()
         KPlugin.instance.logger.warning(e.message)
         e.printStackTrace()
     }
@@ -109,17 +97,14 @@ object HibernateUtil: Listener {
     fun onWorldSave(e: WorldSaveEvent) {
         if (e.world.environment != World.Environment.NORMAL) return
 
-        val session: Session = fac.currentSession
         try {
-            session.flush()
-            transaction.commit()
+            em.flush()
+            em.transaction.commit()
             KPlugin.instance.logger.info("Database saved.")
         } catch (e: Exception) {
             rollbackTransaction(e)
         } finally {
-            session.close()
-            fac.openSession()
-            startTransaction()
+            em.transaction.begin()
         }
     }
 }
