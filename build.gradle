@@ -10,12 +10,14 @@ plugins {
 }
 
 apply plugin: "kotlin-jpa"
+apply plugin: "maven-publish"
 
 group = 'io.github.fhanko'
-version = '1.1'
+version = '1.2'
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
@@ -78,4 +80,15 @@ processResources {
 
 kotlin {
     jvmToolchain(17)
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'kplugin'
+            version = version
+            from(components["java"])
+        }
+    }
 }

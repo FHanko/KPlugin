@@ -11,8 +11,11 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
-abstract class ItemBase(private val id: Int,material: Material, name: String, description: List<String> = listOf()):
-    Listener, ItemComparable, ItemDisableCrafting {
+abstract class ItemBase(private val id: Int, material: Material, name: Component, description: List<Component> = listOf()):
+    Listener, ItemComparable {
+    constructor(id: Int, material: Material, name: String, description: List<String> = listOf()):
+            this(id, material, Component.text(name), description.map { Component.text(it) })
+
     companion object {
         val KEY = NamespacedKey("kplugin", "itembase")
         val itemList = mutableListOf<ItemBase>()
@@ -44,6 +47,13 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
             item.itemMeta ?: return false
             return readItem(item, KEY, PersistentDataType.INTEGER) != null
         }
+
+        fun setText(item: ItemStack, name: Component, lore: List<Component>) {
+            val meta = item.itemMeta
+            meta.displayName(name)
+            meta.lore(lore)
+            item.setItemMeta(meta)
+        }
     }
 
     /**
@@ -59,10 +69,7 @@ abstract class ItemBase(private val id: Int,material: Material, name: String, de
 
     init {
         item = ItemStack(material)
-        val meta = item.itemMeta
-        meta.displayName(Component.text(name))
-        meta.lore(description.map { Component.text(it) })
-        item.setItemMeta(meta)
+        setText(item, name, description)
         markItem(item, KEY, PersistentDataType.INTEGER, id)
         Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)
         itemList.add(this)

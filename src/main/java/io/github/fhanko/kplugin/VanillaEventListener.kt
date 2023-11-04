@@ -42,14 +42,14 @@ class VanillaEventListener: Listener {
             val event = KPluginInteractItemEvent(e.player, e.action, e.item, e.clickedBlock,
                                                  e.blockFace, e.hand, e.clickedPosition)
             Bukkit.getPluginManager().callEvent(event)
-            if (event.useItemInHand() == Event.Result.DENY) e.isCancelled = true
+            e.setUseItemInHand(event.useItemInHand())
         }
 
         if (BlockBase.isMarked(e.clickedBlock)) {
             val event = KPluginInteractBlockEvent(e.player, e.action, e.item, e.clickedBlock,
                                                   e.blockFace, e.hand, e.clickedPosition)
             Bukkit.getPluginManager().callEvent(event)
-            if (event.useInteractedBlock() == Event.Result.DENY) e.isCancelled = true
+            e.setUseInteractedBlock(event.useInteractedBlock())
         }
     }
 
