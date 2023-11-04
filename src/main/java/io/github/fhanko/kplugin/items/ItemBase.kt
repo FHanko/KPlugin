@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
-abstract class ItemBase(private val id: Int, material: Material, name: Component, description: List<Component> = listOf()):
+abstract class ItemBase(val id: Int, val material: Material, val name: Component, val description: List<Component> = listOf()):
     Listener, ItemComparable {
     constructor(id: Int, material: Material, name: String, description: List<String> = listOf()):
             this(id, material, Component.text(name), description.map { Component.text(it) })

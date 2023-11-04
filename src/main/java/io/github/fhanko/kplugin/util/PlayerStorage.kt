@@ -19,7 +19,7 @@ object PlayerStorage {
 }
 
 @Entity @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-class PlayerCard(
+open class PlayerCard(
     @Id val uuid: UUID,
     @Column val name: String,
     @Column var balance: BigDecimal) {

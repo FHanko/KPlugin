@@ -4,6 +4,7 @@ import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.copyPdc
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
@@ -15,8 +16,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
-abstract class BlockBase(private val id: Int,material: Material, name: String, description: List<String> = listOf())
+abstract class BlockBase(id: Int, material: Material, name: Component, description: List<Component> = listOf())
     : ItemBase(id, material, name, description), Listener, BlockComparable {
+
+    constructor(id: Int, material: Material, name: String): this(id, material, Component.text(name))
 
     companion object {
         private fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
