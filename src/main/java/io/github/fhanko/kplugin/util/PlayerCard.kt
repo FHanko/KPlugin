@@ -9,11 +9,11 @@ import java.util.*
 
 @MappedSuperclass
 open class PlayerCard(
-    @Id open val uuid: UUID,
-    @Column open val name: String
+    @Id val uuid: UUID,
+    @Column val name: String
 ) {
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "cooldown", joinColumns = [JoinColumn(name = "player_uuid")])
+    @CollectionTable(joinColumns = [JoinColumn(name = "player_uuid")])
     open val cooldowns = mutableListOf<Cooldown>()
 
     protected fun update() { HibernateUtil.saveEntity(this, HibernateUtil.Operation.Merge) }
@@ -38,6 +38,7 @@ class Cooldown(
 class EconomyCard(uuid: UUID, name: String): PlayerCard(uuid, name) {
     @Column
     var balance: BigDecimal = BigDecimal(0)
+        private set
     fun addBalance(value: BigDecimal) { balance = balance.add(value); update() }
     companion object {
         fun getCard(player: Player) =

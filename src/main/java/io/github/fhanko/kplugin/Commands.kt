@@ -23,7 +23,7 @@ object Commands {
             }).register()
 
         CommandAPICommand("bal").executesPlayer(PlayerCommandExecutor { p, _ ->
-            p.sendMessage(mm.deserialize("<green>${EconomyCard.getCard(p)?.balance}$"))
+            p.sendMessage(mm.deserialize("<green>${EconomyCard.getCard(p).balance}$"))
         }).register()
 
         CommandAPICommand("withdraw").withArguments(listOf(FloatArgument("amount"))).executesPlayer(PlayerCommandExecutor { p, a ->
@@ -32,9 +32,9 @@ object Commands {
                 p.sendMessage(mm.deserialize("<red>You can not withdraw that amount."))
                 return@PlayerCommandExecutor
             }
-            if (EconomyCard.getCard(p)?.balance!! >= cash) {
+            if (EconomyCard.getCard(p).balance >= cash) {
                 HibernateUtil.execute {
-                    EconomyCard.getCard(p)?.addBalance(-cash)
+                    EconomyCard.getCard(p).addBalance(-cash)
                     CurrencyItem.give(p, 1, cash.setScale(2, RoundingMode.DOWN).toString())
                 }
             }

@@ -44,7 +44,6 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
             }
         }, 0, 10)
         visualisationTaskMap[p] = tid
-        println(tid)
     }
 
     override fun unequip(p: Player, e: ItemEquippable.EquipType) {

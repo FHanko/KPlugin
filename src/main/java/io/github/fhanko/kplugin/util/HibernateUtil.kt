@@ -41,7 +41,7 @@ object HibernateUtil: Listener {
         }
     }
 
-    fun <T> loadOrPersistDefault(default: T, id: Serializable): T? {
+    fun <T> loadOrPersistDefault(default: T, id: Serializable): T {
         return execute { em ->
             val ret = em.find(default!!::class.java, id)
             if (ret == null) {
@@ -49,7 +49,7 @@ object HibernateUtil: Listener {
                 return@execute default
             }
             return@execute ret
-        }
+        }!!
     }
 
     enum class Operation { Persist, Merge }
