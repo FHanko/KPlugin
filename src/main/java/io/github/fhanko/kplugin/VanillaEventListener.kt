@@ -13,10 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerItemHeldEvent
-import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.*
 import org.bukkit.inventory.CraftingInventory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.InventoryView
@@ -98,6 +95,16 @@ class VanillaEventListener: Listener {
             Bukkit.getPluginManager().callEvent(event)
         }
     }
+
+    @EventHandler
+    fun onItemDamage(e: PlayerItemDamageEvent) {
+        if (e is KPluginPlayerItemDamageEvent) return
+        if (ItemBase.isMarked(e.item)) {
+            val event = KPluginPlayerItemDamageEvent(e.player, e.item, e.damage, e.originalDamage)
+            Bukkit.getPluginManager().callEvent(event)
+            e.isCancelled = event.isCancelled
+        }
+    }
 }
 
 class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
@@ -109,3 +116,4 @@ class KPluginPlayerDropItemEvent(p: Player, i: Item): PlayerDropItemEvent(p, i)
 class KPluginPlayerPickupItemEvent(p: Player, i: Item, r: Int): EntityPickupItemEvent(p, i, r)
 class KPluginPlayerItemHeldEvent(p: Player, pr: Int, c: Int): PlayerItemHeldEvent(p, pr, c)
 class KPluginPlayerInventorySlotChangeEvent(p: Player, r: Int, o: ItemStack, n: ItemStack): PlayerInventorySlotChangeEvent(p, r, o, n)
+class KPluginPlayerItemDamageEvent(p: Player, w: ItemStack, d: Int, o: Int): PlayerItemDamageEvent(p, w, d, o)
