@@ -1,6 +1,7 @@
 package io.github.fhanko.kplugin.items
 
 import io.github.fhanko.kplugin.KPlugin
+import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.mm
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -13,7 +14,7 @@ import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
 abstract class ItemBase(val id: Int, val material: Material, val name: Component, val description: List<Component> = listOf()):
-    Listener, ItemComparable {
+    Listener, ItemComparable, Initializable {
     constructor(id: Int, material: Material, name: String, description: List<String> = listOf()):
             this(id, material, Component.text(name), description.map { Component.text(it) })
 

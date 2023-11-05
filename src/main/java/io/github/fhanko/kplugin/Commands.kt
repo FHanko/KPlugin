@@ -9,11 +9,13 @@ import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.objects.CurrencyItem
 import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.HibernateUtil
+import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.mm
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-object Commands {
+object Commands: Initializable {
+    init { register() }
     fun register() {
         CommandAPICommand("givekp")
             .withArguments(listOf(IntegerArgument("id"), IntegerArgument("amount")))

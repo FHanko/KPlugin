@@ -1,7 +1,8 @@
 package io.github.fhanko.kplugin.util
 
-import io.github.fhanko.kplugin.items.ItemBase
 import org.reflections.Reflections
+
+interface Initializable
 
 /**
  * Initializes objects (avoids lazy initialization) for ItemBase and Persistable subtypes
@@ -9,10 +10,7 @@ import org.reflections.Reflections
 object Init {
     init {
         val reflections = Reflections("io.github.fhanko")
-        reflections.getSubTypesOf(ItemBase::class.java).forEach {
-            it.kotlin.objectInstance
-        }
-        reflections.getSubTypesOf(FilePersistable::class.java).forEach {
+        reflections.getSubTypesOf(Initializable::class.java).forEach {
             it.kotlin.objectInstance
         }
     }

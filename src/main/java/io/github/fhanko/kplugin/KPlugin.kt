@@ -20,7 +20,6 @@ class KPlugin : JavaPlugin() {
         instance = this
         HibernateUtil.createSessionFactory()
         CommandAPI.onEnable()
-        Commands.register()
         Bukkit.getPluginManager().registerEvents(ZonePlayerMap(), this)
         Bukkit.getPluginManager().registerEvents(HibernateUtil, this)
         Bukkit.getPluginManager().registerEvents(VanillaEventListener(), this)
