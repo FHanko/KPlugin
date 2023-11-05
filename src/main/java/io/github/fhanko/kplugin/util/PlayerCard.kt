@@ -7,28 +7,16 @@ import java.math.BigDecimal
 import java.sql.Timestamp
 import java.util.*
 
-object PlayerStorage {
-    private val playerList = HibernateUtil.loadAll(PlayerCard::class.java)?.toMutableList() ?: mutableListOf()
-
-    fun register(p: Player) {
-        if (!playerList.any { it.uuid == p.identity().uuid() }) HibernateUtil.saveEntity(
-            PlayerCard(p.identity().uuid(), p.name, BigDecimal(0)), HibernateUtil.Operation.Persist)
-    }
-
-    fun getCard(p: Player): PlayerCard? = playerList.find { it.uuid == p.identity().uuid() }
-}
-
-@Entity @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@MappedSuperclass
 open class PlayerCard(
     @Id open val uuid: UUID,
-    @Column open val name: String,
-    @Column open var balance: BigDecimal) {
+    @Column open val name: String
+) {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "cooldown", joinColumns = [JoinColumn(name = "player_uuid")])
     open val cooldowns = mutableListOf<Cooldown>()
 
-    fun update() { HibernateUtil.saveEntity(this, HibernateUtil.Operation.Merge) }
-    fun addBalance(value: BigDecimal) { balance = balance.add(value); update() }
+    protected fun update() { HibernateUtil.saveEntity(this, HibernateUtil.Operation.Merge) }
 
     fun getCooldown(hash: String) = cooldowns.find{ it ->
         it.hash == hash && it.time > Timestamp(System.currentTimeMillis())}?.time?.time?.minus(System.currentTimeMillis())
@@ -45,3 +33,14 @@ class Cooldown(
     @Column val hash: String,
     @Column var time: Timestamp
 )
+
+@Entity
+class EconomyCard(uuid: UUID, name: String): PlayerCard(uuid, name) {
+    @Column
+    var balance: BigDecimal = BigDecimal(0)
+    fun addBalance(value: BigDecimal) { balance = balance.add(value); update() }
+    companion object {
+        fun getCard(player: Player) =
+            HibernateUtil.loadOrPersistDefault(EconomyCard(player.uniqueId, player.name), player.uniqueId)
+    }
+}

@@ -2,14 +2,12 @@ package io.github.fhanko.kplugin
 
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.util.PlayerStorage
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
 import org.bukkit.Bukkit
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
-import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -32,7 +30,6 @@ import org.bukkit.util.Vector
 class VanillaEventListener: Listener {
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
-        PlayerStorage.register(e.player)
     }
 
     @EventHandler

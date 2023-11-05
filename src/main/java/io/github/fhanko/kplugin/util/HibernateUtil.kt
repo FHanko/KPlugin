@@ -3,14 +3,10 @@ package io.github.fhanko.kplugin.util
 import io.github.fhanko.kplugin.KPlugin
 import jakarta.persistence.EntityManager
 import jakarta.persistence.Persistence
-import jakarta.persistence.PersistenceContext
 import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.world.WorldSaveEvent
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-import org.hibernate.Transaction
 import java.io.Serializable
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -42,6 +38,17 @@ object HibernateUtil: Listener {
     fun <T> loadEntity(obj: Class<out T>, id: Serializable): T? {
         return execute { em ->
             return@execute em.find(obj, id)
+        }
+    }
+
+    fun <T> loadOrPersistDefault(default: T, id: Serializable): T? {
+        return execute { em ->
+            val ret = em.find(default!!::class.java, id)
+            if (ret == null) {
+                em.persist(default)
+                return@execute default
+            }
+            return@execute ret
         }
     }
 

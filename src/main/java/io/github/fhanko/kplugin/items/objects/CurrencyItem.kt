@@ -2,7 +2,7 @@ package io.github.fhanko.kplugin.items.objects
 
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemClickable
-import io.github.fhanko.kplugin.util.PlayerStorage
+import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.mm
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -27,7 +27,7 @@ object CurrencyItem: ItemBase(3, Material.PAPER, "$$$", listOf("Use to add to ba
 
     override fun rightClick(e: PlayerInteractEvent) {
         val cash = readItem(e.player.inventory.itemInMainHand, CURRENCY_KEY, PersistentDataType.FLOAT)!!.toBigDecimal()
-        PlayerStorage.getCard(e.player)?.addBalance(cash)
+        EconomyCard.getCard(e.player)?.addBalance(cash)
         e.player.inventory.itemInMainHand.amount--
         e.player.sendMessage(mm.deserialize("Added <green>$cash$<reset> to your balance."))
     }

@@ -7,8 +7,8 @@ import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.objects.CurrencyItem
+import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.HibernateUtil
-import io.github.fhanko.kplugin.util.PlayerStorage
 import io.github.fhanko.kplugin.util.mm
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -23,7 +23,7 @@ object Commands {
             }).register()
 
         CommandAPICommand("bal").executesPlayer(PlayerCommandExecutor { p, _ ->
-            p.sendMessage(mm.deserialize("<green>${PlayerStorage.getCard(p)?.balance}$"))
+            p.sendMessage(mm.deserialize("<green>${EconomyCard.getCard(p)?.balance}$"))
         }).register()
 
         CommandAPICommand("withdraw").withArguments(listOf(FloatArgument("amount"))).executesPlayer(PlayerCommandExecutor { p, a ->
@@ -32,9 +32,9 @@ object Commands {
                 p.sendMessage(mm.deserialize("<red>You can not withdraw that amount."))
                 return@PlayerCommandExecutor
             }
-            if (PlayerStorage.getCard(p)?.balance!! >= cash) {
+            if (EconomyCard.getCard(p)?.balance!! >= cash) {
                 HibernateUtil.execute {
-                    PlayerStorage.getCard(p)?.addBalance(-cash)
+                    EconomyCard.getCard(p)?.addBalance(-cash)
                     CurrencyItem.give(p, 1, cash.setScale(2, RoundingMode.DOWN).toString())
                 }
             }
