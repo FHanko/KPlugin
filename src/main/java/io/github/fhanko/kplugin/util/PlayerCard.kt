@@ -41,7 +41,7 @@ class EconomyCard(uuid: UUID, name: String): PlayerCard(uuid, name) {
         private set
     fun addBalance(value: BigDecimal) { balance = balance.add(value); update() }
     companion object {
-        fun getCard(player: Player) =
+        fun getCard(player: Player): EconomyCard =
             HibernateUtil.loadOrPersistDefault(EconomyCard(player.uniqueId, player.name), player.uniqueId)
     }
 }
