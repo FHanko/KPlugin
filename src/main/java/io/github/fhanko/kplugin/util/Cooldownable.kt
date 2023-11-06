@@ -8,12 +8,12 @@ interface Cooldownable {
 
     fun useCooldown(p: Player, key: String): Boolean {
         val hash = hash(key)
-        val cooldown = EconomyCard.getCard(p).getCooldown(hash) ?: 0
+        val cooldown = CooldownCard.getCard(p).getCooldown(hash) ?: 0
         if (cooldown > 0L) {
             p.sendMessage(cooldownMessage(cooldown))
             return false
         }
-        EconomyCard.getCard(p).setCooldown(hash, getCooldown())
+        CooldownCard.getCard(p).setCooldown(hash, getCooldown())
         return true
     }
 }

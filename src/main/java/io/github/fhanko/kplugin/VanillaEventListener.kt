@@ -109,16 +109,11 @@ class VanillaEventListener: Listener {
         Bukkit.getPluginManager().callEvent(event1)
         Bukkit.getPluginManager().callEvent(event2)
     }
-
-    @EventHandler
-    fun interactTest(e: PlayerInteractEvent) {
-        println("AAA")
-    }
 }
 
-class KPluginInteractItemEvent(val p: Player, val a: Action, val i: ItemStack?, val b: Block?, val bf: BlockFace, val e: EquipmentSlot?, val v: Vector?):
+class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
     KPluginEvent() { val baseEvent = PlayerInteractEvent(p, a, i, b, bf, e, v) }
-class KPluginInteractBlockEvent(val p: Player, val a: Action, val i: ItemStack?, val b: Block?, val bf: BlockFace, val e: EquipmentSlot?, val v: Vector?):
+class KPluginInteractBlockEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
     KPluginEvent() { val baseEvent = PlayerInteractEvent(p, a, i, b, bf, e, v) }
 class KPluginPrepareItemCraftEvent(c: CraftingInventory, i: InventoryView, ir: Boolean):
     KPluginEvent() { val baseEvent = PrepareItemCraftEvent(c, i, ir) }
