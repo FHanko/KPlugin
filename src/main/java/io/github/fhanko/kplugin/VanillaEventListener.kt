@@ -4,6 +4,7 @@ import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
 import org.bukkit.Bukkit
+import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.Item
@@ -14,6 +15,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.*
+import org.bukkit.event.world.WorldSaveEvent
 import org.bukkit.inventory.CraftingInventory
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.InventoryView
@@ -105,6 +107,15 @@ class VanillaEventListener: Listener {
             e.isCancelled = event.isCancelled
         }
     }
+
+    @EventHandler
+    fun onWorldSave(e: WorldSaveEvent) {
+        if (e is KPluginPreWorldSaveEvent || e is KPluginPostWorldSaveEvent) return
+        val event1 = KPluginPreWorldSaveEvent(e.world)
+        val event2 = KPluginPostWorldSaveEvent(e.world)
+        Bukkit.getPluginManager().callEvent(event1)
+        Bukkit.getPluginManager().callEvent(event2)
+    }
 }
 
 class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
@@ -117,3 +128,5 @@ class KPluginPlayerPickupItemEvent(p: Player, i: Item, r: Int): EntityPickupItem
 class KPluginPlayerItemHeldEvent(p: Player, pr: Int, c: Int): PlayerItemHeldEvent(p, pr, c)
 class KPluginPlayerInventorySlotChangeEvent(p: Player, r: Int, o: ItemStack, n: ItemStack): PlayerInventorySlotChangeEvent(p, r, o, n)
 class KPluginPlayerItemDamageEvent(p: Player, w: ItemStack, d: Int, o: Int): PlayerItemDamageEvent(p, w, d, o)
+class KPluginPreWorldSaveEvent(w: World): WorldSaveEvent(w)
+class KPluginPostWorldSaveEvent(w: World): WorldSaveEvent(w)
