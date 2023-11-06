@@ -12,13 +12,16 @@ interface ItemEquippable: Listener, ItemComparable {
     fun equip(p: Player, e: EquipType) { }
     fun unequip(p: Player, e: EquipType) { }
     @EventHandler
-    fun onHeld(e: KPluginPlayerItemHeldEvent) {
+    fun onHeld(kpe: KPluginPlayerItemHeldEvent) {
+        val e = kpe.baseEvent
         if (compareId(e.player.inventory.getItem(e.newSlot))) equip(e.player, EquipType.Hand)
         if (compareId(e.player.inventory.getItem(e.previousSlot))) unequip(e.player, EquipType.Hand)
     }
 
     @EventHandler
-    fun onSlotChange(e: KPluginPlayerInventorySlotChangeEvent) {
+    fun onSlotChange(kpe: KPluginPlayerInventorySlotChangeEvent) {
+        val e = kpe.baseEvent
+        if (compareId(e.newItemStack) == compareId(e.oldItemStack)) return
         if (compareId(e.newItemStack)) {
             if (e.slot == e.player.inventory.heldItemSlot) equip(e.player, EquipType.Hand)
             else if (e.slot == armourSlot().slot) equip(e.player, EquipType.Armour)

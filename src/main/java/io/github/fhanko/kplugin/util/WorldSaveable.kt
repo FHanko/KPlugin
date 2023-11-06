@@ -9,7 +9,8 @@ import org.bukkit.event.world.WorldSaveEvent
 interface PreWorldSaveable {
     fun preWorldSave(e: WorldSaveEvent) {}
     @EventHandler
-    fun onWorldSave(e: KPluginPreWorldSaveEvent) {
+    fun onWorldSave(kpe: KPluginPreWorldSaveEvent) {
+        val e = kpe.baseEvent
         if (e.world.environment != World.Environment.NORMAL) return
         preWorldSave(e)
     }
@@ -18,7 +19,8 @@ interface PreWorldSaveable {
 interface PostWorldSaveable {
     fun postWorldSave(e: WorldSaveEvent) {}
     @EventHandler
-    fun onWorldSave(e: KPluginPostWorldSaveEvent) {
+    fun onWorldSave(kpe: KPluginPostWorldSaveEvent) {
+        val e = kpe.baseEvent
         if (e.world.environment != World.Environment.NORMAL) return
         postWorldSave(e)
     }

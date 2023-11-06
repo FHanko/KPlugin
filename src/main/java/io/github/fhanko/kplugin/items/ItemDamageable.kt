@@ -44,7 +44,8 @@ interface ItemDamageable: ItemComparable {
     fun onDamage(e: PlayerItemDamageEvent) { }
 
     @EventHandler
-    fun onItemDamaged(e: KPluginPlayerItemDamageEvent) {
+    fun onItemDamaged(kpe: KPluginPlayerItemDamageEvent) {
+        val e = kpe.baseEvent
         if (compareId(e.item)) { onDamage(e) }
     }
 }

@@ -10,13 +10,15 @@ import org.bukkit.event.Listener
 interface ItemDroppable: Listener, ItemComparable {
     fun drop(p: Player, i: Item) { }
     @EventHandler
-    fun onDrop(e: KPluginPlayerDropItemEvent) {
+    fun onDrop(kpe: KPluginPlayerDropItemEvent) {
+        val e = kpe.baseEvent
         if (compareId(e.itemDrop.itemStack)) { drop(e.player, e.itemDrop); }
     }
 
     fun pickup(p: Player) {}
     @EventHandler
-    fun onPickup(e: KPluginPlayerPickupItemEvent) {
+    fun onPickup(kpe: KPluginPlayerPickupItemEvent) {
+        val e = kpe.baseEvent
         if (e.entity !is Player) return
         if (compareId(e.item.itemStack)) {
             pickup(e.entity as Player)

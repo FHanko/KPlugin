@@ -10,7 +10,8 @@ interface ItemClickable: Listener, ItemComparable {
     fun leftClick(e: PlayerInteractEvent) { }
     fun rightClick(e: PlayerInteractEvent) { }
     @EventHandler
-    fun onInteract(e: KPluginInteractItemEvent) {
+    fun onInteract(kpe: KPluginInteractItemEvent) {
+        val e = kpe.baseEvent
         if (compareId(e.item)) {
             if (e.hand != EquipmentSlot.HAND) return
             if (e.action.isLeftClick) leftClick(e)

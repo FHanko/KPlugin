@@ -2,6 +2,7 @@ package io.github.fhanko.kplugin
 
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
+import io.github.fhanko.kplugin.util.KPluginEvent
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
 import org.bukkit.Bukkit
 import org.bukkit.World
@@ -33,25 +34,23 @@ class VanillaEventListener: Listener {
 
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
-        if (e is KPluginInteractItemEvent || e is KPluginInteractBlockEvent) return
         if (ItemBase.isMarked(e.item)) {
             val event = KPluginInteractItemEvent(e.player, e.action, e.item, e.clickedBlock,
                                                  e.blockFace, e.hand, e.clickedPosition)
             Bukkit.getPluginManager().callEvent(event)
-            e.setUseItemInHand(event.useItemInHand())
+            e.setUseItemInHand(event.baseEvent.useItemInHand())
         }
 
         if (BlockBase.isMarked(e.clickedBlock)) {
             val event = KPluginInteractBlockEvent(e.player, e.action, e.item, e.clickedBlock,
                                                   e.blockFace, e.hand, e.clickedPosition)
             Bukkit.getPluginManager().callEvent(event)
-            e.setUseInteractedBlock(event.useInteractedBlock())
+            e.setUseInteractedBlock(event.baseEvent.useInteractedBlock())
         }
     }
 
     @EventHandler
     fun onCraft(e: PrepareItemCraftEvent) {
-        if (e is KPluginPrepareItemCraftEvent) return
         if (e.inventory.any { ItemBase.isMarked(it) }) {
             val event = KPluginPrepareItemCraftEvent(e.inventory, e.view, e.isRepair)
             Bukkit.getPluginManager().callEvent(event)
@@ -60,38 +59,34 @@ class VanillaEventListener: Listener {
 
     @EventHandler
     fun onDrop(e: PlayerDropItemEvent) {
-        if (e is KPluginPlayerDropItemEvent) return
         if (ItemBase.isMarked(e.itemDrop.itemStack)) {
             val event = KPluginPlayerDropItemEvent(e.player, e.itemDrop)
             Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.isCancelled
+            e.isCancelled = event.baseEvent.isCancelled
         }
     }
 
     @EventHandler
     fun onPickup(e: EntityPickupItemEvent) {
-        if (e is KPluginPlayerPickupItemEvent) return
         if (e !is Player) return
         if (ItemBase.isMarked(e.item.itemStack)) {
             val event = KPluginPlayerPickupItemEvent(e.player!!, e.item, e.remaining)
             Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.isCancelled
+            e.isCancelled = event.baseEvent.isCancelled
         }
     }
 
     @EventHandler
     fun onHeld(e: PlayerItemHeldEvent) {
-        if (e is KPluginPlayerItemHeldEvent) return
         if (ItemBase.isMarked(e.player.inventory.getItem(e.newSlot)) || ItemBase.isMarked(e.player.inventory.getItem(e.previousSlot))) {
             val event = KPluginPlayerItemHeldEvent(e.player, e.previousSlot, e.newSlot)
             Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.isCancelled
+            e.isCancelled = event.baseEvent.isCancelled
         }
     }
 
     @EventHandler
     fun onSlotChange(e: PlayerInventorySlotChangeEvent) {
-        if (e is KPluginPlayerInventorySlotChangeEvent) return
         if (ItemBase.isMarked(e.oldItemStack) || ItemBase.isMarked(e.newItemStack)) {
             val event = KPluginPlayerInventorySlotChangeEvent(e.player, e.rawSlot, e.oldItemStack, e.newItemStack)
             Bukkit.getPluginManager().callEvent(event)
@@ -100,33 +95,44 @@ class VanillaEventListener: Listener {
 
     @EventHandler
     fun onItemDamage(e: PlayerItemDamageEvent) {
-        if (e is KPluginPlayerItemDamageEvent) return
         if (ItemBase.isMarked(e.item)) {
             val event = KPluginPlayerItemDamageEvent(e.player, e.item, e.damage, e.originalDamage)
             Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.isCancelled
+            e.isCancelled = event.baseEvent.isCancelled
         }
     }
 
     @EventHandler
     fun onWorldSave(e: WorldSaveEvent) {
-        if (e is KPluginPreWorldSaveEvent || e is KPluginPostWorldSaveEvent) return
         val event1 = KPluginPreWorldSaveEvent(e.world)
         val event2 = KPluginPostWorldSaveEvent(e.world)
         Bukkit.getPluginManager().callEvent(event1)
         Bukkit.getPluginManager().callEvent(event2)
     }
+
+    @EventHandler
+    fun interactTest(e: PlayerInteractEvent) {
+        println("AAA")
+    }
 }
 
-class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
-    PlayerInteractEvent(p, a, i, b, bf, e, v)
-class KPluginInteractBlockEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
-    PlayerInteractEvent(p, a, i, b, bf, e, v)
-class KPluginPrepareItemCraftEvent(c: CraftingInventory, i: InventoryView, ir: Boolean): PrepareItemCraftEvent(c, i, ir)
-class KPluginPlayerDropItemEvent(p: Player, i: Item): PlayerDropItemEvent(p, i)
-class KPluginPlayerPickupItemEvent(p: Player, i: Item, r: Int): EntityPickupItemEvent(p, i, r)
-class KPluginPlayerItemHeldEvent(p: Player, pr: Int, c: Int): PlayerItemHeldEvent(p, pr, c)
-class KPluginPlayerInventorySlotChangeEvent(p: Player, r: Int, o: ItemStack, n: ItemStack): PlayerInventorySlotChangeEvent(p, r, o, n)
-class KPluginPlayerItemDamageEvent(p: Player, w: ItemStack, d: Int, o: Int): PlayerItemDamageEvent(p, w, d, o)
-class KPluginPreWorldSaveEvent(w: World): WorldSaveEvent(w)
-class KPluginPostWorldSaveEvent(w: World): WorldSaveEvent(w)
+class KPluginInteractItemEvent(val p: Player, val a: Action, val i: ItemStack?, val b: Block?, val bf: BlockFace, val e: EquipmentSlot?, val v: Vector?):
+    KPluginEvent() { val baseEvent = PlayerInteractEvent(p, a, i, b, bf, e, v) }
+class KPluginInteractBlockEvent(val p: Player, val a: Action, val i: ItemStack?, val b: Block?, val bf: BlockFace, val e: EquipmentSlot?, val v: Vector?):
+    KPluginEvent() { val baseEvent = PlayerInteractEvent(p, a, i, b, bf, e, v) }
+class KPluginPrepareItemCraftEvent(c: CraftingInventory, i: InventoryView, ir: Boolean):
+    KPluginEvent() { val baseEvent = PrepareItemCraftEvent(c, i, ir) }
+class KPluginPlayerDropItemEvent(p: Player, i: Item):
+    KPluginEvent() { val baseEvent = PlayerDropItemEvent(p, i) }
+class KPluginPlayerPickupItemEvent(p: Player, i: Item, r: Int):
+    KPluginEvent() { val baseEvent = EntityPickupItemEvent(p, i, r) }
+class KPluginPlayerItemHeldEvent(p: Player, pr: Int, c: Int):
+    KPluginEvent() { val baseEvent = PlayerItemHeldEvent(p, pr, c) }
+class KPluginPlayerInventorySlotChangeEvent(p: Player, r: Int, o: ItemStack, n: ItemStack):
+    KPluginEvent() { val baseEvent = PlayerInventorySlotChangeEvent(p, r, o, n) }
+class KPluginPlayerItemDamageEvent(p: Player, w: ItemStack, d: Int, o: Int):
+    KPluginEvent() { val baseEvent = PlayerItemDamageEvent(p, w, d, o) }
+class KPluginPreWorldSaveEvent(w: World):
+    KPluginEvent() { val baseEvent = WorldSaveEvent(w) }
+class KPluginPostWorldSaveEvent(w: World):
+    KPluginEvent() { val baseEvent = WorldSaveEvent(w) }
