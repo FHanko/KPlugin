@@ -67,10 +67,9 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         player.inventory.addItem(i)
     }
 
-    protected var item: ItemStack
+    protected var item: ItemStack = ItemStack(material)
 
     init {
-        item = ItemStack(material)
         setText(item, name, description)
         markItem(item, KEY, PersistentDataType.INTEGER, id)
         Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)

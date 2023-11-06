@@ -4,6 +4,7 @@ package io.github.fhanko.kplugin.blocks.objects
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.blocks.BlockClickable
 import io.github.fhanko.kplugin.util.HibernateUtil
+import io.github.fhanko.kplugin.util.Inventoryable
 import io.github.fhanko.kplugin.util.converter.InventoryConverter
 import jakarta.persistence.*
 import org.bukkit.Material
@@ -23,7 +24,7 @@ private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
 /**
  * Connected chest are a set of chests that all share the same content at possibly different locations.
  */
-object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), BlockClickable, InventoryHolder {
+object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), BlockClickable, Inventoryable {
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */
@@ -51,14 +52,13 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         invList.add(inv)
     }
 
-    @EventHandler
-    fun onInventoryClose(e: InventoryCloseEvent) {
+    override fun inventoryClose(e: InventoryCloseEvent) {
         val inv = invList.find { it.inventory == e.inventory } ?: return
         HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Merge)
         invList.remove(inv)
     }
-
-    override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest inventories are stored in inventoryMap.") }
+    
+    override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest holds multiple inventories.") }
 }
 
 @Entity
