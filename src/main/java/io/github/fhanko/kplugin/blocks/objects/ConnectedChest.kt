@@ -10,6 +10,8 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
@@ -22,8 +24,6 @@ private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
  * Connected chest are a set of chests that all share the same content at possibly different locations.
  */
 object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), BlockClickable, InventoryHolder {
-    private var inventoryMap = HibernateUtil.loadAll(KInventory::class.java)?.toMutableList() ?: mutableListOf<KInventory>()
-
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */
@@ -36,19 +36,26 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
         HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Persist)
 
         markItem(i, CHEST_KEY, PersistentDataType.INTEGER, inv.id)
-        inventoryMap.add(inv)
 
         i.amount = amount
         player.inventory.addItem(i)
     }
 
+    private val invList = mutableSetOf<KInventory>()
     override fun rightClick(e: PlayerInteractEvent) {
         e.isCancelled = true
 
         val ci: Int = readBlock(e.clickedBlock!!, CHEST_KEY, PersistentDataType.INTEGER)
-        val inv = inventoryMap.find { it.id == ci } ?: return
+        val inv = HibernateUtil.loadEntity(KInventory::class.java, ci) ?: return
         e.player.openInventory(inv.inventory)
+        invList.add(inv)
+    }
+
+    @EventHandler
+    fun onInventoryClose(e: InventoryCloseEvent) {
+        val inv = invList.find { it.inventory == e.inventory } ?: return
         HibernateUtil.saveEntity(inv, HibernateUtil.Operation.Merge)
+        invList.remove(inv)
     }
 
     override fun getInventory(): Inventory { throw Exception("Unreachable. ConnectedChest inventories are stored in inventoryMap.") }
@@ -56,7 +63,6 @@ object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), Block
 
 @Entity
 class KInventory(
-    @Column(columnDefinition = "CLOB") @Convert(converter = InventoryConverter::class)
-    var inventory: Inventory) {
+    @Column(columnDefinition = "CLOB") @Convert(converter = InventoryConverter::class) var inventory: Inventory) {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int = 0
 }
