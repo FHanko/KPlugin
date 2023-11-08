@@ -4,6 +4,7 @@ import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemClickable
 import io.github.fhanko.kplugin.items.ItemEquippable
+import io.github.fhanko.kplugin.util.Schedulable
 import io.github.fhanko.kplugin.zones.ZoneChunkMap
 import io.github.fhanko.kplugin.zones.objects.ZoneHeal
 import org.bukkit.Location
@@ -12,7 +13,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 
-object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube zones")), ItemClickable, ItemEquippable {
+object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube zones")), ItemClickable, ItemEquippable, Schedulable {
     private val zoneItemMap = mutableMapOf<Player, Location>()
 
     override fun leftClick(e: PlayerInteractEvent) {
@@ -34,21 +35,21 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
         }
     }
 
-    private val visualisationTaskMap = mutableMapOf<Player, Int>()
     override fun equip(p: Player, e: ItemEquippable.EquipType) {
-        val tid = KPlugin.instance.server.scheduler.scheduleSyncRepeatingTask(KPlugin.instance, {
-            ZoneChunkMap.getZones(p.chunk)?.forEach { z ->
-                z.borders.forEach {
-                    p.world.spawnParticle(Particle.REDSTONE, it,3, Particle.DustOptions(z.borderColor, 0.5f))
-                }
+        scheduleRepeat(p.uniqueId.toString(), 200, p)
+    }
+
+    override fun runSchedule(vararg params: Any) {
+        val p = params[0] as Player
+        ZoneChunkMap.getZones(p.chunk)?.forEach { z ->
+            z.borders.forEach {
+                p.world.spawnParticle(Particle.REDSTONE, it,3, Particle.DustOptions(z.borderColor, 0.5f))
             }
-        }, 0, 10)
-        visualisationTaskMap[p] = tid
+        }
     }
 
     override fun unequip(p: Player, e: ItemEquippable.EquipType) {
-        if (!visualisationTaskMap.containsKey(p)) return
-        KPlugin.instance.server.scheduler.cancelTask(visualisationTaskMap[p]!!)
+        cancelSchedule(p.uniqueId.toString())
     }
 }
 

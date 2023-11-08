@@ -32,7 +32,7 @@ class Cooldown(
 @Entity
 class CooldownCard(uuid: UUID, name: String): PlayerCard(uuid, name) {
     @ElementCollection(fetch = FetchType.EAGER)
-    open val cooldowns = mutableListOf<Cooldown>()
+    val cooldowns = mutableListOf<Cooldown>()
 
     fun getCooldown(hash: String) = cooldowns.find{ it ->
         it.hash == hash && it.time > Timestamp(System.currentTimeMillis())}?.time?.time?.minus(System.currentTimeMillis())
