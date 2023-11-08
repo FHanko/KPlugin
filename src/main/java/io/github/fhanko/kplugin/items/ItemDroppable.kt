@@ -7,6 +7,9 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
+/**
+ * Implementable for subclasses of ItemBase to override drop and pickup functions.
+ */
 interface ItemDroppable: Listener, ItemComparable {
     fun drop(p: Player, i: Item) { }
     @EventHandler

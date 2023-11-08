@@ -6,6 +6,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 
+/**
+ * Implementable for subclasses of ItemBase to override left- and right click functions.
+ */
 interface ItemClickable: Listener, ItemComparable {
     fun leftClick(e: PlayerInteractEvent) { }
     fun rightClick(e: PlayerInteractEvent) { }

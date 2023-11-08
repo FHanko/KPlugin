@@ -3,11 +3,9 @@ package io.github.fhanko.kplugin.util
 
 import jakarta.persistence.*
 import org.bukkit.entity.Player
-import java.io.Serializable
 import java.math.BigDecimal
 import java.sql.Timestamp
 import java.util.*
-import kotlin.jvm.Transient
 
 @MappedSuperclass
 open class PlayerCard(
