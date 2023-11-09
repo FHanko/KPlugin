@@ -1,28 +1,20 @@
 package io.github.fhanko.kplugin
 
 import io.github.fhanko.kplugin.blocks.BlockBase
-import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.util.KPluginEvent
-import io.github.fhanko.kplugin.util.rem
+import io.github.fhanko.kplugin.blocks.BlockClickable
+import io.github.fhanko.kplugin.items.*
+import io.github.fhanko.kplugin.items.objects.TestItem.armourSlot
+import io.github.fhanko.kplugin.util.HibernateUtil
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
-import org.bukkit.Bukkit
 import org.bukkit.World
-import org.bukkit.block.Block
-import org.bukkit.block.BlockFace
-import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.*
 import org.bukkit.event.world.WorldSaveEvent
-import org.bukkit.inventory.CraftingInventory
-import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.InventoryView
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Vector
 
 /**
  * Addresses event efficiency concerns by handling them once and firing custom Events
@@ -35,100 +27,62 @@ class VanillaEventListener: Listener {
 
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
-        if (ItemBase.isMarked(e.item)) {
-            val event = KPluginInteractItemEvent(e.player, e.action, e.item, e.clickedBlock,
-                                                 e.blockFace, e.hand, e.interactionPoint?.rem(1))
-            Bukkit.getPluginManager().callEvent(event)
-            e.setUseItemInHand(event.baseEvent.useItemInHand())
-        }
-
-        if (BlockBase.isMarked(e.clickedBlock)) {
-            val event = KPluginInteractBlockEvent(e.player, e.action, e.item, e.clickedBlock,
-                                                  e.blockFace, e.hand, e.interactionPoint?.rem(1))
-            Bukkit.getPluginManager().callEvent(event)
-            e.setUseInteractedBlock(event.baseEvent.useInteractedBlock())
-        }
+        ItemBase.get(e.item)?.also { if (it is ItemClickable) it.onInteract(e) }
+        BlockBase.get(e.clickedBlock)?.also { if (it is BlockClickable) it.onInteract(e) }
     }
 
     @EventHandler
     fun onCraft(e: PrepareItemCraftEvent) {
-        if (e.inventory.any { ItemBase.isMarked(it) }) {
-            val event = KPluginPrepareItemCraftEvent(e.inventory, e.view, e.isRepair)
-            Bukkit.getPluginManager().callEvent(event)
+        e.inventory.forEach { ing ->
+            ItemBase.get(ing)?.also { if (it is ItemCraftable) it.craft(e) }
         }
     }
 
     @EventHandler
     fun onDrop(e: PlayerDropItemEvent) {
-        if (ItemBase.isMarked(e.itemDrop.itemStack)) {
-            val event = KPluginPlayerDropItemEvent(e.player, e.itemDrop)
-            Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.baseEvent.isCancelled
-        }
+        ItemBase.get(e.itemDrop.itemStack)?.also { if (it is ItemDroppable) it.drop(e) }
     }
 
     @EventHandler
     fun onPickup(e: EntityPickupItemEvent) {
         if (e !is Player) return
-        if (ItemBase.isMarked(e.item.itemStack)) {
-            val event = KPluginPlayerPickupItemEvent(e.player!!, e.item, e.remaining)
-            Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.baseEvent.isCancelled
-        }
+        ItemBase.get(e.item.itemStack)?.also { if (it is ItemDroppable) it.pickup(e) }
     }
 
     @EventHandler
     fun onHeld(e: PlayerItemHeldEvent) {
-        if (ItemBase.isMarked(e.player.inventory.getItem(e.newSlot)) || ItemBase.isMarked(e.player.inventory.getItem(e.previousSlot))) {
-            val event = KPluginPlayerItemHeldEvent(e.player, e.previousSlot, e.newSlot)
-            Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.baseEvent.isCancelled
-        }
+        val baseNew = ItemBase.get(e.player.inventory.getItem(e.newSlot))
+        val baseOld = ItemBase.get(e.player.inventory.getItem(e.previousSlot))
+        // Don't equip a swap to the same item
+        if (baseNew != null && baseOld != null && baseNew.id == baseOld.id) return
+        baseNew?.also { if (it is ItemEquippable) it.equip(e.player, ItemEquippable.EquipType.Hand) }
+        baseOld?.also { if (it is ItemEquippable) it.unequip(e.player, ItemEquippable.EquipType.Hand) }
     }
 
     @EventHandler
     fun onSlotChange(e: PlayerInventorySlotChangeEvent) {
-        if (ItemBase.isMarked(e.oldItemStack) || ItemBase.isMarked(e.newItemStack)) {
-            val event = KPluginPlayerInventorySlotChangeEvent(e.player, e.rawSlot, e.oldItemStack, e.newItemStack)
-            Bukkit.getPluginManager().callEvent(event)
+        val baseNew = ItemBase.get(e.newItemStack)
+        val baseOld = ItemBase.get(e.oldItemStack)
+        // Don't equip a swap to the same item
+        if (baseNew != null && baseOld != null && baseNew.id == baseOld.id) return
+        if (baseNew is ItemEquippable) baseNew.also {
+            if (e.slot == e.player.inventory.heldItemSlot) baseNew.equip(e.player, ItemEquippable.EquipType.Hand)
+            else if (e.slot == baseNew.armourSlot().slot) baseNew.equip(e.player, ItemEquippable.EquipType.Armour)
+        }
+        if (baseOld is ItemEquippable) baseOld.also {
+            if (e.slot == e.player.inventory.heldItemSlot) baseOld.unequip(e.player, ItemEquippable.EquipType.Hand)
+            else if (e.slot == baseOld.armourSlot().slot) baseOld.unequip(e.player, ItemEquippable.EquipType.Armour)
         }
     }
 
     @EventHandler
     fun onItemDamage(e: PlayerItemDamageEvent) {
-        if (ItemBase.isMarked(e.item)) {
-            val event = KPluginPlayerItemDamageEvent(e.player, e.item, e.damage, e.originalDamage)
-            Bukkit.getPluginManager().callEvent(event)
-            e.isCancelled = event.baseEvent.isCancelled
-        }
+        ItemBase.get(e.item)?.also { if (it is ItemDamageable) it.damage(e) }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     fun onWorldSave(e: WorldSaveEvent) {
-        val event1 = KPluginPreWorldSaveEvent(e.world)
-        val event2 = KPluginPostWorldSaveEvent(e.world)
-        Bukkit.getPluginManager().callEvent(event1)
-        Bukkit.getPluginManager().callEvent(event2)
+        if (e.world.environment != World.Environment.NORMAL) return
+        HibernateUtil.postWorldSave(e)
     }
 }
-
-class KPluginInteractItemEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
-    KPluginEvent() { val baseEvent = PlayerInteractEvent(p, a, i, b, bf, e, v) }
-class KPluginInteractBlockEvent(p: Player, a: Action, i: ItemStack?, b: Block?, bf: BlockFace, e: EquipmentSlot?, v: Vector?):
-    KPluginEvent() { val baseEvent = PlayerInteractEvent(p, a, i, b, bf, e, v) }
-class KPluginPrepareItemCraftEvent(c: CraftingInventory, i: InventoryView, ir: Boolean):
-    KPluginEvent() { val baseEvent = PrepareItemCraftEvent(c, i, ir) }
-class KPluginPlayerDropItemEvent(p: Player, i: Item):
-    KPluginEvent() { val baseEvent = PlayerDropItemEvent(p, i) }
-class KPluginPlayerPickupItemEvent(p: Player, i: Item, r: Int):
-    KPluginEvent() { val baseEvent = EntityPickupItemEvent(p, i, r) }
-class KPluginPlayerItemHeldEvent(p: Player, pr: Int, c: Int):
-    KPluginEvent() { val baseEvent = PlayerItemHeldEvent(p, pr, c) }
-class KPluginPlayerInventorySlotChangeEvent(p: Player, r: Int, o: ItemStack, n: ItemStack):
-    KPluginEvent() { val baseEvent = PlayerInventorySlotChangeEvent(p, r, o, n) }
-class KPluginPlayerItemDamageEvent(p: Player, w: ItemStack, d: Int, o: Int):
-    KPluginEvent() { val baseEvent = PlayerItemDamageEvent(p, w, d, o) }
-class KPluginPreWorldSaveEvent(w: World):
-    KPluginEvent() { val baseEvent = WorldSaveEvent(w) }
-class KPluginPostWorldSaveEvent(w: World):
-    KPluginEvent() { val baseEvent = WorldSaveEvent(w) }

@@ -8,6 +8,7 @@ import io.github.fhanko.kplugin.util.Cooldownable
 import org.bukkit.Material
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
 object TestItem: ItemBase(0, Material.DIAMOND, "Test"), ItemEquippable, ItemDroppable, ItemClickable, Cooldownable {
@@ -19,8 +20,8 @@ object TestItem: ItemBase(0, Material.DIAMOND, "Test"), ItemEquippable, ItemDrop
         p.sendMessage("Unequipped test")
     }
 
-    override fun drop(p: Player, i: Item) {
-        p.sendMessage("Dropped test")
+    override fun drop(e: PlayerDropItemEvent) {
+        e.player.sendMessage("Dropped test")
     }
 
     override fun getCooldown() = 2500L

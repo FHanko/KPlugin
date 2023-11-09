@@ -9,7 +9,7 @@ import java.io.Serializable
 import java.util.concurrent.LinkedBlockingQueue
 
 
-object HibernateUtil: Listener, PostWorldSaveable {
+object HibernateUtil: Listener {
     private lateinit var em: EntityManager
 
     fun createSessionFactory() {
@@ -98,7 +98,7 @@ object HibernateUtil: Listener, PostWorldSaveable {
         e.printStackTrace()
     }
 
-    override fun postWorldSave(e: WorldSaveEvent) {
+    fun postWorldSave(e: WorldSaveEvent) {
         try {
             em.flush()
             em.clear()

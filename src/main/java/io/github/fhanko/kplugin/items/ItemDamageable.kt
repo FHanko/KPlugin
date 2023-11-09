@@ -1,12 +1,10 @@
 package io.github.fhanko.kplugin.items
 
-import io.github.fhanko.kplugin.KPluginPlayerItemDamageEvent
 import io.github.fhanko.kplugin.util.mm
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
@@ -47,11 +45,5 @@ interface ItemDamageable: ItemComparable {
         Bukkit.getPluginManager().callEvent(PlayerItemDamageEvent(player, item, damage, damage))
     }
 
-    fun onDamage(e: PlayerItemDamageEvent) { }
-
-    @EventHandler
-    fun onItemDamaged(kpe: KPluginPlayerItemDamageEvent) {
-        val e = kpe.baseEvent
-        if (compareId(e.item)) { onDamage(e) }
-    }
+    fun damage(e: PlayerItemDamageEvent) { }
 }

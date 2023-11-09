@@ -4,30 +4,28 @@ import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.mm
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
-import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
 abstract class ItemBase(val id: Int, val material: Material, val name: Component, description: List<Component> = listOf()):
-    Listener, ItemComparable, Initializable {
+    ItemComparable, Initializable {
     constructor(id: Int, material: Material, name: String, description: List<String> = listOf()):
             this(id, material, Component.text(name), description.map { Component.text(it) })
 
     companion object {
         val KEY = NamespacedKey("kplugin", "itembase")
-        val itemList = mutableListOf<ItemBase>()
+        val itemList = mutableMapOf<Int, ItemBase>()
 
         /**
          * Adds item with id to given Players inventory.
          */
         fun give(player: Player, id: Int, amount: Int = 1, vararg args: String) {
-            val i = itemList.find { it.id == id } ?: return
-            i.give(player, amount, *args)
+            if (itemList.contains(id))
+                itemList[id]!!.give(player, amount, *args)
         }
 
         /**
@@ -42,17 +40,17 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
             @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
         }
 
-        fun isMarked(item: ItemStack?) : Boolean {
-            item ?: return false
-            item.itemMeta ?: return false
-            return readItem(item, KEY, PersistentDataType.INTEGER) != null
-        }
-
         fun setText(item: ItemStack, name: Component, lore: List<Component>) {
             item.editMeta {
                 it.displayName(name)
                 it.lore(lore)
             }
+        }
+
+        fun get(item: ItemStack?): ItemBase? {
+            item ?: return null
+            val itemId = readItem(item, KEY, PersistentDataType.INTEGER) ?: return null
+            return if (itemList.contains(itemId)) itemList[itemId] else null
         }
     }
 
@@ -70,12 +68,11 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     init {
         setText(item, name, description)
         markItem(item, KEY, PersistentDataType.INTEGER, id)
-        Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)
-        itemList.add(this)
+        itemList[id] = this
 
         KPlugin.instance.logger.info("Init BaseItem ${mm.serialize(name)}")
     }
 
-    override fun compareId(other: ItemStack?) =
+    fun compareId(other: ItemStack?) =
         other?.itemMeta?.persistentDataContainer?.get(KEY, PersistentDataType.INTEGER) == id
 }

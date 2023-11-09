@@ -28,9 +28,10 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
             @Suppress("Unchecked_Cast") return getBlockPdc(block).get(key, type) as Z
         }
 
-        fun isMarked(block: Block?): Boolean {
-           block ?: return false
-           return readBlock(block, KEY, PersistentDataType.INTEGER) != null
+        fun get(block: Block?): BlockBase? {
+            block ?: return null
+            val blockId = readBlock(block, KEY, PersistentDataType.INTEGER) ?: return null
+            return if (itemList.contains(blockId)) itemList[blockId] as BlockBase else null
         }
     }
 
