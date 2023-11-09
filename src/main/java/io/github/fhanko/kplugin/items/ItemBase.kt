@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
-abstract class ItemBase(val id: Int, val material: Material, val name: Component, val description: List<Component> = listOf()):
+abstract class ItemBase(val id: Int, val material: Material, val name: Component, description: List<Component> = listOf()):
     Listener, ItemComparable, Initializable {
     constructor(id: Int, material: Material, name: String, description: List<String> = listOf()):
             this(id, material, Component.text(name), description.map { Component.text(it) })
@@ -34,9 +34,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
          * Marks an Item with a PDC ID.
          */
         fun <T, Z : Any> markItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
-            val meta = item.itemMeta ?: return
-            meta.persistentDataContainer.set(key, type, value)
-            item.setItemMeta(meta)
+            item.editMeta { it.persistentDataContainer.set(key, type, value) }
         }
 
         fun <T, Z> readItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
@@ -51,10 +49,10 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         }
 
         fun setText(item: ItemStack, name: Component, lore: List<Component>) {
-            val meta = item.itemMeta
-            meta.displayName(name)
-            meta.lore(lore)
-            item.setItemMeta(meta)
+            item.editMeta {
+                it.displayName(name)
+                it.lore(lore)
+            }
         }
     }
 

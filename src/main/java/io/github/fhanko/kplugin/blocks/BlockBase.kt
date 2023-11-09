@@ -38,9 +38,9 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
     @EventHandler
     fun onPlace(e: BlockPlaceEvent) {
         if (compareId(e.itemInHand)) {
+            place(e)
             val blockData = CustomBlockData(e.blockPlaced, KPlugin.instance)
             copyPdc(e.itemInHand.itemMeta.persistentDataContainer, blockData)
-            place(e)
         }
     }
 
@@ -48,14 +48,12 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
     @EventHandler
     fun onBreak(e: BlockBreakEvent) {
         if (compareBlockId(e.block)) {
+            destroy(e)
             e.isDropItems = false
             val i = ItemStack(item)
-            val im = i.itemMeta
-            copyPdc(CustomBlockData(e.block, KPlugin.instance), im.persistentDataContainer)
-            i.itemMeta = im
+            i.editMeta { copyPdc(CustomBlockData(e.block, KPlugin.instance), it.persistentDataContainer) }
             i.amount = 1
             e.block.world.dropItemNaturally(e.block.location, i)
-            destroy(e)
         }
     }
 

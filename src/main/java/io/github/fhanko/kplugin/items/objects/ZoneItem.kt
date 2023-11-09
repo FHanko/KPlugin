@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin.items.objects
 
-import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.ItemClickable
 import io.github.fhanko.kplugin.items.ItemEquippable
