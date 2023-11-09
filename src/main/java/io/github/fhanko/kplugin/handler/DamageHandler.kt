@@ -1,5 +1,6 @@
-package io.github.fhanko.kplugin.items
+package io.github.fhanko.kplugin.handler
 
+import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.mm
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -11,13 +12,12 @@ import org.bukkit.persistence.PersistentDataType
 import kotlin.math.max
 
 private val DURABILITY_KEY = NamespacedKey("kplugin", "itemdamageable")
-
 /**
  * Implementable for subclasses of ItemBase to override onDamage function which is called on the loss of durability.
  * If the implementing ItemStack of item does not have a durability, a durability based on PersistentDataContainers can
  * be set using the durability setter and getter functions.
  */
-interface ItemDamageable: ItemComparable {
+interface DamageHandler {
     fun getDurability(item: ItemStack): Pair<Int, Int>? {
         val arr = ItemBase.readItem(item, DURABILITY_KEY, PersistentDataType.INTEGER_ARRAY) ?: return null
         return Pair(arr[0], arr[1])
@@ -26,7 +26,12 @@ interface ItemDamageable: ItemComparable {
     fun durabilityText(durability: Int, maxDurability: Int): Component? = null
 
     fun setDurability(item: ItemStack, durability: Int, maxDurability: Int) {
-        ItemBase.markItem(item, DURABILITY_KEY, PersistentDataType.INTEGER_ARRAY, arrayOf(durability, maxDurability).toIntArray())
+        ItemBase.markItem(
+            item,
+            DURABILITY_KEY,
+            PersistentDataType.INTEGER_ARRAY,
+            arrayOf(durability, maxDurability).toIntArray()
+        )
         // Remove old durabilityText and add the new one
         if (durabilityText(durability, maxDurability) != null) {
             val regex = Regex("[a-zA-Z]+")

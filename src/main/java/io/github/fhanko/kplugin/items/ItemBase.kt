@@ -11,8 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
-abstract class ItemBase(val id: Int, val material: Material, val name: Component, description: List<Component> = listOf()):
-    ItemComparable, Initializable {
+abstract class ItemBase(val id: Int, val material: Material, val name: Component, description: List<Component> = listOf()): Initializable {
     constructor(id: Int, material: Material, name: String, description: List<String> = listOf()):
             this(id, material, Component.text(name), description.map { Component.text(it) })
 
@@ -73,6 +72,6 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         KPlugin.instance.logger.info("Init BaseItem ${mm.serialize(name)}")
     }
 
-    fun compareId(other: ItemStack?) =
+    protected fun compareId(other: ItemStack?) =
         other?.itemMeta?.persistentDataContainer?.get(KEY, PersistentDataType.INTEGER) == id
 }

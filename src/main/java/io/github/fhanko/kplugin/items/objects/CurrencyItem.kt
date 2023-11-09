@@ -1,7 +1,7 @@
 package io.github.fhanko.kplugin.items.objects
 
 import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.items.ItemClickable
+import io.github.fhanko.kplugin.handler.ClickHandler
 import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.mm
 import org.bukkit.Material
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 private val CURRENCY_KEY = NamespacedKey("kplugin", "currencyitem")
-object CurrencyItem: ItemBase(3, Material.PAPER, "$$$", listOf("Use to add to balance")), ItemClickable {
+object CurrencyItem: ItemBase(3, Material.PAPER, "$$$", listOf("Use to add to balance")), ClickHandler {
     override fun give(player: Player, amount: Int, vararg args: String) {
         val i = ItemStack(item)
         i.amount = amount

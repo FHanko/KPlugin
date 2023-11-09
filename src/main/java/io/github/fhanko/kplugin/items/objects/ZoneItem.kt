@@ -1,8 +1,8 @@
 package io.github.fhanko.kplugin.items.objects
 
 import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.items.ItemClickable
-import io.github.fhanko.kplugin.items.ItemEquippable
+import io.github.fhanko.kplugin.handler.ClickHandler
+import io.github.fhanko.kplugin.handler.EquipHandler
 import io.github.fhanko.kplugin.util.Schedulable
 import io.github.fhanko.kplugin.zones.ZoneChunkMap
 import io.github.fhanko.kplugin.zones.objects.ZoneHeal
@@ -12,7 +12,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 
-object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube zones")), ItemClickable, ItemEquippable, Schedulable {
+object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube zones")), ClickHandler, EquipHandler, Schedulable {
     private val zoneItemMap = mutableMapOf<Player, Location>()
 
     override fun leftClick(e: PlayerInteractEvent) {
@@ -34,7 +34,7 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
         }
     }
 
-    override fun equip(p: Player, e: ItemEquippable.EquipType) {
+    override fun equip(p: Player, e: EquipHandler.EquipType) {
         scheduleRepeat(p.uniqueId.toString(), 200, p)
     }
 
@@ -47,7 +47,7 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
         }
     }
 
-    override fun unequip(p: Player, e: ItemEquippable.EquipType) {
+    override fun unequip(p: Player, e: EquipHandler.EquipType) {
         cancelSchedule(p.uniqueId.toString())
     }
 }

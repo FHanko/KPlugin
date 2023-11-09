@@ -1,5 +1,5 @@
 @file:Suppress("unused")
-package io.github.fhanko.kplugin.items
+package io.github.fhanko.kplugin.handler
 
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
@@ -7,7 +7,7 @@ import org.bukkit.event.Listener
 /**
  * Implementable for subclasses of ItemBase to override item equip and unequip functions.
  */
-interface ItemEquippable: Listener, ItemComparable {
+interface EquipHandler {
     enum class EquipType { Hand, Armour }
     fun equip(p: Player, e: EquipType) { }
     fun unequip(p: Player, e: EquipType) { }

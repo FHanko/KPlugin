@@ -2,8 +2,8 @@
 package io.github.fhanko.kplugin.blocks.objects
 
 import io.github.fhanko.kplugin.blocks.BlockBase
-import io.github.fhanko.kplugin.blocks.BlockClickable
 import io.github.fhanko.kplugin.gui.Inventoryable
+import io.github.fhanko.kplugin.handler.ClickHandler
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.converter.InventoryConverter
 import jakarta.persistence.*
@@ -22,7 +22,7 @@ private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
 /**
  * Connected chest are a set of chests that all share the same content at possibly different locations.
  */
-object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), BlockClickable, Inventoryable {
+object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), ClickHandler, Inventoryable {
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */
@@ -41,10 +41,10 @@ object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), BlockCli
     }
 
     private val invList = mutableSetOf<KInventory>()
-    override fun rightClick(e: PlayerInteractEvent) {
+    override fun rightClickBlock(e: PlayerInteractEvent) {
         e.isCancelled = true
 
-        val ci: Int = readBlock(e.clickedBlock!!, CHEST_KEY, PersistentDataType.INTEGER)
+        val ci: Int = readBlock(e.clickedBlock, CHEST_KEY, PersistentDataType.INTEGER) ?: return
         val inv = HibernateUtil.loadEntity(KInventory::class.java, ci) ?: return
         e.player.openInventory(inv.inventory)
         invList.add(inv)

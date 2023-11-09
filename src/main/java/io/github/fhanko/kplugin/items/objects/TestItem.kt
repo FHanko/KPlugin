@@ -1,22 +1,21 @@
 package io.github.fhanko.kplugin.items.objects
 
 import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.items.ItemClickable
-import io.github.fhanko.kplugin.items.ItemDroppable
-import io.github.fhanko.kplugin.items.ItemEquippable
+import io.github.fhanko.kplugin.handler.ClickHandler
+import io.github.fhanko.kplugin.handler.DropHandler
+import io.github.fhanko.kplugin.handler.EquipHandler
 import io.github.fhanko.kplugin.util.Cooldownable
 import org.bukkit.Material
-import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
-object TestItem: ItemBase(0, Material.DIAMOND, "Test"), ItemEquippable, ItemDroppable, ItemClickable, Cooldownable {
-    override fun equip(p: Player, e: ItemEquippable.EquipType) {
+object TestItem: ItemBase(0, Material.DIAMOND, "Test"), EquipHandler, DropHandler, ClickHandler, Cooldownable {
+    override fun equip(p: Player, e: EquipHandler.EquipType) {
         p.sendMessage("Equipped test")
     }
 
-    override fun unequip(p: Player, e: ItemEquippable.EquipType) {
+    override fun unequip(p: Player, e: EquipHandler.EquipType) {
         p.sendMessage("Unequipped test")
     }
 
