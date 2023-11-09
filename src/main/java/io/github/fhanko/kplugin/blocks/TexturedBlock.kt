@@ -45,6 +45,6 @@ abstract class TexturedBlock(texture: String, private val overrideMaterial: Mate
     }
 
     override fun destroy(e: BlockBreakEvent) {
-        e.block.world.getNearbyEntitiesByType(ItemDisplay::class.java, e.block.location.add(OFFSET), 0.005, 0.005, 0.005).forEach { it.remove() }
+        e.block.chunk.entities.forEach { if (it.location == e.block.location.add(OFFSET)) it.remove() }
     }
 }

@@ -13,10 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 @Suppress("LeakingThis")
-open class GUI(size: Int): Listener, Inventoryable {
-    init {
-        Bukkit.getPluginManager().registerEvents(this, KPlugin.instance)
-    }
+open class GUI(size: Int): Inventoryable {
     companion object {
         fun parse(guiString: String): GUI = GUI(guiString.length).apply { this.guiString = guiString }
     }

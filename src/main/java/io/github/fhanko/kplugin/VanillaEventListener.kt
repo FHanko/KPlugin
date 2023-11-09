@@ -2,6 +2,7 @@ package io.github.fhanko.kplugin
 
 import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.blocks.BlockBase
+import io.github.fhanko.kplugin.gui.Inventoryable
 import io.github.fhanko.kplugin.handler.*
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.HibernateUtil
@@ -15,6 +16,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityPickupItemEvent
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.*
 import org.bukkit.event.world.WorldSaveEvent
@@ -112,5 +116,26 @@ class VanillaEventListener: Listener {
             i.amount = 1
             e.block.world.dropItemNaturally(e.block.location, i)
         }
+    }
+
+    @EventHandler
+    fun onInventoryClose(e: InventoryCloseEvent) {
+        val holder = e.inventory.holder
+        if (holder is Inventoryable)
+            holder.inventoryClose(e)
+    }
+
+    @EventHandler
+    fun onInventoryOpen(e: InventoryOpenEvent) {
+        val holder = e.inventory.holder
+        if (holder is Inventoryable)
+            holder.inventoryOpen(e)
+    }
+
+    @EventHandler
+    fun onInventoryClick(e: InventoryClickEvent) {
+        val holder = e.inventory.holder
+        if (holder is Inventoryable)
+            holder.inventoryClick(e)
     }
 }
