@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin.handler
 
-import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 

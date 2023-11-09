@@ -1,7 +1,7 @@
 package io.github.fhanko.kplugin.items.objects
 
-import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.handler.ClickHandler
+import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.mm
 import org.bukkit.Material

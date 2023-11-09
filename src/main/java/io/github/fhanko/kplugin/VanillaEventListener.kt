@@ -3,7 +3,7 @@ package io.github.fhanko.kplugin
 import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.handler.*
-import io.github.fhanko.kplugin.items.*
+import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.copyPdc
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent

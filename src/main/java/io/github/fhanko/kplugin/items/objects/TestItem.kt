@@ -1,9 +1,9 @@
 package io.github.fhanko.kplugin.items.objects
 
-import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.handler.ClickHandler
 import io.github.fhanko.kplugin.handler.DropHandler
 import io.github.fhanko.kplugin.handler.EquipHandler
+import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.Cooldownable
 import org.bukkit.Material
 import org.bukkit.entity.Player

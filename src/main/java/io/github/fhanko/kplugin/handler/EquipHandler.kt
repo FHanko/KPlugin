@@ -2,7 +2,6 @@
 package io.github.fhanko.kplugin.handler
 
 import org.bukkit.entity.Player
-import org.bukkit.event.Listener
 
 /**
  * Implementable for subclasses of ItemBase to override item equip and unequip functions.
