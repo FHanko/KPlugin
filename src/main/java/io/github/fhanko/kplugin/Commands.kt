@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.FloatArgument
 import dev.jorel.commandapi.arguments.IntegerArgument
 import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
+import io.github.fhanko.kplugin.gui.objects.GiveGUI
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.objects.CurrencyItem
 import io.github.fhanko.kplugin.util.EconomyCard
@@ -17,6 +18,10 @@ import java.math.RoundingMode
 object Commands: Initializable {
     init { register() }
     fun register() {
+        CommandAPICommand("givekp").executesPlayer(PlayerCommandExecutor { p, _ ->
+            p.openInventory(GiveGUI.inventory)
+        }).register()
+
         CommandAPICommand("givekp")
             .withArguments(listOf(IntegerArgument("id"), IntegerArgument("amount")))
             .withOptionalArguments(StringArgument("options"))

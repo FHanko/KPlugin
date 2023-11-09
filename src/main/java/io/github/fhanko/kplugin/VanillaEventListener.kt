@@ -3,6 +3,7 @@ package io.github.fhanko.kplugin
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.KPluginEvent
+import io.github.fhanko.kplugin.util.rem
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
 import org.bukkit.Bukkit
 import org.bukkit.World
@@ -36,14 +37,14 @@ class VanillaEventListener: Listener {
     fun onInteract(e: PlayerInteractEvent) {
         if (ItemBase.isMarked(e.item)) {
             val event = KPluginInteractItemEvent(e.player, e.action, e.item, e.clickedBlock,
-                                                 e.blockFace, e.hand, e.clickedPosition)
+                                                 e.blockFace, e.hand, e.interactionPoint?.rem(1))
             Bukkit.getPluginManager().callEvent(event)
             e.setUseItemInHand(event.baseEvent.useItemInHand())
         }
 
         if (BlockBase.isMarked(e.clickedBlock)) {
             val event = KPluginInteractBlockEvent(e.player, e.action, e.item, e.clickedBlock,
-                                                  e.blockFace, e.hand, e.clickedPosition)
+                                                  e.blockFace, e.hand, e.interactionPoint?.rem(1))
             Bukkit.getPluginManager().callEvent(event)
             e.setUseInteractedBlock(event.baseEvent.useInteractedBlock())
         }

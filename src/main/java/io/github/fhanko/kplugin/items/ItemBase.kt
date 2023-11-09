@@ -65,7 +65,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         player.inventory.addItem(i)
     }
 
-    protected var item: ItemStack = ItemStack(material)
+    val item: ItemStack = ItemStack(material)
 
     init {
         setText(item, name, description)

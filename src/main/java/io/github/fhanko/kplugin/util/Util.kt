@@ -1,9 +1,11 @@
 package io.github.fhanko.kplugin.util
 
 import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.util.Vector
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -54,4 +56,8 @@ fun hash(input:String): String {
 
 fun Double.roundTo(n : Int) : Double {
     return "%.${n}f".format(this).toDouble()
+}
+
+fun Location.rem(mod: Int): Vector {
+    return Vector(x % mod, y % mod, z % mod)
 }

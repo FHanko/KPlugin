@@ -3,8 +3,8 @@ package io.github.fhanko.kplugin.blocks.objects
 
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.blocks.BlockClickable
+import io.github.fhanko.kplugin.gui.Inventoryable
 import io.github.fhanko.kplugin.util.HibernateUtil
-import io.github.fhanko.kplugin.util.Inventoryable
 import io.github.fhanko.kplugin.util.converter.InventoryConverter
 import jakarta.persistence.*
 import org.bukkit.Material
@@ -22,7 +22,7 @@ private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
 /**
  * Connected chest are a set of chests that all share the same content at possibly different locations.
  */
-object ConnectedChest: BlockBase(1001, Material.CHEST, "Connected Chest"), BlockClickable, Inventoryable {
+object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), BlockClickable, Inventoryable {
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */

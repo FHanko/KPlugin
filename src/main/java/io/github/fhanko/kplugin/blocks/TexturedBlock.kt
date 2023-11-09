@@ -16,6 +16,8 @@ import org.bukkit.util.Vector
 import java.util.*
 
 val OFFSET = Vector(0.5, 1.01, 0.5)
+//Get textures from
+//https://minecraft-heads.com
 abstract class TexturedBlock(texture: String, private val overrideMaterial: Material, id: Int, name: Component, lore: List<Component> = mutableListOf()): BlockBase(id, Material.PLAYER_HEAD, name, lore) {
     private lateinit var display: ItemDisplay
     init {

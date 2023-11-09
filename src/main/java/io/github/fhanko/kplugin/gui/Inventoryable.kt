@@ -1,15 +1,15 @@
-package io.github.fhanko.kplugin.util
+package io.github.fhanko.kplugin.gui
 
 import org.bukkit.event.EventHandler
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.event.inventory.InventoryInteractEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.InventoryHolder
 
 interface Inventoryable: InventoryHolder {
     fun inventoryClose(e: InventoryCloseEvent) { }
     fun inventoryOpen(e: InventoryOpenEvent) { }
-    fun inventoryInteract(e: InventoryInteractEvent) { }
+    fun inventoryClick(e: InventoryClickEvent) { }
 
     @EventHandler
     fun onInventoryClose(e: InventoryCloseEvent) {
@@ -24,8 +24,8 @@ interface Inventoryable: InventoryHolder {
     }
 
     @EventHandler
-    fun onInventoryInteract(e: InventoryInteractEvent) {
+    fun onInventoryClick(e: InventoryClickEvent) {
         if (e.inventory.holder == this)
-            inventoryInteract(e)
+            inventoryClick(e)
     }
 }
