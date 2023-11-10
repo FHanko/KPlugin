@@ -3,13 +3,12 @@ package io.github.fhanko.kplugin.util
 import io.github.fhanko.kplugin.KPlugin
 import jakarta.persistence.EntityManager
 import jakarta.persistence.Persistence
-import org.bukkit.event.Listener
 import org.bukkit.event.world.WorldSaveEvent
 import java.io.Serializable
 import java.util.concurrent.LinkedBlockingQueue
 
 
-object HibernateUtil: Listener {
+object HibernateUtil {
     private lateinit var em: EntityManager
 
     fun createSessionFactory() {

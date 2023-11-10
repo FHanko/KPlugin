@@ -1,19 +1,17 @@
 package io.github.fhanko.kplugin.gui
 
-import io.github.fhanko.kplugin.KPlugin
+import io.github.fhanko.kplugin.gui.handler.InventoryHandler
 import net.kyori.adventure.text.Component
 import net.minecraft.world.item.ItemStack
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack
 import org.bukkit.entity.Player
-import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
 @Suppress("LeakingThis")
-open class GUI(size: Int): Inventoryable {
+open class GUI(size: Int): InventoryHandler {
     companion object {
         fun parse(guiString: String): GUI = GUI(guiString.length).apply { this.guiString = guiString }
     }

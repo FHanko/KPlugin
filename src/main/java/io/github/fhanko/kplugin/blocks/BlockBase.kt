@@ -2,7 +2,7 @@ package io.github.fhanko.kplugin.blocks
 
 import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.KPlugin
-import io.github.fhanko.kplugin.handler.PlaceHandler
+import io.github.fhanko.kplugin.blocks.handler.PlaceHandler
 import io.github.fhanko.kplugin.items.ItemBase
 import net.kyori.adventure.text.Component
 import org.bukkit.Material

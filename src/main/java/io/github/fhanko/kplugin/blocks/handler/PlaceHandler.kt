@@ -1,4 +1,4 @@
-package io.github.fhanko.kplugin.handler
+package io.github.fhanko.kplugin.blocks.handler
 
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent

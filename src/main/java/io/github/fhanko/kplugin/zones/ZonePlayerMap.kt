@@ -1,11 +1,12 @@
 package io.github.fhanko.kplugin.zones
 
+import io.github.fhanko.kplugin.util.Initializable
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 
-class ZonePlayerMap : Listener {
+class ZonePlayerMap : Listener, Initializable {
     private val map = mutableMapOf<Player, HashSet<Zone>>()
 
     @EventHandler

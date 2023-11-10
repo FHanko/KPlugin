@@ -1,7 +1,7 @@
 package io.github.fhanko.kplugin.blocks.objects
 
 import io.github.fhanko.kplugin.blocks.TexturedBlock
-import io.github.fhanko.kplugin.handler.ClickHandler
+import io.github.fhanko.kplugin.items.handler.ClickHandler
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent

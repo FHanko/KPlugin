@@ -2,8 +2,8 @@
 package io.github.fhanko.kplugin.blocks.objects
 
 import io.github.fhanko.kplugin.blocks.BlockBase
-import io.github.fhanko.kplugin.gui.Inventoryable
-import io.github.fhanko.kplugin.handler.ClickHandler
+import io.github.fhanko.kplugin.gui.handler.InventoryHandler
+import io.github.fhanko.kplugin.items.handler.ClickHandler
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.converter.InventoryConverter
 import jakarta.persistence.*
@@ -22,7 +22,7 @@ private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
 /**
  * Connected chest are a set of chests that all share the same content at possibly different locations.
  */
-object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), ClickHandler, Inventoryable {
+object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), ClickHandler, InventoryHandler {
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */

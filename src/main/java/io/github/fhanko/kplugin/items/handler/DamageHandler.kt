@@ -1,4 +1,4 @@
-package io.github.fhanko.kplugin.handler
+package io.github.fhanko.kplugin.items.handler
 
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.mm

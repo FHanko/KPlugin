@@ -1,39 +1,26 @@
-package io.github.fhanko.kplugin
+package io.github.fhanko.kplugin.items.handler
 
-import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.blocks.BlockBase
-import io.github.fhanko.kplugin.gui.Inventoryable
-import io.github.fhanko.kplugin.handler.*
 import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.util.HibernateUtil
-import io.github.fhanko.kplugin.util.copyPdc
+import io.github.fhanko.kplugin.util.Initializable
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
-import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityPickupItemEvent
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
-import org.bukkit.event.player.*
-import org.bukkit.event.world.WorldSaveEvent
-import org.bukkit.inventory.ItemStack
+import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerItemDamageEvent
+import org.bukkit.event.player.PlayerItemHeldEvent
 
 /**
+ * Event listener for item handler
+ *
  * Addresses event efficiency concerns by handling them once and firing handler functions
  * instead of firing all events on all items.
  */
-class VanillaEventListener: Listener {
-    @EventHandler
-    fun onJoin(e: PlayerJoinEvent) {
-        e.player.sendMessage("Welcome!")
-    }
-
+object ItemListener: Listener, Initializable {
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
         ItemBase.get(e.item)?.also { if (it is ClickHandler) it.onInteract(e) }
@@ -87,55 +74,5 @@ class VanillaEventListener: Listener {
     @EventHandler
     fun onItemDamage(e: PlayerItemDamageEvent) {
         ItemBase.get(e.item)?.also { if (it is DamageHandler) it.damage(e) }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    fun onWorldSave(e: WorldSaveEvent) {
-        if (e.world.environment != World.Environment.NORMAL) return
-        HibernateUtil.postWorldSave(e)
-    }
-
-    @EventHandler
-    fun onPlace(e: BlockPlaceEvent) {
-        val base = ItemBase.get(e.itemInHand)
-        if (base is PlaceHandler) base.also {
-            it.place(e)
-            val blockData = CustomBlockData(e.blockPlaced, KPlugin.instance)
-            copyPdc(e.itemInHand.itemMeta.persistentDataContainer, blockData)
-        }
-    }
-
-    @EventHandler
-    fun onBreak(e: BlockBreakEvent) {
-        val base = BlockBase.get(e.block)
-        if (base is PlaceHandler) base.also {
-            it.destroy(e)
-            e.isDropItems = false
-            val i = ItemStack(it.item)
-            i.editMeta { im -> copyPdc(CustomBlockData(e.block, KPlugin.instance), im.persistentDataContainer) }
-            i.amount = 1
-            e.block.world.dropItemNaturally(e.block.location, i)
-        }
-    }
-
-    @EventHandler
-    fun onInventoryClose(e: InventoryCloseEvent) {
-        val holder = e.inventory.holder
-        if (holder is Inventoryable)
-            holder.inventoryClose(e)
-    }
-
-    @EventHandler
-    fun onInventoryOpen(e: InventoryOpenEvent) {
-        val holder = e.inventory.holder
-        if (holder is Inventoryable)
-            holder.inventoryOpen(e)
-    }
-
-    @EventHandler
-    fun onInventoryClick(e: InventoryClickEvent) {
-        val holder = e.inventory.holder
-        if (holder is Inventoryable)
-            holder.inventoryClick(e)
     }
 }
