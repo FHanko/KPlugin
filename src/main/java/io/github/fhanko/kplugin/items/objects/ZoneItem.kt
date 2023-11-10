@@ -35,10 +35,10 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
     }
 
     override fun equip(p: Player, e: EquipHandler.EquipType) {
-        scheduleRepeat(p.uniqueId.toString(), 200, p)
+        scheduleRepeat(p.uniqueId.toString(), 200, ::showParticle, p)
     }
 
-    override fun runSchedule(vararg params: Any) {
+    private fun showParticle(params: List<Any>) {
         val p = params[0] as Player
         ZoneChunkMap.getZones(p.chunk)?.forEach { z ->
             z.borders.forEach {
