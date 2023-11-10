@@ -10,10 +10,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.world.WorldSaveEvent
 
 /**
- * Addresses event efficiency concerns by handling them once and firing handler functions
- * instead of firing all events on all items.
+ * This listener handles events which are not specifically related to any of the other packages
  */
-class DefaultListener: Listener, Initializable {
+object DefaultListener: Listener, Initializable {
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
         e.player.sendMessage("Welcome!")

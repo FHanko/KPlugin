@@ -1,7 +1,6 @@
 package io.github.fhanko.kplugin.util
 
 import io.github.fhanko.kplugin.KPlugin
-import io.github.fhanko.kplugin.zones.ZonePlayerMap
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.reflections.Reflections

@@ -21,16 +21,6 @@ abstract class Zone: Serializable {
     abstract fun chunkList(): Set<Chunk>
 
     /**
-     * Called when a player enters this Zone
-     */
-    open fun enter(p: Player) { }
-
-    /**
-     * Called when a player leaves this Zone
-     */
-    open fun leave(p: Player) { }
-
-    /**
      * Borders of the zone
      */
     abstract val borders: List<Location>

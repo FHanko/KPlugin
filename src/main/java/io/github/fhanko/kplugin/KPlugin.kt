@@ -6,8 +6,6 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.Init
 import io.github.fhanko.kplugin.zones.ZoneCommands
-import io.github.fhanko.kplugin.zones.ZonePlayerMap
-import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("Unused")

@@ -17,7 +17,7 @@ import java.math.RoundingMode
 
 object Commands: Initializable {
     init { register() }
-    fun register() {
+    private fun register() {
         CommandAPICommand("givekp").executesPlayer(PlayerCommandExecutor { p, _ ->
             p.openInventory(GiveGUI.inventory)
         }).register()
