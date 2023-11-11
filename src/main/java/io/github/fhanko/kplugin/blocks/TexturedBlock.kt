@@ -2,7 +2,6 @@ package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
-import io.github.fhanko.kplugin.util.Rotation
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -13,6 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.util.Vector
+import org.joml.Vector3f
 import java.util.*
 
 val OFFSET = Vector(0.5, 1.01, 0.5)
@@ -34,7 +34,7 @@ abstract class TexturedBlock(texture: String, private val overrideMaterial: Mate
         t.scale.set(OFFSET.y * 2)
         val angle = (360 - p.yaw + 180)
         val angleSnapped = (Math.round(angle / 90) * 90) + 180
-        t.rightRotation.set(Rotation(0f, angleSnapped.toFloat(), 0f).toQuaternionDeg())
+        t.leftRotation.fromAxisAngleDeg(Vector3f(0f, 1f, 0f), angleSnapped.toFloat())
         display.transformation = t
         display.brightness = Display.Brightness(7, 7)
     }

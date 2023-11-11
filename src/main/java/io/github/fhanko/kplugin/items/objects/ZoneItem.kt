@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.items.objects
 
+import io.github.fhanko.kplugin.display.CubeDisplay
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.handler.ClickHandler
 import io.github.fhanko.kplugin.items.handler.EquipHandler
@@ -8,7 +9,6 @@ import io.github.fhanko.kplugin.zones.ZoneChunkMap
 import io.github.fhanko.kplugin.zones.objects.ZoneHeal
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.Particle
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 
@@ -34,21 +34,17 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
         }
     }
 
+    private val cubeMap = mutableMapOf<Player, MutableList<CubeDisplay>>()
     override fun equip(p: Player, e: EquipHandler.EquipType) {
-        scheduleRepeat(p.uniqueId.toString(), 200, ::showParticle, p)
-    }
-
-    private fun showParticle(params: List<Any>) {
-        val p = params[0] as Player
-        ZoneChunkMap.getZones(p.chunk)?.forEach { z ->
-            z.borders.forEach {
-                p.world.spawnParticle(Particle.REDSTONE, it,3, Particle.DustOptions(z.borderColor, 0.5f))
-            }
+        cubeMap[p] = mutableListOf()
+        ZoneChunkMap.getRadiusZones(p.chunk, 1).forEach { z ->
+            cubeMap[p]!!.add(CubeDisplay(z.l1, z.l2))
         }
     }
 
     override fun unequip(p: Player, e: EquipHandler.EquipType) {
-        cancelSchedule(p.uniqueId.toString())
+        cubeMap[p]!!.forEach { it.remove() }
+        cubeMap[p]!!.clear()
     }
 }
 

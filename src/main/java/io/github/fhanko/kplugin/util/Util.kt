@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.util.Vector
+import org.joml.Vector3f
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -60,4 +61,8 @@ fun Double.roundTo(n : Int) : Double {
 
 fun Location.rem(mod: Int): Vector {
     return Vector(x % mod, y % mod, z % mod)
+}
+
+fun Vector.to3f(): Vector3f {
+    return Vector3f(this.x.toFloat(), this.y.toFloat(), this.z.toFloat())
 }

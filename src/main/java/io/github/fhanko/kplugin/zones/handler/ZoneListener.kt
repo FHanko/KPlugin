@@ -17,7 +17,7 @@ object ZoneListener : Listener, Initializable {
         val pzmap = playerZoneMap.getOrPut(e.player) { HashSet() }
         val zoneCollisions = (ZoneChunkMap.getZones(e.player.chunk)?.filter { z->
             z is EnterHandler && z.isIn(e.player.location.add(0.0, 1.0, 0.0))
-        } ?: HashSet<Zone>())
+        } ?: HashSet())
 
         // Enter new collisions
         zoneCollisions.forEach { z -> z as EnterHandler

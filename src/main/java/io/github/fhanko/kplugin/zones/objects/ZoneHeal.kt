@@ -1,15 +1,13 @@
 package io.github.fhanko.kplugin.zones.objects
 
 import io.github.fhanko.kplugin.util.Schedulable
-import io.github.fhanko.kplugin.zones.ZoneCube
+import io.github.fhanko.kplugin.zones.Zone
 import io.github.fhanko.kplugin.zones.handler.EnterHandler
-import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 
-class ZoneHeal(start: Location, end: Location): ZoneCube(start, end), EnterHandler, Schedulable {
-    private val tidMap = mutableMapOf<Player, Int>()
+class ZoneHeal(start: Location, end: Location): Zone(start, end), EnterHandler, Schedulable {
     override fun enter(p: Player) {
         scheduleRepeat(p.uniqueId.toString(), 1000, ::healPlayer, p)
     }
@@ -23,6 +21,4 @@ class ZoneHeal(start: Location, end: Location): ZoneCube(start, end), EnterHandl
     override fun leave(p: Player) {
         cancelSchedule(p.uniqueId.toString())
     }
-
-    override val borderColor: Color = Color.TEAL
 }

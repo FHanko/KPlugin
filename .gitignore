@@ -1,6 +1,7 @@
 # User-specific stuff
 .idea/
 src/main/java/io/github/fhanko/magicplugin
+server
 
 *.iml
 *.ipr
