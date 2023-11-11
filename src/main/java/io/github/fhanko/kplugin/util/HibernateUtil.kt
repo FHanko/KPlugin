@@ -102,7 +102,7 @@ object HibernateUtil {
     private fun rollbackTransaction(e: Exception) {
         em.transaction.rollback()
         KPlugin.instance.logger.warning(e.message)
-        e.printStackTrace()
+        KPlugin.instance.logger.warning(e.stackTraceToString())
     }
 
     fun postWorldSave(e: WorldSaveEvent) {

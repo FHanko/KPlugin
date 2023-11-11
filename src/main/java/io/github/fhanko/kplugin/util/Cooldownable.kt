@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.util
 
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 
 interface Cooldownable {
@@ -11,7 +12,7 @@ interface Cooldownable {
         val hash = hash("${p.uniqueId}$key")
         val cooldown = CooldownManager.getCooldown(hash, persist) ?: 0
         if (cooldown > 0L) {
-            p.sendMessage(cooldownMessage(cooldown))
+            if (cooldownMessage(cooldown) != Component.text("")) p.sendMessage(cooldownMessage(cooldown))
             return false
         }
         CooldownManager.setCooldown(hash, getCooldown(), persist)
