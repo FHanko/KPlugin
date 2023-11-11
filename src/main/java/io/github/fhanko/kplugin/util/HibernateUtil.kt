@@ -61,6 +61,14 @@ object HibernateUtil {
         return ret ?: false
     }
 
+    fun putEntity(id: Serializable, obj: Any): Boolean {
+        val ret = execute { session ->
+            if (!session.contains(obj) && session.find(obj::class.java, id) == null) session.persist(obj) else session.merge(obj)
+            return@execute true
+        }
+        return ret ?: false
+    }
+
     fun <T> loadAll(obj: Class<out T>): List<T>? {
         return execute { em ->
             val builder = em.criteriaBuilder
