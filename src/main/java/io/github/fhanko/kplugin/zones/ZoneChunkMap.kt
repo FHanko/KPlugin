@@ -2,6 +2,7 @@ package io.github.fhanko.kplugin.zones
 
 import io.github.fhanko.kplugin.util.FilePersistable
 import org.bukkit.Chunk
+import org.bukkit.Location
 
 private const val SAVE_FILE = "Zones.data"
 
@@ -16,6 +17,7 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
     }
 
     fun addZone(zone: Zone, save: Boolean = true) {
+        zone.create()
         val chunkList = zone.chunkList()
         chunkList.forEach {
             if (grid.containsKey(it.x to it.z)) {
@@ -27,11 +29,20 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
         if (save) save(SAVE_FILE, getZones())
     }
 
-    fun removeZone(zone: Zone) {
+    fun removeZone(zone: Zone, save: Boolean = true) {
+        zone.remove()
         val chunkList = zone.chunkList()
         chunkList.forEach {
             grid[it.x to it.z]!!.remove(zone)
         }
+        if (save) save(SAVE_FILE, getZones())
+    }
+
+    fun fromBounds(start: Location, end: Location): Zone? {
+        grid[(start.x.toInt() shr 4) to (start.z.toInt() shr 4)]?.forEach {
+            if (it.start == start && it.end == end) return it
+        }
+        return null
     }
 
     fun getZones(chunk: Chunk): HashSet<Zone>? {

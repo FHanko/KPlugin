@@ -1,13 +1,14 @@
 package io.github.fhanko.kplugin.zones
 
-import io.github.fhanko.kplugin.util.toward
+import io.github.fhanko.kplugin.util.rangeTo
 import org.bukkit.Chunk
 import org.bukkit.Location
+import org.bukkit.block.Block
 import org.bukkit.util.BoundingBox
 import java.io.Serializable
 
-abstract class Zone(val l1: Location, val l2: Location): Serializable {
-    private val box: BoundingBox = BoundingBox.of(l1, l2)
+abstract class Zone(val start: Location, val end: Location): Serializable {
+    private val box: BoundingBox = BoundingBox.of(start, end)
 
     /**
     * Returns all chunks that contain blocks of the Zone
@@ -15,13 +16,31 @@ abstract class Zone(val l1: Location, val l2: Location): Serializable {
     fun chunkList(): Set<Chunk> {
         val ret = mutableSetOf<Chunk>()
         // Block coordinate shr 4 is the chunk coordinate
-        for (x in (box.minX.toInt() shr 4) toward (box.maxX.toInt() shr 4)) {
-            for (z in (box.minZ.toInt() shr 4) toward (box.maxZ.toInt() shr 4)) {
-                ret.add(l1.world.getChunkAt(x, z))
-            }
+        for (x in (box.minX.toInt() shr 4) .. (box.maxX.toInt() shr 4))
+        for (z in (box.minZ.toInt() shr 4) .. (box.maxZ.toInt() shr 4)) {
+            ret.add(start.world.getChunkAt(x, z))
         }
         return ret
     }
+
+    @Transient lateinit var blocks: MutableList<Block>
+        private set
+    /**
+     * Called when the zone is added to the chunk map. Call super when overriding
+     */
+    open fun create() {
+        blocks = mutableListOf()
+        for (x in box.minX.rangeTo(box.maxX))
+        for (y in box.minY.rangeTo(box.maxY))
+        for (z in box.minZ.rangeTo(box.maxZ)) {
+            blocks.add(end.world.getBlockAt(x, y, z))
+        }
+    }
+
+    /**
+     * Called when the zone is removed from the chunk map.
+     */
+    open fun remove() { }
 
     /**
     * Returns true if that location is in the Zone

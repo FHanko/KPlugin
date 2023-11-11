@@ -18,7 +18,7 @@ import java.util.*
 val OFFSET = Vector(0.5, 1.01, 0.5)
 //Get textures from
 //https://minecraft-heads.com
-abstract class TexturedBlock(texture: String, private val overrideMaterial: Material, id: Int, name: Component, lore: List<Component> = mutableListOf()): BlockBase(id, Material.PLAYER_HEAD, name, lore) {
+abstract class TexturedBlock(texture: String, id: Int, private val overrideMaterial: Material, name: Component, lore: List<Component> = mutableListOf()): BlockBase(id, Material.PLAYER_HEAD, name, lore) {
     private lateinit var display: ItemDisplay
     init {
         val profile = Bukkit.getServer().createProfile(UUID.randomUUID())
@@ -39,11 +39,17 @@ abstract class TexturedBlock(texture: String, private val overrideMaterial: Mate
         display.brightness = Display.Brightness(7, 7)
     }
 
+    /**
+     * Covers a block in Skull texture when placed. Call super when overriding
+     */
     override fun place(e: BlockPlaceEvent) {
         coverBlock(e.block, e.player)
         e.block.type = overrideMaterial
     }
 
+    /**
+     * Removes Skull texture when destroyed. Call super when overriding
+     */
     override fun destroy(e: CustomBlockDataRemoveEvent) {
         e.block.chunk.entities.forEach { if (it.location == e.block.location.add(OFFSET)) it.remove() }
     }

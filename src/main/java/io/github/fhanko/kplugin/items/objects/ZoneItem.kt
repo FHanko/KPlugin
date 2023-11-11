@@ -38,7 +38,7 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
     override fun equip(p: Player, e: EquipHandler.EquipType) {
         cubeMap[p] = mutableListOf()
         ZoneChunkMap.getRadiusZones(p.chunk, 1).forEach { z ->
-            cubeMap[p]!!.add(CubeDisplay(z.l1, z.l2))
+            cubeMap[p]!!.add(CubeDisplay(z.start, z.end))
         }
     }
 

@@ -66,3 +66,7 @@ fun Location.rem(mod: Int): Vector {
 fun Vector.to3f(): Vector3f {
     return Vector3f(this.x.toFloat(), this.y.toFloat(), this.z.toFloat())
 }
+
+fun Double.rangeTo(to: Double): IntRange {
+    return this.toInt() .. to.toInt()
+}
