@@ -10,7 +10,6 @@ import org.bukkit.block.Block
 import org.bukkit.entity.Display
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Player
-import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.util.Vector

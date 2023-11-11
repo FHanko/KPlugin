@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin.zones.objects
 
-import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.util.Schedulable
 import io.github.fhanko.kplugin.zones.ZoneCube
 import io.github.fhanko.kplugin.zones.handler.EnterHandler

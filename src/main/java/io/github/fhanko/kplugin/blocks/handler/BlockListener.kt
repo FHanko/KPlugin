@@ -1,17 +1,14 @@
 package io.github.fhanko.kplugin.blocks.handler
 
 import com.jeff_media.customblockdata.CustomBlockData
-import com.jeff_media.customblockdata.events.CustomBlockDataEvent
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.copyPdc
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent

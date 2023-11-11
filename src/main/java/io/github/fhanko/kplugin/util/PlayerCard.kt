@@ -1,10 +1,12 @@
 @file:Suppress("unused")
 package io.github.fhanko.kplugin.util
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.MappedSuperclass
 import org.bukkit.entity.Player
 import java.math.BigDecimal
-import java.sql.Timestamp
 import java.util.*
 
 @MappedSuperclass

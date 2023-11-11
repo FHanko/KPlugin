@@ -4,7 +4,6 @@ import io.github.fhanko.kplugin.util.toward
 import org.bukkit.Chunk
 import org.bukkit.Color
 import org.bukkit.Location
-import org.bukkit.entity.Player
 import java.io.Serializable
 import kotlin.math.max
 import kotlin.math.min

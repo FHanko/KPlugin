@@ -1,7 +1,5 @@
 package io.github.fhanko.kplugin.blocks.objects
 
-import com.jeff_media.customblockdata.events.CustomBlockDataEvent
-import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.blocks.TexturedBlock
 import io.github.fhanko.kplugin.items.handler.ClickHandler
 import net.kyori.adventure.text.Component
