@@ -9,6 +9,8 @@ import org.bukkit.util.Vector
 import org.joml.Vector3f
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.*
+import kotlin.math.roundToInt
 
 infix fun Int.toward(to: Int): IntProgression {
     val step = if (this > to) -1 else 1
@@ -68,5 +70,7 @@ fun Vector.to3f(): Vector3f {
 }
 
 fun Double.rangeTo(to: Double): IntRange {
-    return this.toInt() .. to.toInt()
+    return this.roundToInt() .. to.roundToInt()
 }
+
+val random = Random()
