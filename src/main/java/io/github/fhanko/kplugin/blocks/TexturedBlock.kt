@@ -1,6 +1,7 @@
 package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
+import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.util.Rotation
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -44,7 +45,7 @@ abstract class TexturedBlock(texture: String, private val overrideMaterial: Mate
         e.block.type = overrideMaterial
     }
 
-    override fun destroy(e: BlockBreakEvent) {
+    override fun destroy(e: CustomBlockDataRemoveEvent) {
         e.block.chunk.entities.forEach { if (it.location == e.block.location.add(OFFSET)) it.remove() }
     }
 }
