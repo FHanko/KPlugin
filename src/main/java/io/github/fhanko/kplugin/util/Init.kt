@@ -11,8 +11,8 @@ interface Initializable
  * Initializes objects (avoids lazy initialization) for ItemBase and Persistable subtypes
  */
 object Init {
-    init {
-        val reflections = Reflections("io.github.fhanko")
+    fun register(prefix: String) {
+        val reflections = Reflections(prefix)
         reflections.getSubTypesOf(Initializable::class.java).forEach {
             val inst = it.kotlin.objectInstance
 

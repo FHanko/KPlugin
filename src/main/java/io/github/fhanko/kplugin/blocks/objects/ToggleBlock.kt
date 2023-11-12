@@ -2,6 +2,7 @@ package io.github.fhanko.kplugin.blocks.objects
 
 import io.github.fhanko.kplugin.blocks.AnimatedBlock
 import io.github.fhanko.kplugin.items.handler.ClickHandler
+import io.github.fhanko.kplugin.items.objects.CurrencyItem
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -17,9 +18,21 @@ private val frames = mutableListOf<String>(
 object ToggleBlock: AnimatedBlock(frames, 7, Material.IRON_BLOCK, Component.text("Toggle Block")), ClickHandler {
     override fun rightClickBlock(e: PlayerInteractEvent) {
         val block = e.clickedBlock!!
-        val isOn = readBlock(block, ISON_KEY, PersistentDataType.BOOLEAN) ?: return
         nextFrame(block)
+        val isOn = readBlock(block, ISON_KEY, PersistentDataType.BOOLEAN)!!
         markBlock(block, ISON_KEY, PersistentDataType.BOOLEAN, !isOn)
+
+        if (!isOn) {
+            val i = CurrencyItem.instance(1, "1")
+            val loc = block.location.add(0.0, 0.5, 0.0)
+            scheduleRepeat(block.location.toString(), 1000,
+                {_ ->
+                    block.world.dropItem(loc, i)
+                }
+            )
+        } else {
+            cancelSchedule(block.location.toString())
+        }
     }
 
     override fun place(e: BlockPlaceEvent) {

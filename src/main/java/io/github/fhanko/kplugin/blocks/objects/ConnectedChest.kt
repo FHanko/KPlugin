@@ -10,7 +10,6 @@ import jakarta.persistence.*
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
@@ -26,7 +25,7 @@ object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), ClickHan
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */
-    override fun give(player: Player, amount: Int, vararg args: String) {
+    override fun instance(amount: Int, vararg args: String): ItemStack {
         var invSize = 9
         if (args.isNotEmpty() && args[0].toIntOrNull() != null && args[0].toInt() in 9..54 step 9) invSize = args[0].toInt()
 
@@ -37,7 +36,7 @@ object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), ClickHan
         markItem(i, CHEST_KEY, PersistentDataType.INTEGER, inv.id)
 
         i.amount = amount
-        player.inventory.addItem(i)
+        return i
     }
 
     private val invList = mutableSetOf<KInventory>()

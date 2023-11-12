@@ -6,14 +6,13 @@ import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.mm
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 private val CURRENCY_KEY = NamespacedKey("kplugin", "currencyitem")
 object CurrencyItem: ItemBase(3, Material.PAPER, "$$$", listOf("Use to add to balance")), ClickHandler {
-    override fun give(player: Player, amount: Int, vararg args: String) {
+    override fun instance(amount: Int, vararg args: String): ItemStack {
         val i = ItemStack(item)
         i.amount = amount
         val im = i.itemMeta
@@ -21,8 +20,7 @@ object CurrencyItem: ItemBase(3, Material.PAPER, "$$$", listOf("Use to add to ba
         im.displayName(mm.deserialize("<green>$cash$"))
         i.itemMeta = im
         markItem(i, CURRENCY_KEY, PersistentDataType.FLOAT, cash)
-
-        player.inventory.addItem(i)
+        return i
     }
 
     override fun rightClick(e: PlayerInteractEvent) {

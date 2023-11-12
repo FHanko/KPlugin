@@ -57,12 +57,15 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     }
 
     /**
+     * Returns an instance of this item's ItemStack.
+     */
+    open fun instance(amount: Int, vararg args: String): ItemStack = ItemStack(item).apply { this.amount = amount }
+
+    /**
      * Adds this item to given Players inventory.
      */
-    open fun give(player: Player, amount: Int = 1, vararg args: String) {
-        val i = item
-        i.amount = amount
-        player.inventory.addItem(i)
+    fun give(player: Player, amount: Int = 1, vararg args: String) {
+        player.inventory.addItem(instance(amount, *args))
     }
 
     val item: ItemStack = ItemStack(material)
