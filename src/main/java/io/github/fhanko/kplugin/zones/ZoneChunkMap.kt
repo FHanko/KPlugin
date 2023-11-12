@@ -16,6 +16,9 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
         load(SAVE_FILE)?.forEach { addZone(it, false) }
     }
 
+    /**
+     * Adds [zone] to the chunk [grid]. Persists the [grid] if [save] is true.
+     */
     fun addZone(zone: Zone, save: Boolean = true) {
         zone.create()
         val chunkList = zone.chunkList()
@@ -29,6 +32,9 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
         if (save) save(SAVE_FILE, getZones())
     }
 
+    /**
+     * Removes [zone] from the chunk [grid]. Persists the [grid] if [save] is true.
+     */
     fun removeZone(zone: Zone, save: Boolean = true) {
         zone.remove()
         val chunkList = zone.chunkList()
@@ -38,6 +44,9 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
         if (save) save(SAVE_FILE, getZones())
     }
 
+    /**
+     * Returns a [Zone] in [grid] from its bounds [start] and [end].
+     */
     fun fromBounds(start: Location, end: Location): Zone? {
         grid[(start.x.toInt() shr 4) to (start.z.toInt() shr 4)]?.forEach {
             if (it.start == start && it.end == end) return it
@@ -45,12 +54,15 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
         return null
     }
 
+    /**
+     * Returns all [Zone]s contained in [chunk].
+     */
     fun getZones(chunk: Chunk): HashSet<Zone>? {
         return grid[chunk.x to chunk.z]
     }
 
     /**
-     * Returns all Zones in a chunk radius.
+     * Returns all [Zone]s contained in [chunk] and further chunks in [radius].
      */
     fun getRadiusZones(chunk: Chunk, radius: Int): HashSet<Zone> {
         val ret = HashSet<Zone>()
@@ -60,6 +72,9 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
         return ret
     }
 
+    /**
+     * Returns all [Zone]s from [grid].
+     */
     private fun getZones(): HashSet<Zone> {
         val ret = mutableSetOf<Zone>().toHashSet()
         grid.forEach { (_, z) -> z.forEach { ret.add(it) } }
