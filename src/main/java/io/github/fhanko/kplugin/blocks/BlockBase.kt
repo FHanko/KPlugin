@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
+import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
@@ -19,6 +20,17 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
     companion object {
         private fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
 
+        /**
+         * Marks a block with a PDC ID.
+         */
+        fun <T, Z : Any> markBlock(block: Block, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
+            val blockData = CustomBlockData(block, KPlugin.instance)
+            blockData.set(key, type, value)
+        }
+
+        /**
+         * Reads a PDC ID from a block.
+         */
         fun <T, Z> readBlock(block: Block?, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
             block ?: return null
             @Suppress("Unchecked_Cast") return getBlockPdc(block).get(key, type) as Z

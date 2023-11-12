@@ -10,6 +10,7 @@ import org.bukkit.entity.Display
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Player
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.util.Vector
 import org.joml.Vector3f
@@ -19,7 +20,6 @@ val OFFSET = Vector(0.5, 1.01, 0.5)
 //Get textures from
 //https://minecraft-heads.com
 abstract class TexturedBlock(texture: String, id: Int, private val overrideMaterial: Material, name: Component, lore: List<Component> = mutableListOf()): BlockBase(id, Material.PLAYER_HEAD, name, lore) {
-    private lateinit var display: ItemDisplay
     init {
         val profile = Bukkit.getServer().createProfile(UUID.randomUUID())
         val property = ProfileProperty("textures", texture)
@@ -27,30 +27,43 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
         item.editMeta { it as SkullMeta; it.playerProfile = profile }
     }
 
-    private fun coverBlock(block: Block, p: Player) {
-        display = block.world.spawn(block.location.add(OFFSET), ItemDisplay::class.java)
-        display.itemStack = item
+    /**
+     * Removes Skull texture from block by removing any entity at the blocks position. This can not be done with entity
+     * id as entities cannot be fetched by id, but iterating chunk entities should not be computationally concerning for now.
+     */
+    protected fun removeCover(block: Block) {
+        block.chunk.entities.forEach { if (it.location == block.location.add(OFFSET)) it.remove() }
+    }
+
+    protected fun coverBlock(block: Block, coverItem: ItemStack): ItemDisplay {
+        val display = block.world.spawn(block.location.add(OFFSET), ItemDisplay::class.java)
+        display.itemStack = coverItem
+        val t = display.transformation.apply { scale.set(OFFSET.y * 2); display.transformation = this }
+        display.brightness = Display.Brightness(7, 7)
+        block.type = overrideMaterial
+        return display
+    }
+
+    private fun placeBlock(block: Block, p: Player) {
+        val display = coverBlock(block, item)
         val t = display.transformation
-        t.scale.set(OFFSET.y * 2)
         val angle = (360 - p.yaw + 180)
         val angleSnapped = (Math.round(angle / 90) * 90) + 180
         t.leftRotation.fromAxisAngleDeg(Vector3f(0f, 1f, 0f), angleSnapped.toFloat())
         display.transformation = t
-        display.brightness = Display.Brightness(7, 7)
     }
 
     /**
      * Covers a block in Skull texture when placed. Call super when overriding
      */
     override fun place(e: BlockPlaceEvent) {
-        coverBlock(e.block, e.player)
-        e.block.type = overrideMaterial
+        placeBlock(e.block, e.player)
     }
 
     /**
      * Removes Skull texture when destroyed. Call super when overriding
      */
     override fun destroy(e: CustomBlockDataRemoveEvent) {
-        e.block.chunk.entities.forEach { if (it.location == e.block.location.add(OFFSET)) it.remove() }
+        removeCover(e.block)
     }
 }

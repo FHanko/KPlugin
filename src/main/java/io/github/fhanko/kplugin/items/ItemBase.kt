@@ -28,12 +28,15 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         }
 
         /**
-         * Marks an Item with a PDC ID.
+         * Marks an item with a PDC ID.
          */
         fun <T, Z : Any> markItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
             item.editMeta { it.persistentDataContainer.set(key, type, value) }
         }
 
+        /**
+         * Reads a PDC ID from an item.
+         */
         fun <T, Z> readItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
             val meta = item.itemMeta ?: return null
             @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
