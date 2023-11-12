@@ -5,6 +5,7 @@ import org.bukkit.inventory.EquipmentSlot
 
 /**
  * Implementable for subclasses of ItemBase to override left- and right click functions.
+ * Fired when left- or right-clicked with a subclass item or on a block.
  */
 interface ClickHandler {
     fun leftClick(e: PlayerInteractEvent) { }

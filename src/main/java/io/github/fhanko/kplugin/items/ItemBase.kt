@@ -8,6 +8,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
 @Suppress("LeakingThis")
@@ -20,7 +21,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         val itemList = mutableMapOf<Int, ItemBase>()
 
         /**
-         * Adds item with id to given Players inventory.
+         * Adds [instance] of [ItemBase] with given [id] to [player]s inventory.
          */
         fun give(player: Player, id: Int, amount: Int = 1, vararg args: String) {
             if (itemList.contains(id))
@@ -28,20 +29,23 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         }
 
         /**
-         * Marks an item with a PDC ID.
+         * Marks an item with an ID in this [item]s [PersistentDataContainer].
          */
         fun <T, Z : Any> markItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
             item.editMeta { it.persistentDataContainer.set(key, type, value) }
         }
 
         /**
-         * Reads a PDC ID from an item.
+         * Reads an ID from the [PersistentDataContainer] of this [item].
          */
         fun <T, Z> readItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
             val meta = item.itemMeta ?: return null
             @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
         }
 
+        /**
+         * Updates the [name] and [lore] of [item].
+         */
         fun setText(item: ItemStack, name: Component, lore: List<Component>) {
             item.editMeta {
                 it.displayName(name)
@@ -49,6 +53,9 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
             }
         }
 
+        /**
+         * Returns [ItemBase] that is associated with given [ItemStack] [item].
+         */
         fun get(item: ItemStack?): ItemBase? {
             item ?: return null
             val itemId = readItem(item, KEY, PersistentDataType.INTEGER) ?: return null
@@ -57,12 +64,12 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     }
 
     /**
-     * Returns an instance of this item's ItemStack.
+     * Returns a configured [ItemStack] of this [item] with given [amount].
      */
     open fun instance(amount: Int, vararg args: String): ItemStack = ItemStack(item).apply { this.amount = amount }
 
     /**
-     * Adds this item to given Players inventory.
+     * Adds an [instance] of this item to given [player]s inventory.
      */
     fun give(player: Player, amount: Int = 1, vararg args: String) {
         player.inventory.addItem(instance(amount, *args))

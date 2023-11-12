@@ -9,7 +9,7 @@ import org.bukkit.event.world.EntitiesLoadEvent
 import java.util.*
 
 /**
- * Keeps a consistent list of Entity ids mapped to their displays.
+ * Keeps a consistent list of unique(persistent) entity ids mapped to their [Display]s.
  */
 object DisplayList: Initializable, Listener {
     val displayIds = mutableMapOf<UUID, Display>()

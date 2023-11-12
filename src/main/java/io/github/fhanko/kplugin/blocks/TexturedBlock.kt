@@ -9,6 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
+import org.bukkit.block.Skull
 import org.bukkit.entity.Display
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Player
@@ -23,7 +24,7 @@ import java.util.*
 val BLOCK_DISPLAY_ID_KEY = NamespacedKey("kplugin", "texturedblock")
 val OFFSET = Vector(0.5, 1.01, 0.5)
 /**
- * Represents a block that is covered by a supplied player head texture.
+ * Represents a [Block] that is covered by a supplied head([Skull]) texture.
  * Get textures from https://minecraft-heads.com
  */
 abstract class TexturedBlock(texture: String, id: Int, private val overrideMaterial: Material, name: Component, lore: List<Component> = mutableListOf())
@@ -36,7 +37,7 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
     }
 
     /**
-     * Covers the supplied block with a skull textured by coverItem. Marks the block with the display(cover) id for later removal.
+     * Covers the supplied [block] with a [Display] (Skull texture) by [coverItem]. Marks the [block] with the displays unique id for later removal.
      */
     protected fun coverBlock(block: Block, coverItem: ItemStack): ItemDisplay {
         val display = block.world.spawn(block.location.add(OFFSET), ItemDisplay::class.java)
@@ -50,27 +51,26 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
     }
 
     /**
-     * Covers the supplied block using coverBlock(...) and also turns the cover to face the supplied player.
+     * Covers the supplied [block] using [coverBlock] and also turns the cover to face the supplied [player].
      */
-    private fun placeBlock(block: Block, p: Player) {
+    private fun placeBlock(block: Block, player: Player) {
         val display = coverBlock(block, item)
         val t = display.transformation
-        val angle = (360 - p.yaw + 180)
+        val angle = (360 - player.yaw + 180)
         val angleSnapped = (Math.round(angle / 90) * 90) + 180
         t.leftRotation.fromAxisAngleDeg(Vector3f(0f, 1f, 0f), angleSnapped.toFloat())
         display.transformation = t
     }
 
     /**
-     * Covers a block in Skull texture when placed. Call super when overriding
+     * Covers this block in Skull texture when placed. Subclasses need to call super when overriding.
      */
     override fun place(e: BlockPlaceEvent) {
         placeBlock(e.block, e.player)
     }
 
     /**
-     * Removes Skull texture when destroyed. Call super when overriding
-     * This removes the display with entity id marked during covering.
+     * Removes [Display] covering this block when destroyed. Subclasses need to call super when overriding.
      */
     override fun destroy(e: CustomBlockDataRemoveEvent) {
         val currentDisplay = UUID.fromString(readBlock(e.block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING))

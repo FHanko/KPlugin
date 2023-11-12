@@ -5,6 +5,7 @@ import org.bukkit.entity.Player
 
 /**
  * Implementable for subclasses of ItemBase to override item equip and unequip functions.
+ * Fired when a subclass item is equipped or unequipped in hand or amour slot.
  */
 interface EquipHandler {
     enum class EquipType { Hand, Armour }

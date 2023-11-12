@@ -8,7 +8,7 @@ import org.reflections.Reflections
 interface Initializable
 
 /**
- * Initializes objects (avoids lazy initialization) for ItemBase and Persistable subtypes
+ * Initializes objects (avoids lazy initialization) for [Initializable] subtype objects.
  */
 object Init {
     fun register(prefix: String) {

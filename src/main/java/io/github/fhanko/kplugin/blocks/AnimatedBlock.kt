@@ -15,9 +15,13 @@ import java.util.*
 
 private val ANIMATION_KEY = NamespacedKey("kplugin", "animatedblock")
 private const val noTexture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDVkMjAzMzBkYTU5YzIwN2Q3ODM1MjgzOGU5MWE0OGVhMWU0MmI0NWE5ODkzMjI2MTQ0YjI1MWZlOWI5ZDUzNSJ9fX0="
+/**
+ * Represents a [TexturedBlock] that holds multiple textures that can be changed dynamically.
+ */
 abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, material: Material, name: Component, lore: List<Component> = listOf())
     : TexturedBlock(texture[0], id, material, name, lore) {
     private val skulls = mutableListOf<ItemStack>()
+
     init {
         if (texture.size == 0) texture.add(noTexture)
         texture.forEach { tex ->
@@ -34,8 +38,14 @@ abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, 
         markBlock(e.block, ANIMATION_KEY, PersistentDataType.INTEGER, 0)
     }
 
+    /**
+     * Returns the id of current frame from [block].
+     */
     protected fun getFrame(block: Block): Int? = readBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER)
 
+    /**
+     * Sets the frame of [block]s [TexturedBlock] cover.
+     */
     protected fun setFrame(block: Block, frame: Int?) {
         val modFrame = frame?.rem(texture.size) ?: return
         // Remove old cover delayed to avoid the block being naked while the new display loads
@@ -47,6 +57,9 @@ abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, 
         markBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER, modFrame)
     }
 
+    /**
+     * Increases the [block]s frame by 1.
+     */
     protected fun nextFrame(block: Block) {
         val frame = getFrame(block) ?: return
         setFrame(block, frame.plus(1))

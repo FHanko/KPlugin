@@ -20,7 +20,7 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
         private fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
 
         /**
-         * Marks a block with a PDC ID.
+         * Marks the [PersistentDataContainer] of supplied [block] with [value] of type [type].
          */
         fun <T, Z : Any> markBlock(block: Block, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
             val blockData = CustomBlockData(block, KPlugin.instance)
@@ -28,13 +28,16 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
         }
 
         /**
-         * Reads a PDC ID from a block.
+         * Returns value of type [type] associated with [key] from [PersistentDataContainer] of [block].
          */
         fun <T, Z> readBlock(block: Block?, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
             block ?: return null
             @Suppress("Unchecked_Cast") return getBlockPdc(block).get(key, type) as Z
         }
 
+        /**
+         * Returns [BlockBase] that is associated with given [Block] [block].
+         */
         fun get(block: Block?): BlockBase? {
             block ?: return null
             val blockId = readBlock(block, KEY, PersistentDataType.INTEGER) ?: return null

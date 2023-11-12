@@ -8,13 +8,14 @@ import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 import kotlin.math.max
 
 private val DURABILITY_KEY = NamespacedKey("kplugin", "itemdamageable")
 /**
  * Implementable for subclasses of ItemBase to override onDamage function which is called on the loss of durability.
- * If the implementing ItemStack of item does not have a durability, a durability based on PersistentDataContainers can
+ * If the implementing ItemStack of item does not have a durability, a durability based on [PersistentDataContainer]s can
  * be set using the durability setter and getter functions.
  */
 interface DamageHandler {
