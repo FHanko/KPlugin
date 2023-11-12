@@ -1,6 +1,7 @@
 package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
+import io.github.fhanko.kplugin.display.DisplayList
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -30,16 +31,20 @@ abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, 
 
     override fun place(e: BlockPlaceEvent) {
         coverBlock(e.block, skulls.first())
-        BlockBase.markBlock(e.block, ANIMATION_KEY, PersistentDataType.INTEGER, 0)
+        markBlock(e.block, ANIMATION_KEY, PersistentDataType.INTEGER, 0)
     }
 
     protected fun getFrame(block: Block): Int? = readBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER)
 
     protected fun setFrame(block: Block, frame: Int?) {
         val modFrame = frame?.rem(texture.size) ?: return
-        removeCover(block)
+        // Remove old cover delayed to avoid the block being naked while the new display loads
+        val currentDisplay = UUID.fromString(readBlock(block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING))
+        currentDisplay?.apply { schedule(currentDisplay.toString(), 100, { i -> DisplayList.displayIds[i[0]]?.remove() }, this) }
+        // Place new cover
         coverBlock(block, skulls[modFrame])
-        BlockBase.markBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER, modFrame)
+        // Mark the current frame on the block
+        markBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER, modFrame)
     }
 
     protected fun nextFrame(block: Block) {

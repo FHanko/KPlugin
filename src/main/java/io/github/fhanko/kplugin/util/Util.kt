@@ -39,11 +39,15 @@ fun pdcDataType(pdc: PersistentDataContainer, key: NamespacedKey): PersistentDat
     return null
 }
 
+/**
+ * Copies all persistent data from pdcSource to pdcTarget. Does not override keys.
+ */
 fun copyPdc(pdcSource: PersistentDataContainer, pdcTarget: PersistentDataContainer) {
     pdcSource.keys.forEach { k ->
         val dataType = pdcDataType(pdcSource, k) ?: return
         val data = pdcSource.get(k, dataType) ?: return
-        pdcTarget.setAlt(k, dataType, data)
+        if (!pdcTarget.has(k))
+            pdcTarget.setAlt(k, dataType, data)
     }
 }
 
