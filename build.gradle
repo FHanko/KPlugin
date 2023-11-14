@@ -35,6 +35,8 @@ shadowJar {
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation 'org.reflections:reflections:0.10.2'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.20-RC2'
 
     paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
     implementation "dev.jorel:commandapi-bukkit-shade:9.2.0"
@@ -80,7 +82,7 @@ publishing {
             groupId = group
             artifactId = 'kplugin'
             version = version
-            from(components["java"])
+            from components.java
         }
     }
 }

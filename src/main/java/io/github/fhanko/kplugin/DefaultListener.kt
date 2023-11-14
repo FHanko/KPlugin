@@ -12,7 +12,7 @@ import org.bukkit.event.world.WorldSaveEvent
 /**
  * This listener handles events which are not specifically related to any of the other packages
  */
-object DefaultListener: Listener, Initializable {
+object DefaultListener: Listener {
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
         e.player.sendMessage("Welcome!")

@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 
-object ZoneListener : Listener, Initializable {
+object ZoneListener : Listener {
     // Maps Players to zones they are inside of
     private val playerZoneMap = mutableMapOf<Player, HashSet<Zone>>()
 

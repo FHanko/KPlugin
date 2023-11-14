@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent
  * Addresses event efficiency concerns by handling them once and firing handler functions
  * instead of firing all events on all items.
  */
-object ItemListener: Listener, Initializable {
+object ItemListener: Listener {
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
         ItemBase.get(e.item)?.also { if (it is ClickHandler) it.onInteract(e) }

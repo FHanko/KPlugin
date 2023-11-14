@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack
  * Addresses event efficiency concerns by handling them once and firing handler functions
  * instead of firing all events on all blocks.
  */
-object BlockListener: Listener, Initializable {
+object BlockListener: Listener {
     @EventHandler
     fun onPlace(e: BlockPlaceEvent) {
         val base = ItemBase.get(e.itemInHand)

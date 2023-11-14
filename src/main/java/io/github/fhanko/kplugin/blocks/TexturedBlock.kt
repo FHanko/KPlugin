@@ -2,7 +2,7 @@ package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
-import io.github.fhanko.kplugin.display.DisplayList
+import io.github.fhanko.kplugin.display.DisplayListener
 import io.github.fhanko.kplugin.util.Schedulable
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -74,6 +74,6 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
      */
     override fun destroy(e: CustomBlockDataRemoveEvent) {
         val currentDisplay = UUID.fromString(readBlock(e.block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING))
-        currentDisplay?.apply { DisplayList.displayIds[this]?.remove() }
+        currentDisplay?.apply { DisplayListener.displayIds[this]?.remove() }
     }
 }
