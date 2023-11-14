@@ -1,8 +1,8 @@
 package io.github.fhanko.kplugin.util
 
-import io.github.fhanko.kplugin.KPlugin
 import jakarta.persistence.EntityManager
 import jakarta.persistence.Persistence
+import org.bukkit.Bukkit
 import org.bukkit.event.world.WorldSaveEvent
 import java.io.Serializable
 import java.util.concurrent.LinkedBlockingQueue
@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 object HibernateUtil {
     private lateinit var em: EntityManager
+    private var initialized = false
 
     fun createSessionFactory() {
         // https://sjhannah.com/blog/2018/11/21/jaxb-hell-on-jdk-9/
@@ -23,12 +24,14 @@ object HibernateUtil {
 
         em = queue.take()
         em.transaction.begin()
+
+        initialized = true
     }
 
     fun shutdown() {
         em.flush()
         em.transaction.commit()
-        KPlugin.instance.logger.info("Database saved.")
+        Bukkit.getLogger().info("Database saved.")
         em.close()
     }
 
@@ -101,16 +104,17 @@ object HibernateUtil {
 
     private fun rollbackTransaction(e: Exception) {
         em.transaction.rollback()
-        KPlugin.instance.logger.warning(e.message)
-        KPlugin.instance.logger.warning(e.stackTraceToString())
+        Bukkit.getLogger().warning(e.message)
+        Bukkit.getLogger().warning(e.stackTraceToString())
     }
 
     fun postWorldSave(e: WorldSaveEvent) {
+        if (!initialized) return
         try {
             em.flush()
             em.clear()
             em.transaction.commit()
-            KPlugin.instance.logger.info("Database saved.")
+            Bukkit.getLogger().info("Database saved.")
         } catch (e: Exception) {
             rollbackTransaction(e)
         } finally {

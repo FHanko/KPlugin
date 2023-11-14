@@ -8,6 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPickupItemEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -53,6 +54,12 @@ object ItemListener: Listener, Initializable {
         if (baseNew != null && baseOld != null && baseNew.id == baseOld.id) return
         baseNew?.also { if (it is EquipHandler) it.equip(e.player, EquipHandler.EquipType.Hand) }
         baseOld?.also { if (it is EquipHandler) it.unequip(e.player, EquipHandler.EquipType.Hand) }
+    }
+
+    @EventHandler
+    fun onInventoryOpen(e: InventoryOpenEvent) {
+        val base = ItemBase.get(e.player.inventory.getItem(e.player.inventory.heldItemSlot))
+        base?.also { if (it is EquipHandler) it.unequip(e.player as Player, EquipHandler.EquipType.Hand) }
     }
 
     @EventHandler

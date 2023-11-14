@@ -1,9 +1,9 @@
 package io.github.fhanko.kplugin.items
 
-import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.mm
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -82,7 +82,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         markItem(item, KEY, PersistentDataType.INTEGER, id)
         itemList[id] = this
 
-        KPlugin.instance.logger.info("Init BaseItem ${mm.serialize(name)}")
+        Bukkit.getLogger().info("Init BaseItem ${mm.serialize(name)}")
     }
 
     protected fun compareId(other: ItemStack?) =

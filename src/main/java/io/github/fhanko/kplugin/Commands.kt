@@ -10,14 +10,12 @@ import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.objects.CurrencyItem
 import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.HibernateUtil
-import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.mm
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-object Commands: Initializable {
-    init { register() }
-    private fun register() {
+object Commands {
+    fun registerGive() {
         CommandAPICommand("givekp").executesPlayer(PlayerCommandExecutor { p, _ ->
             p.openInventory(GiveGUI.inventory)
         }).register()
@@ -28,7 +26,9 @@ object Commands: Initializable {
             .executesPlayer(PlayerCommandExecutor { p, a ->
                 ItemBase.give(p, a[0] as Int, a[1] as Int, *((a.getOrDefault(2, "") as String).split(" ")).toTypedArray())
             }).register()
+    }
 
+    fun registerBal() {
         CommandAPICommand("bal").executesPlayer(PlayerCommandExecutor { p, _ ->
             p.sendMessage(mm.deserialize("<green>${EconomyCard.getCard(p).balance}$"))
         }).register()
