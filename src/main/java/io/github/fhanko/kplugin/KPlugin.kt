@@ -19,7 +19,7 @@ class KPlugin : JavaPlugin() {
         HibernateUtil.createSessionFactory()
         CommandAPI.onEnable()
         CustomBlockData.registerListener(this)
-        Init.register("io.github.fhanko")
+        Init.initialize(this, "io.github.fhanko.kplugin")
     }
 
     override fun onLoad()
