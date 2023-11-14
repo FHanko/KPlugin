@@ -2,7 +2,6 @@ package io.github.fhanko.kplugin.items.handler
 
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.util.Initializable
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

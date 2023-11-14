@@ -1,6 +1,6 @@
 package io.github.fhanko.kplugin.display
 
-import io.github.fhanko.kplugin.util.Initializable
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent
 import org.bukkit.entity.Display
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -23,5 +23,11 @@ object DisplayListener: Listener {
     fun onEntitySpawn(e: EntitySpawnEvent) {
         val d = e.entity
         if (d is Display){ displayIds[d.uniqueId] = d }
+    }
+
+    @EventHandler
+    fun onEntityRemove(e: EntityRemoveFromWorldEvent) {
+        val d = e.entity
+        if (d is Display){ displayIds.remove(e.entity.uniqueId) }
     }
 }

@@ -5,7 +5,6 @@ import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
-import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.copyPdc
 import org.bukkit.Material
 import org.bukkit.event.EventHandler

@@ -1,7 +1,6 @@
 package io.github.fhanko.kplugin
 
 import io.github.fhanko.kplugin.util.HibernateUtil
-import io.github.fhanko.kplugin.util.Initializable
 import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority

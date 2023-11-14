@@ -26,14 +26,14 @@ class KPlugin : JavaPlugin() {
             Bukkit.getPluginManager().registerEvents(ItemListener, instance)
             Bukkit.getPluginManager().registerEvents(DisplayListener, instance)
             Bukkit.getPluginManager().registerEvents(InventoryListener, instance)
+            CustomBlockData.registerListener(instance)
         }
     }
 
     override fun onEnable() {
-        instance = this
+        initialize(this)
         HibernateUtil.createSessionFactory()
         CommandAPI.onEnable()
-        CustomBlockData.registerListener(this)
         Init.initialize("io.github.fhanko")
 
         Commands.registerGive()

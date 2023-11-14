@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin.zones.handler
 
-import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.zones.Zone
 import io.github.fhanko.kplugin.zones.ZoneChunkMap
 import org.bukkit.entity.Player

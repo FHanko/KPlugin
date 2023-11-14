@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin.gui.handler
 
-import io.github.fhanko.kplugin.util.Initializable
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent

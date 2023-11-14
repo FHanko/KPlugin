@@ -2,6 +2,7 @@ package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
 import io.github.fhanko.kplugin.display.DisplayListener
+import io.github.fhanko.kplugin.display.DisplayUtil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -34,7 +35,7 @@ abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, 
     }
 
     override fun place(e: BlockPlaceEvent) {
-        coverBlock(e.block, skulls.first())
+        DisplayUtil.facePlayer(coverBlock(e.block, skulls.first()), e.player)
         markBlock(e.block, ANIMATION_KEY, PersistentDataType.INTEGER, 0)
     }
 
@@ -48,11 +49,14 @@ abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, 
      */
     protected fun setFrame(block: Block, frame: Int?) {
         val modFrame = frame?.rem(texture.size) ?: return
+        val oldDisplayId = UUID.fromString(readBlock(block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING))
+        // Keep the transformation of the old display
+        val oldTransformation = DisplayListener.displayIds[oldDisplayId]?.transformation
         // Remove old cover delayed to avoid the block being naked while the new display loads
-        val currentDisplay = UUID.fromString(readBlock(block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING))
-        currentDisplay?.apply { schedule(currentDisplay.toString(), 100, { i -> DisplayListener.displayIds[i[0]]?.remove() }, this) }
+        oldDisplayId?.apply { schedule(oldDisplayId.toString(), 100, { i -> DisplayListener.displayIds[i[0]]?.remove() }, this) }
         // Place new cover
-        coverBlock(block, skulls[modFrame])
+        val newCover = coverBlock(block, skulls[modFrame])
+        oldTransformation?.apply { newCover.transformation = this }
         // Mark the current frame on the block
         markBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER, modFrame)
     }

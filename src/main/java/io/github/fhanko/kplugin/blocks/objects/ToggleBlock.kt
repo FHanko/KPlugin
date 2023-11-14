@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.blocks.objects
 
+import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.blocks.AnimatedBlock
 import io.github.fhanko.kplugin.items.handler.ClickHandler
 import io.github.fhanko.kplugin.items.objects.CurrencyItem
@@ -38,5 +39,10 @@ object ToggleBlock: AnimatedBlock(frames, 7, Material.IRON_BLOCK, Component.text
     override fun place(e: BlockPlaceEvent) {
         super.place(e)
         markBlock(e.block, ISON_KEY, PersistentDataType.BOOLEAN, false)
+    }
+
+    override fun destroy(e: CustomBlockDataRemoveEvent) {
+        super.destroy(e)
+        cancelSchedule(e.block.location.toString())
     }
 }
