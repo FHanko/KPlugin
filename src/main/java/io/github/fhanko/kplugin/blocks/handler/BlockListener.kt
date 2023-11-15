@@ -1,6 +1,7 @@
 package io.github.fhanko.kplugin.blocks.handler
 
 import com.jeff_media.customblockdata.CustomBlockData
+import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.blocks.BlockBase
@@ -61,6 +62,12 @@ object BlockListener: Listener {
             val base = BlockBase.get(b)
             if (base is RayTraceHandler && e.player.location.distance(b.location) <= base.traceDistance()) base.trace(e)
         }
+    }
+
+    @EventHandler
+    fun onMove(e: CustomBlockDataMoveEvent) {
+        val base = BlockBase.get(e.block)
+        if (base is MoveHandler) base.move(e)
     }
 }
 
