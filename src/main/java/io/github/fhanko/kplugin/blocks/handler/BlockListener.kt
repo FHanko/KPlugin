@@ -1,6 +1,7 @@
 package io.github.fhanko.kplugin.blocks.handler
 
 import com.jeff_media.customblockdata.CustomBlockData
+import com.jeff_media.customblockdata.events.CustomBlockDataEvent
 import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.KPlugin
@@ -49,7 +50,15 @@ object BlockListener: Listener {
 
     @EventHandler
     fun onDestroy(e: CustomBlockDataRemoveEvent) {
-        e.block.type = Material.AIR
+        println(e.reason)
+        if (e.reason == CustomBlockDataEvent.Reason.BLOCK_PLACE) {
+            val replaceBase = BlockBase.get(e.block)
+            if (replaceBase is PlaceHandler) replaceBase.replace(e.bukkitEvent as BlockPlaceEvent)
+            // When replacing the CustomBlockData stays
+            e.isCancelled = true
+            //CustomBlockData(e.block, KPlugin.instance).copyTo((e.bukkitEvent as BlockPlaceEvent).blockPlaced, KPlugin.instance)
+            return
+        }
         val base = BlockBase.get(e.block)
         if (base is PlaceHandler) base.destroy(e)
     }

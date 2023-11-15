@@ -29,14 +29,14 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         }
 
         /**
-         * Marks an item with an ID in this [item]s [PersistentDataContainer].
+         * Marks [key] of an item with [value] in [item]s [PersistentDataContainer].
          */
         fun <T, Z : Any> markItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
             item.editMeta { it.persistentDataContainer.set(key, type, value) }
         }
 
         /**
-         * Reads an ID from the [PersistentDataContainer] of this [item].
+         * Reads an ID from the [PersistentDataContainer] of [item].
          */
         fun <T, Z> readItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
             val meta = item.itemMeta ?: return null

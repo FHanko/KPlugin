@@ -20,11 +20,19 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
         private fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
 
         /**
-         * Marks the [PersistentDataContainer] of supplied [block] with [value] of type [type].
+         * Marks [key] of [PersistentDataContainer] from the supplied [block] with [value] of type [type].
          */
         fun <T, Z : Any> markBlock(block: Block, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
             val blockData = CustomBlockData(block, KPlugin.instance)
             blockData.set(key, type, value)
+        }
+
+        /**
+         * Removes [key] from [PersistentDataContainer] of supplied [block].
+         */
+        fun unmarkBlock(block: Block, key: NamespacedKey) {
+            val blockData = CustomBlockData(block, KPlugin.instance)
+            blockData.remove(key)
         }
 
         /**

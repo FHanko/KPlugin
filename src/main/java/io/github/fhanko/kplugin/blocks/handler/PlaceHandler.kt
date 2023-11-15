@@ -10,6 +10,11 @@ interface PlaceHandler {
      */
     fun place(e: BlockPlaceEvent) { }
     /**
+     * Called when a player replaces this block. Only possible for replaceable block types.
+     * CustomBlockData is not lost when replacing.
+     */
+    fun replace(e: BlockPlaceEvent) { }
+    /**
      * Called when a player removes this block.
      */
     fun broke(e: BlockBreakEvent) { }
