@@ -19,10 +19,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.util.Vector
-import org.joml.Vector3f
 import java.util.*
 
-val BLOCK_DISPLAY_ID_KEY = NamespacedKey("kplugin", "texturedblock")
+private val BLOCK_DISPLAY_ID_KEY = NamespacedKey("kplugin", "texturedblock")
 val OFFSET = Vector(0.5, 1.01, 0.5)
 /**
  * Represents a [Block] that is covered by a supplied head([Skull]) texture.
@@ -30,6 +29,7 @@ val OFFSET = Vector(0.5, 1.01, 0.5)
  */
 abstract class TexturedBlock(texture: String, id: Int, private val overrideMaterial: Material, name: Component, lore: List<Component> = mutableListOf())
     : BlockBase(id, Material.PLAYER_HEAD, name, lore), Schedulable {
+
     init {
         val profile = Bukkit.getServer().createProfile(UUID.randomUUID())
         val property = ProfileProperty("textures", texture)
@@ -49,6 +49,13 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
         // Mark block with display id for later removal
         markBlock(block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING, display.uniqueId.toString())
         return display
+    }
+
+    /**
+     * Returns the [Display] associated with [block].
+     */
+    protected fun getDisplay(block: Block): ItemDisplay? {
+        return DisplayListener.displayIds.getOrDefault(UUID.fromString(readBlock(block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING)), null) as ItemDisplay?
     }
 
     /**

@@ -8,7 +8,6 @@ import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.Cooldownable
 import io.github.fhanko.kplugin.util.copyPdc
-import io.papermc.paper.event.player.PlayerArmSwingEvent
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
