@@ -5,6 +5,8 @@ import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.blocks.handler.PlaceHandler
 import io.github.fhanko.kplugin.items.ItemBase
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
@@ -13,7 +15,6 @@ import org.bukkit.persistence.PersistentDataType
 
 abstract class BlockBase(id: Int, material: Material, name: Component, description: List<Component> = listOf())
     : ItemBase(id, material, name, description), PlaceHandler {
-
     constructor(id: Int, material: Material, name: String): this(id, material, Component.text(name))
 
     companion object {
@@ -36,6 +37,14 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
         }
 
         /**
+         * Clears [PersistentDataContainer] of supplied [block].
+         */
+        fun clearBlock(block: Block) {
+            val blockData = CustomBlockData(block, KPlugin.instance)
+            blockData.clear()
+        }
+
+        /**
          * Returns value of type [type] associated with [key] from [PersistentDataContainer] of [block].
          */
         fun <T, Z> readBlock(block: Block?, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
@@ -51,6 +60,23 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
             val blockId = readBlock(block, KEY, PersistentDataType.INTEGER) ?: return null
             return if (itemList.contains(blockId)) itemList[blockId] as BlockBase else null
         }
+    }
+
+    enum class DropBehaviour { None, Material, Block }
+    /**
+     * Determines what is dropped when breaking this block.
+     */
+    open fun dropBehaviour() = DropBehaviour.Block
+
+    /**
+     * Places and returns an instance of this at [location].
+     */
+    open fun placeInstance(location: Location, vararg args: Any): Block {
+        val block = location.world.getBlockAt(location)
+        clearBlock(block)
+        block.blockData = Bukkit.createBlockData(material)
+        markBlock(block, KEY, PersistentDataType.INTEGER, id)
+        return block
     }
 
     private fun compareBlockId(other: Block?): Boolean {

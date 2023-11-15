@@ -40,7 +40,9 @@ object BlockListener: Listener {
         val base = BlockBase.get(e.block)
         if (base is PlaceHandler) base.also {
             it.broke(e)
+            if (base.dropBehaviour() == BlockBase.DropBehaviour.Material) return
             e.isDropItems = false
+            if (base.dropBehaviour() == BlockBase.DropBehaviour.None) return
             val i = ItemStack(it.item)
             i.editMeta { im -> copyPdc(CustomBlockData(e.block, KPlugin.instance), im.persistentDataContainer) }
             i.amount = 1
@@ -50,15 +52,6 @@ object BlockListener: Listener {
 
     @EventHandler
     fun onDestroy(e: CustomBlockDataRemoveEvent) {
-        println(e.reason)
-        if (e.reason == CustomBlockDataEvent.Reason.BLOCK_PLACE) {
-            val replaceBase = BlockBase.get(e.block)
-            if (replaceBase is PlaceHandler) replaceBase.replace(e.bukkitEvent as BlockPlaceEvent)
-            // When replacing the CustomBlockData stays
-            e.isCancelled = true
-            //CustomBlockData(e.block, KPlugin.instance).copyTo((e.bukkitEvent as BlockPlaceEvent).blockPlaced, KPlugin.instance)
-            return
-        }
         val base = BlockBase.get(e.block)
         if (base is PlaceHandler) base.destroy(e)
     }
