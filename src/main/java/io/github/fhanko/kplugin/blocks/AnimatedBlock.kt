@@ -19,13 +19,13 @@ private const val noTexture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90Z
 /**
  * Represents a [TexturedBlock] that holds multiple textures that can be changed dynamically.
  */
-abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, material: Material, name: Component, lore: List<Component> = listOf())
-    : TexturedBlock(texture[0], id, material, name, lore) {
+abstract class AnimatedBlock(val textures: MutableList<String>, id: Int, material: Material, name: Component, lore: List<Component> = listOf())
+    : TexturedBlock(textures[0], id, material, name, lore) {
     private val skulls = mutableListOf<ItemStack>()
 
     init {
-        if (texture.size == 0) texture.add(noTexture)
-        texture.forEach { tex ->
+        if (textures.size == 0) textures.add(noTexture)
+        textures.forEach { tex ->
             skulls.add(ItemStack(Material.PLAYER_HEAD))
             val profile = Bukkit.getServer().createProfile(UUID.randomUUID())
             val property = ProfileProperty("textures", tex)
@@ -48,7 +48,7 @@ abstract class AnimatedBlock(private val texture: MutableList<String>, id: Int, 
      * Sets the frame of [block]s [TexturedBlock] cover.
      */
     protected fun setFrame(block: Block, frame: Int?) {
-        val modFrame = frame?.rem(texture.size) ?: return
+        val modFrame = frame?.rem(textures.size) ?: return
         val oldDisplayId = UUID.fromString(readBlock(block, BLOCK_DISPLAY_ID_KEY, PersistentDataType.STRING))
         // Keep the transformation of the old display
         val oldTransformation = DisplayListener.displayIds[oldDisplayId]?.transformation

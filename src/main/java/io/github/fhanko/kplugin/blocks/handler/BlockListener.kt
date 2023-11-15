@@ -5,12 +5,16 @@ import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.items.ItemBase
+import io.github.fhanko.kplugin.util.Cooldownable
 import io.github.fhanko.kplugin.util.copyPdc
+import io.papermc.paper.event.player.PlayerArmSwingEvent
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -49,4 +53,18 @@ object BlockListener: Listener {
         val base = BlockBase.get(e.block)
         if (base is PlaceHandler) base.destroy(e)
     }
+
+    @EventHandler
+    fun onInteract(e: PlayerInteractEvent) {
+        if (RayTraceTracker.useCooldown(e.player, RayTraceTracker.hashCode().toString())) {
+            val b = e.player.rayTraceBlocks(MAX_TRACE_DISTANCE)?.hitBlock ?: return
+            val base = BlockBase.get(b)
+            if (base is RayTraceHandler && e.player.location.distance(b.location) <= base.traceDistance()) base.trace(e)
+        }
+    }
+}
+
+object RayTraceTracker: Cooldownable {
+    override fun getCooldown(): Long = 300L
+    override fun cooldownMessage(cooldown: Long): Component = Component.text("")
 }
