@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.items
 
+import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.util.Initializable
 import io.github.fhanko.kplugin.util.mm
 import net.kyori.adventure.text.Component
@@ -17,13 +18,13 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
             this(id, material, Component.text(name), description.map { Component.text(it) })
 
     companion object {
-        val KEY = NamespacedKey("kplugin", "itembase")
+        val KEY = NamespacedKey(KPlugin.instance, "itembase")
         val itemList = mutableMapOf<Int, ItemBase>()
 
         /**
          * Adds [instance] of [ItemBase] with given [id] to [player]s inventory.
          */
-        fun give(player: Player, id: Int, amount: Int = 1, vararg args: String) {
+        fun give(player: Player, id: Int, amount: Int = 1, vararg args: ItemArgument) {
             if (itemList.contains(id))
                 itemList[id]!!.give(player, amount, *args)
         }
@@ -66,12 +67,12 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     /**
      * Returns a configured [ItemStack] of this [item] with given [amount].
      */
-    open fun instance(amount: Int, vararg args: String): ItemStack = ItemStack(item).apply { this.amount = amount }
+    open fun instance(amount: Int, vararg args: ItemArgument): ItemStack = ItemStack(item).apply { this.amount = amount }
 
     /**
-     * Adds an [instance] of this item to given [player]s inventory.
+     * Adds an [instance] of this item to given [player]s inventory with [args] parsed from strings.
      */
-    fun give(player: Player, amount: Int = 1, vararg args: String) {
+    fun give(player: Player, amount: Int = 1, vararg args: ItemArgument) {
         player.inventory.addItem(instance(amount, *args))
     }
 
@@ -88,3 +89,11 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     protected fun compareId(other: ItemStack?) =
         other?.itemMeta?.persistentDataContainer?.get(KEY, PersistentDataType.INTEGER) == id
 }
+
+data class ItemArgument(val string: String, val integer: Int?, val float: Float?) {
+    constructor(string: String): this(string, string.toIntOrNull(), string.toFloatOrNull())
+    constructor(integer: Int): this(integer.toString(), integer, integer.toFloat())
+    constructor(float: Float): this(float.toString(), float.toInt(), float)
+}
+
+fun String.toItemArg() = ItemArgument(this)

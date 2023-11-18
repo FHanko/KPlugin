@@ -1,8 +1,10 @@
 @file:Suppress("unused")
 package io.github.fhanko.kplugin.blocks.objects
 
+import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.blocks.BlockBase
 import io.github.fhanko.kplugin.gui.handler.InventoryHandler
+import io.github.fhanko.kplugin.items.ItemArgument
 import io.github.fhanko.kplugin.items.handler.ClickHandler
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.converter.InventoryConverter
@@ -10,13 +12,14 @@ import jakarta.persistence.*
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-private val CHEST_KEY = NamespacedKey("kplugin", "connectedchest")
+private val CHEST_KEY = NamespacedKey(KPlugin.instance, "connectedchest")
 
 /**
  * Connected chest are a set of chests that all share the same content at possibly different locations.
@@ -25,9 +28,9 @@ object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), ClickHan
     /**
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */
-    override fun instance(amount: Int, vararg args: String): ItemStack {
-        var invSize = 9
-        if (args.isNotEmpty() && args[0].toIntOrNull() != null && args[0].toInt() in 9..54 step 9) invSize = args[0].toInt()
+    override fun instance(amount: Int, vararg args: ItemArgument): ItemStack {
+        var invSize = args.getOrNull(0)?.integer ?: 9
+        if (invSize !in 9..54 step 9) invSize = 9
 
         val i = ItemStack(item)
         val inv = KInventory(CraftInventoryCustom(this, invSize))

@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.items.handler
 
+import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.mm
 import net.kyori.adventure.text.Component
@@ -12,7 +13,7 @@ import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 import kotlin.math.max
 
-private val DURABILITY_KEY = NamespacedKey("kplugin", "itemdamageable")
+private val DURABILITY_KEY = NamespacedKey(KPlugin.instance, "itemdamageable")
 /**
  * Implementable for subclasses of ItemBase to override onDamage function which is called on the loss of durability.
  * If the implementing ItemStack of item does not have a durability, a durability based on [PersistentDataContainer]s can

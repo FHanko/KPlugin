@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.util
 
+import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.KPlugin
 import org.bukkit.Bukkit
 
@@ -9,6 +10,13 @@ import org.bukkit.Bukkit
 interface Schedulable {
     companion object {
         var scheduleId: MutableMap<String, Int> = mutableMapOf()
+
+        /**
+         * Schedules [action] for running on the next server tick.
+         */
+        fun nextTick(action: (List<Any>) -> Unit, vararg params: Any) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(KPlugin.instance, Runnable { action(params.asList()) })
+        }
     }
 
     private fun getHash(key: String): String = hash(key + hashCode())

@@ -8,6 +8,7 @@ import dev.jorel.commandapi.executors.PlayerCommandExecutor
 import io.github.fhanko.kplugin.gui.objects.GiveGUI
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.objects.CurrencyItem
+import io.github.fhanko.kplugin.items.toItemArg
 import io.github.fhanko.kplugin.util.EconomyCard
 import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.mm
@@ -24,7 +25,8 @@ object Commands {
             .withArguments(listOf(IntegerArgument("id"), IntegerArgument("amount")))
             .withOptionalArguments(StringArgument("options"))
             .executesPlayer(PlayerCommandExecutor { p, a ->
-                ItemBase.give(p, a[0] as Int, a[1] as Int, *((a.getOrDefault(2, "") as String).split(" ")).toTypedArray())
+                val args = ((a.getOrDefault(2, "") as String).split(" ")).map { it.toItemArg() }.toTypedArray()
+                ItemBase.give(p, a[0] as Int, a[1] as Int, *args)
             }).register()
     }
 
@@ -42,7 +44,7 @@ object Commands {
             if (EconomyCard.getCard(p).balance >= cash) {
                 HibernateUtil.execute {
                     EconomyCard.getCard(p).addBalance(-cash)
-                    CurrencyItem.give(p, 1, cash.setScale(2, RoundingMode.DOWN).toString())
+                    CurrencyItem.give(p, 1, cash.setScale(2, RoundingMode.DOWN).toString().toItemArg())
                 }
             }
             else { p.sendMessage(mm.deserialize("<red>Your balance is insufficient.")) }

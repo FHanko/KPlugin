@@ -2,6 +2,7 @@ package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
+import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.display.DisplayListener
 import io.github.fhanko.kplugin.display.DisplayUtil
 import io.github.fhanko.kplugin.util.Schedulable
@@ -21,7 +22,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.util.Vector
 import java.util.*
 
-private val BLOCK_DISPLAY_ID_KEY = NamespacedKey("kplugin", "texturedblock")
+private val BLOCK_DISPLAY_ID_KEY = NamespacedKey(KPlugin.instance, "texturedblock")
 val OFFSET = Vector(0.5, 1.01, 0.5)
 /**
  * Represents a [Block] that is covered by a supplied head([Skull]) texture.

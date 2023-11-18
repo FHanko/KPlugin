@@ -1,6 +1,7 @@
 package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
+import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.display.DisplayUtil
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -14,7 +15,7 @@ import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
-private val ANIMATION_KEY = NamespacedKey("kplugin", "animatedblock")
+private val ANIMATION_KEY = NamespacedKey(KPlugin.instance, "animatedblock")
 private const val noTexture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDVkMjAzMzBkYTU5YzIwN2Q3ODM1MjgzOGU5MWE0OGVhMWU0MmI0NWE5ODkzMjI2MTQ0YjI1MWZlOWI5ZDUzNSJ9fX0="
 /**
  * Represents a [TexturedBlock] that holds multiple textures that can be changed dynamically.

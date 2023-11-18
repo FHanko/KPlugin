@@ -3,7 +3,9 @@ package io.github.fhanko.kplugin.blocks
 import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.blocks.handler.PlaceHandler
+import io.github.fhanko.kplugin.items.ItemArgument
 import io.github.fhanko.kplugin.items.ItemBase
+import io.github.fhanko.kplugin.util.copyPdc
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -71,11 +73,12 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
     /**
      * Places and returns an instance of this at [location].
      */
-    open fun placeInstance(location: Location, vararg args: Any): Block {
+    open fun placeInstance(location: Location, vararg args: ItemArgument): Block {
         val block = location.world.getBlockAt(location)
         clearBlock(block)
         block.blockData = Bukkit.createBlockData(material)
-        markBlock(block, KEY, PersistentDataType.INTEGER, id)
+        val blockData = CustomBlockData(block, KPlugin.instance)
+        copyPdc(instance(1, *args).itemMeta.persistentDataContainer, blockData)
         return block
     }
 
