@@ -1,12 +1,11 @@
 package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
-import io.github.fhanko.kplugin.KPlugin
 import io.github.fhanko.kplugin.display.DisplayUtil
+import io.github.fhanko.kplugin.items.ItemData
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.event.block.BlockPlaceEvent
@@ -15,7 +14,6 @@ import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
-private val ANIMATION_KEY = NamespacedKey(KPlugin.instance, "animatedblock")
 private const val noTexture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDVkMjAzMzBkYTU5YzIwN2Q3ODM1MjgzOGU5MWE0OGVhMWU0MmI0NWE5ODkzMjI2MTQ0YjI1MWZlOWI5ZDUzNSJ9fX0="
 /**
  * Represents a [TexturedBlock] that holds multiple textures that can be changed dynamically.
@@ -23,7 +21,7 @@ private const val noTexture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90Z
 abstract class AnimatedBlock(val textures: MutableList<String>, id: Int, material: Material, name: Component, lore: List<Component> = listOf())
     : TexturedBlock(textures[0], id, material, name, lore) {
     private val skulls = mutableListOf<ItemStack>()
-
+    private val frameNumber = ItemData(PersistentDataType.INTEGER, "frameNumber")
     init {
         if (textures.size == 0) textures.add(noTexture)
         textures.forEach { tex ->
@@ -37,13 +35,13 @@ abstract class AnimatedBlock(val textures: MutableList<String>, id: Int, materia
 
     override fun place(e: BlockPlaceEvent) {
         DisplayUtil.facePlayer(coverBlock(e.block, skulls.first()), e.player)
-        markBlock(e.block, ANIMATION_KEY, PersistentDataType.INTEGER, 0)
+        frameNumber.setBlock(e.block, 0)
     }
 
     /**
      * Returns the id of current frame from [block].
      */
-    protected fun getFrame(block: Block): Int? = readBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER)
+    protected fun getFrame(block: Block): Int? = frameNumber.getBlock(block)
 
     /**
      * Sets the frame of [block]s [TexturedBlock] cover.
@@ -59,7 +57,7 @@ abstract class AnimatedBlock(val textures: MutableList<String>, id: Int, materia
         val newCover = coverBlock(block, skulls[modFrame])
         oldTransformation?.apply { newCover.transformation = this }
         // Mark the current frame on the block
-        markBlock(block, ANIMATION_KEY, PersistentDataType.INTEGER, modFrame)
+        frameNumber.setBlock(block, modFrame)
     }
 
     /**

@@ -18,7 +18,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
             this(id, material, Component.text(name), description.map { Component.text(it) })
 
     companion object {
-        val KEY = NamespacedKey(KPlugin.instance, "itembase")
+        @JvmStatic protected val idKey = NamespacedKey(KPlugin.instance, "Id")
         val itemList = mutableMapOf<Int, ItemBase>()
 
         /**
@@ -27,21 +27,6 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         fun give(player: Player, id: Int, amount: Int = 1, vararg args: ItemArgument) {
             if (itemList.contains(id))
                 itemList[id]!!.give(player, amount, *args)
-        }
-
-        /**
-         * Marks [key] of an item with [value] in [item]s [PersistentDataContainer].
-         */
-        fun <T, Z : Any> markItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
-            item.editMeta { it.persistentDataContainer.set(key, type, value) }
-        }
-
-        /**
-         * Reads an ID from the [PersistentDataContainer] of [item].
-         */
-        fun <T, Z> readItem(item: ItemStack, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
-            val meta = item.itemMeta ?: return null
-            @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
         }
 
         /**
@@ -55,12 +40,20 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         }
 
         /**
+         * Reads an ID from the [PersistentDataContainer] of [item].
+         */
+        fun <T, Z> readItem(item: ItemStack?, key: NamespacedKey, type: PersistentDataType<T, Z>): Z? {
+            val meta = item?.itemMeta ?: return null
+            @Suppress("Unchecked_Cast") return meta.persistentDataContainer.get(key, type) as Z
+        }
+
+        /**
          * Returns [ItemBase] that is associated with given [ItemStack] [item].
          */
         fun get(item: ItemStack?): ItemBase? {
             item ?: return null
-            val itemId = readItem(item, KEY, PersistentDataType.INTEGER) ?: return null
-            return if (itemList.contains(itemId)) itemList[itemId] else null
+            val itemId = readItem(item, idKey, PersistentDataType.INTEGER) ?: return null
+            return itemList.getOrDefault(itemId, null)
         }
     }
 
@@ -77,17 +70,15 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     }
 
     val item: ItemStack = ItemStack(material)
+    protected val key = ItemData(PersistentDataType.INTEGER, "Id")
 
     init {
         setText(item, name, description)
-        markItem(item, KEY, PersistentDataType.INTEGER, id)
+        key.set(item, id)
         itemList[id] = this
 
         Bukkit.getLogger().info("Init BaseItem ${mm.serialize(name)}")
     }
-
-    protected fun compareId(other: ItemStack?) =
-        other?.itemMeta?.persistentDataContainer?.get(KEY, PersistentDataType.INTEGER) == id
 }
 
 data class ItemArgument(val string: String, val integer: Int?, val float: Float?) {
@@ -95,5 +86,3 @@ data class ItemArgument(val string: String, val integer: Int?, val float: Float?
     constructor(integer: Int): this(integer.toString(), integer, integer.toFloat())
     constructor(float: Float): this(float.toString(), float.toInt(), float)
 }
-
-fun String.toItemArg() = ItemArgument(this)

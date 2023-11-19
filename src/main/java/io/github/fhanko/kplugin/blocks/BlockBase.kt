@@ -23,22 +23,6 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
         private fun getBlockPdc(block: Block): PersistentDataContainer = CustomBlockData(block, KPlugin.instance)
 
         /**
-         * Marks [key] of [PersistentDataContainer] from the supplied [block] with [value] of type [type].
-         */
-        fun <T, Z : Any> markBlock(block: Block, key: NamespacedKey, type: PersistentDataType<T, Z>, value: Z) {
-            val blockData = CustomBlockData(block, KPlugin.instance)
-            blockData.set(key, type, value)
-        }
-
-        /**
-         * Removes [key] from [PersistentDataContainer] of supplied [block].
-         */
-        fun unmarkBlock(block: Block, key: NamespacedKey) {
-            val blockData = CustomBlockData(block, KPlugin.instance)
-            blockData.remove(key)
-        }
-
-        /**
          * Clears [PersistentDataContainer] of supplied [block].
          */
         fun clearBlock(block: Block) {
@@ -59,8 +43,8 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
          */
         fun get(block: Block?): BlockBase? {
             block ?: return null
-            val blockId = readBlock(block, KEY, PersistentDataType.INTEGER) ?: return null
-            return if (itemList.contains(blockId)) itemList[blockId] as BlockBase else null
+            val blockId = readBlock(block, ItemBase.idKey, PersistentDataType.INTEGER) ?: return null
+            return itemList.getOrDefault(blockId, null) as BlockBase
         }
     }
 
@@ -80,11 +64,5 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
         val blockData = CustomBlockData(block, KPlugin.instance)
         copyPdc(instance(1, *args).itemMeta.persistentDataContainer, blockData)
         return block
-    }
-
-    private fun compareBlockId(other: Block?): Boolean {
-        other ?: return false
-        val blockData = CustomBlockData(other, KPlugin.instance)
-        return blockData.get(KEY, PersistentDataType.INTEGER) == id
     }
 }

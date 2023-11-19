@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.util
 
+import io.github.fhanko.kplugin.items.ItemArgument
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
@@ -68,3 +69,5 @@ fun Double.rangeTo(to: Double): IntRange {
 }
 
 val random = Random()
+
+fun String.toItemArg() = ItemArgument(this)

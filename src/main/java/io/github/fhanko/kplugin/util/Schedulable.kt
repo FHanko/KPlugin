@@ -1,6 +1,5 @@
 package io.github.fhanko.kplugin.util
 
-import com.jeff_media.customblockdata.CustomBlockData
 import io.github.fhanko.kplugin.KPlugin
 import org.bukkit.Bukkit
 
