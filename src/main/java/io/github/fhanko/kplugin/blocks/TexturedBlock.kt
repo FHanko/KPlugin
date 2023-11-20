@@ -29,6 +29,7 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
     : BlockBase(id, Material.PLAYER_HEAD, name, lore), Schedulable {
     private val offset = Vector(0.5, 1.01, 0.5)
     private val displayId = ItemData(PersistentDataType.STRING, "displayId")
+    protected open val opaque = true
     init {
         val profile = Bukkit.getServer().createProfile(UUID.randomUUID())
         val property = ProfileProperty("textures", texture)
@@ -43,7 +44,7 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
         val display = block.world.spawn(block.location.add(offset), ItemDisplay::class.java)
         display.itemStack = coverItem
         display.transformation.apply { scale.set(offset.y * 2); display.transformation = this }
-        display.brightness = Display.Brightness(7, 7)
+        if (opaque) display.brightness = Display.Brightness(7, 7)
         block.type = overrideMaterial
         // Mark block with display id for later removal
         displayId.setBlock(block, display.uniqueId.toString())

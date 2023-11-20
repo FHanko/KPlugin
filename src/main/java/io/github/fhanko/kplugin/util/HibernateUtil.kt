@@ -12,11 +12,11 @@ object HibernateUtil {
     private lateinit var em: EntityManager
     private var initialized = false
 
-    fun createSessionFactory() {
+    fun createSessionFactory(persistenceUnitName: String) {
         // https://sjhannah.com/blog/2018/11/21/jaxb-hell-on-jdk-9/
         val queue = LinkedBlockingQueue<EntityManager>()
         val t = Thread {
-            val emf = Persistence.createEntityManagerFactory("PUnit")
+            val emf = Persistence.createEntityManagerFactory(persistenceUnitName)
             queue.add(emf.createEntityManager())
         }
         t.setContextClassLoader(javaClass.getClassLoader())

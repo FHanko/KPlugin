@@ -32,7 +32,7 @@ class KPlugin : JavaPlugin() {
 
     override fun onEnable() {
         initialize(this)
-        HibernateUtil.createSessionFactory()
+        HibernateUtil.createSessionFactory("PUnit")
         CommandAPI.onEnable()
         Init.initialize("io.github.fhanko")
 
