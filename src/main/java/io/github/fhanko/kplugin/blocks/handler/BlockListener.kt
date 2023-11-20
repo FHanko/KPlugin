@@ -9,6 +9,8 @@ import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.util.Cooldownable
 import io.github.fhanko.kplugin.util.copyPdc
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -52,6 +54,7 @@ object BlockListener: Listener {
     fun onDestroy(e: CustomBlockDataRemoveEvent) {
         val base = BlockBase.get(e.block)
         if (base is PlaceHandler) base.destroy(e)
+        e.block.blockData = Bukkit.createBlockData(Material.AIR)
     }
 
     @EventHandler

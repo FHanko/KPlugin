@@ -6,6 +6,7 @@ import io.github.fhanko.kplugin.display.DisplayListener
 import io.github.fhanko.kplugin.display.DisplayUtil
 import io.github.fhanko.kplugin.items.ItemData
 import io.github.fhanko.kplugin.util.Schedulable
+import io.github.fhanko.kplugin.util.random
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -14,6 +15,7 @@ import org.bukkit.block.Skull
 import org.bukkit.entity.Display
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.entity.Player
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
@@ -43,7 +45,9 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
     protected fun coverBlock(block: Block, coverItem: ItemStack): ItemDisplay {
         val display = block.world.spawn(block.location.add(offset), ItemDisplay::class.java)
         display.itemStack = coverItem
-        display.transformation.apply { scale.set(offset.y * 2); display.transformation = this }
+        // Avoid any overlap
+        val extraOffset = 0.001 * random.nextFloat()
+        display.transformation.apply { scale.set(offset.y * 2 + extraOffset); display.transformation = this }
         if (opaque) display.brightness = Display.Brightness(7, 7)
         block.type = overrideMaterial
         // Mark block with display id for later removal
@@ -59,17 +63,26 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
     }
 
     /**
+     * Removes the [Display] associated with [block].
+     */
+    protected fun removeDisplay(block: Block) {
+        val id = displayId.getBlock(block) ?: return
+        UUID.fromString(id)?.apply { DisplayListener.displayIds[this]?.remove() }
+        displayId.removeBlock(block)
+    }
+
+    /**
      * Covers the [Block] of [e] using [coverBlock] and also turns the cover to face the [Player] of [e].
      */
     override fun place(e: BlockPlaceEvent) {
         DisplayUtil.facePlayer(coverBlock(e.block, item), e.player)
     }
 
-    /**
-     * Removes [Display] covering this block when destroyed.
-     */
+    override fun broke(e: BlockBreakEvent) {
+        removeDisplay(e.block)
+    }
+
     override fun destroy(e: CustomBlockDataRemoveEvent) {
-        val currentDisplay = UUID.fromString(displayId.getBlock(e.block))
-        currentDisplay?.apply { DisplayListener.displayIds[this]?.remove() }
+        removeDisplay(e.block)
     }
 }

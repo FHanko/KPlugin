@@ -1,13 +1,13 @@
 package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
-import io.github.fhanko.kplugin.display.DisplayUtil
 import io.github.fhanko.kplugin.items.ItemData
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.ItemDisplay
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
@@ -34,8 +34,13 @@ abstract class AnimatedBlock(val textures: MutableList<String>, id: Int, materia
     }
 
     override fun place(e: BlockPlaceEvent) {
-        DisplayUtil.facePlayer(coverBlock(e.block, skulls.first()), e.player)
+        super.place(e)
         frameNumber.setBlock(e.block, 0)
+    }
+
+    override fun broke(e: BlockBreakEvent) {
+        super.broke(e)
+        frameNumber.removeBlock(e.block)
     }
 
     /**
