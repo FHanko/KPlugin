@@ -5,11 +5,9 @@ import org.bukkit.entity.Player
 import org.joml.Vector3f
 
 object DisplayUtil {
-    fun facePlayer(display: Display, player: Player) {
+    fun blockFacePlayer(display: Display, player: Player) {
         val t = display.transformation
-        val angle = (360 - player.yaw + 180)
-        val angleSnapped = (Math.round(angle / 90) * 90) + 180
-        t.leftRotation.fromAxisAngleDeg(Vector3f(0f, 1f, 0f), angleSnapped.toFloat())
+        t.leftRotation.fromAxisAngleDeg(Vector3f(0f, 1f, 0f), (Math.round((player.yaw) / -90) * 90).toFloat())
         display.transformation = t
     }
 }

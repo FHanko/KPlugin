@@ -22,10 +22,10 @@ class KPlugin : JavaPlugin() {
             instance = plugin
             Bukkit.getPluginManager().registerEvents(DefaultListener, instance)
             Bukkit.getPluginManager().registerEvents(ZoneListener, instance)
-            Bukkit.getPluginManager().registerEvents(BlockListener, instance)
             Bukkit.getPluginManager().registerEvents(ItemListener, instance)
             Bukkit.getPluginManager().registerEvents(DisplayListener, instance)
             Bukkit.getPluginManager().registerEvents(InventoryListener, instance)
+            Bukkit.getPluginManager().registerEvents(BlockListener, instance)
             CustomBlockData.registerListener(instance)
         }
     }

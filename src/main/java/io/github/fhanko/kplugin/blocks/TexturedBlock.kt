@@ -75,7 +75,7 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
      * Covers the [Block] of [e] using [coverBlock] and also turns the cover to face the [Player] of [e].
      */
     override fun place(e: BlockPlaceEvent) {
-        DisplayUtil.facePlayer(coverBlock(e.block, item), e.player)
+        DisplayUtil.blockFacePlayer(coverBlock(e.block, item), e.player)
     }
 
     override fun broke(e: BlockBreakEvent) {

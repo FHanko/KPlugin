@@ -7,6 +7,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.util.Vector
+import org.joml.Vector3f
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
@@ -71,3 +72,5 @@ fun Double.rangeTo(to: Double): IntRange {
 val random = Random()
 
 fun String.toItemArg() = ItemArgument(this)
+
+fun Vector.to3f(): Vector3f = Vector3f(x.toFloat(), y.toFloat(), z.toFloat())
