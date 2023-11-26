@@ -1,4 +1,4 @@
-package io.github.fhanko.kplugin.display
+package io.github.fhanko.kplugin.entity
 
 import org.bukkit.entity.Display
 import org.bukkit.entity.Player

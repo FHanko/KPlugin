@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 
 class ZoneHeal(start: Location, end: Location): Zone(start, end), EnterHandler, Schedulable {
     override fun enter(p: Player) {
-        scheduleRepeat(p.uniqueId.toString(), 1000, ::healPlayer, p)
+        scheduleRepeat(p.uniqueId.toString(), 20, ::healPlayer, p)
     }
 
     private fun healPlayer(params: List<Any>) {
@@ -19,6 +19,6 @@ class ZoneHeal(start: Location, end: Location): Zone(start, end), EnterHandler, 
     }
 
     override fun leave(p: Player) {
-        cancelSchedule(p.uniqueId.toString())
+        scheduleCancel(p.uniqueId.toString())
     }
 }

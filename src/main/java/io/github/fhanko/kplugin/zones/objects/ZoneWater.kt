@@ -13,7 +13,7 @@ class ZoneWater(start: Location, end: Location): Zone(start, end), Schedulable {
 
     override fun create() {
         super.create()
-        scheduleRepeat(scheduleKey, 20000, ::waterBlocks)
+        scheduleRepeat(scheduleKey, 400, ::waterBlocks)
     }
 
     private fun waterBlocks(params: List<Any>) {
@@ -28,6 +28,6 @@ class ZoneWater(start: Location, end: Location): Zone(start, end), Schedulable {
     }
 
     override fun remove() {
-        cancelSchedule(scheduleKey)
+        scheduleCancel(scheduleKey)
     }
 }

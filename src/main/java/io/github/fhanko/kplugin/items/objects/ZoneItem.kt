@@ -1,6 +1,6 @@
 package io.github.fhanko.kplugin.items.objects
 
-import io.github.fhanko.kplugin.display.CubeDisplay
+import io.github.fhanko.kplugin.entity.CubeDisplay
 import io.github.fhanko.kplugin.items.ItemBase
 import io.github.fhanko.kplugin.items.handler.ClickHandler
 import io.github.fhanko.kplugin.items.handler.EquipHandler

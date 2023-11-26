@@ -4,7 +4,7 @@ import com.jeff_media.customblockdata.CustomBlockData
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.fhanko.kplugin.blocks.handler.BlockListener
-import io.github.fhanko.kplugin.display.DisplayListener
+import io.github.fhanko.kplugin.entity.DisplayListener
 import io.github.fhanko.kplugin.gui.handler.InventoryListener
 import io.github.fhanko.kplugin.items.handler.ItemListener
 import io.github.fhanko.kplugin.util.HibernateUtil

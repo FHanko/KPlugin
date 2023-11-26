@@ -2,8 +2,8 @@ package io.github.fhanko.kplugin.blocks
 
 import com.destroystokyo.paper.profile.ProfileProperty
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
-import io.github.fhanko.kplugin.display.DisplayListener
-import io.github.fhanko.kplugin.display.DisplayUtil
+import io.github.fhanko.kplugin.entity.DisplayListener
+import io.github.fhanko.kplugin.entity.DisplayUtil
 import io.github.fhanko.kplugin.items.ItemData
 import io.github.fhanko.kplugin.util.Schedulable
 import io.github.fhanko.kplugin.util.random

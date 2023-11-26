@@ -1,4 +1,4 @@
-package io.github.fhanko.kplugin.display
+package io.github.fhanko.kplugin.entity
 
 import io.github.fhanko.kplugin.util.Schedulable
 import org.bukkit.Color

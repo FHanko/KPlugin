@@ -1,4 +1,4 @@
-package io.github.fhanko.kplugin.display
+package io.github.fhanko.kplugin.entity
 
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent
 import org.bukkit.entity.Display

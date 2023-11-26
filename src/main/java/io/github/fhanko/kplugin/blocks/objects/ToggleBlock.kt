@@ -27,13 +27,13 @@ object ToggleBlock: AnimatedBlock(frames, 7, Material.IRON_BLOCK, Component.text
         if (!on) {
             val i = CurrencyItem.instance(1, ItemArgument(1f))
             val loc = block.location.add(0.0, 0.5, 0.0)
-            scheduleRepeat(block.location.toString(), 1000,
+            scheduleRepeat(block.location.toString(), 20,
                 {_ ->
                     block.world.dropItem(loc, i)
                 }
             )
         } else {
-            cancelSchedule(block.location.toString())
+            scheduleCancel(block.location.toString())
         }
     }
 
@@ -44,6 +44,6 @@ object ToggleBlock: AnimatedBlock(frames, 7, Material.IRON_BLOCK, Component.text
 
     override fun destroy(e: CustomBlockDataRemoveEvent) {
         super.destroy(e)
-        cancelSchedule(e.block.location.toString())
+        scheduleCancel(e.block.location.toString())
     }
 }
