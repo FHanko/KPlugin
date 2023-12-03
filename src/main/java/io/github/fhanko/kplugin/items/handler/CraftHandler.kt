@@ -19,3 +19,14 @@ interface DisableCraftHandler: CraftHandler {
         e.inventory.result = ItemStack(Material.AIR)
     }
 }
+
+/**
+ * Implementable for subclasses of ItemBase to override the output of crafting with that item to nothing
+ * if viewers do not have a certain permission.
+ */
+interface CraftPermissionHandler: CraftHandler {
+    fun craftPermission() = ""
+    override fun craft(e: PrepareItemCraftEvent) {
+        if (e.viewers.any { !it.hasPermission(craftPermission()) }) e.inventory.result = ItemStack(Material.AIR)
+    }
+}
