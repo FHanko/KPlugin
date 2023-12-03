@@ -9,6 +9,7 @@ import org.bukkit.util.Vector
 abstract class Projectile(val source: Entity?, val projectile: Entity, var velocity: Vector, val mass: Float = 1f): Schedulable {
     private val world = projectile.location.world
     private var liveTicks = 0L
+    protected var previousVelocity = Vector()
 
     fun shoot(tickInterval: Long = 1) {
         scheduleRepeat(projectile.uniqueId.toString(), tickInterval, ::tick, tickInterval)
@@ -16,6 +17,7 @@ abstract class Projectile(val source: Entity?, val projectile: Entity, var veloc
 
     private fun tick(params: List<Any>) {
         val delta = params[0] as Long
+        previousVelocity.copy(velocity)
         move(delta)
         val hit = world.rayTrace(
             projectile.location.subtract(velocity), velocity, velocity.length(), FluidCollisionMode.NEVER, true, 0.01
@@ -36,8 +38,8 @@ abstract class Projectile(val source: Entity?, val projectile: Entity, var veloc
 
     open fun move(delta: Long) {
         if (mass > 0) {
-            velocity.multiply(1f - (delta * 0.008f * mass))
-            velocity.add(Vector(0f, -0.02f * delta * mass, 0f))
+            velocity.multiply(1f - (delta * 0.01f * mass))
+            velocity.add(Vector(0f, -0.025f * delta * mass, 0f))
         }
         projectile.teleport(projectile.location.add(velocity))
     }

@@ -1,5 +1,6 @@
 package io.github.fhanko.kplugin.entity
 
+import io.github.fhanko.kplugin.util.then
 import io.github.fhanko.kplugin.util.to3f
 import net.minecraft.util.Mth
 import org.bukkit.entity.Display
@@ -19,6 +20,12 @@ object DisplayUtil {
     fun setRotation(display: Display, quaternion: Quaternionf) {
         val t = display.transformation
         t.leftRotation.set(quaternion)
+        display.transformation = t
+    }
+
+    fun applyRotation(display: Display, quaternion: Quaternionf) {
+        val t = display.transformation
+        t.leftRotation.set(t.leftRotation then quaternion)
         display.transformation = t
     }
 

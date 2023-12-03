@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPickupItemEvent
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -75,6 +76,14 @@ object ItemListener: Listener {
             if (e.slot == e.player.inventory.heldItemSlot) baseOld.unequip(e.player, EquipHandler.EquipType.Hand)
             else if (e.slot == baseOld.armourSlot().slot) baseOld.unequip(e.player, EquipHandler.EquipType.Armour)
         }
+    }
+
+    @EventHandler
+    fun onInventoryClick(e: InventoryClickEvent) {
+        val clickedBase = ItemBase.get(e.currentItem)
+        val droppedBase = ItemBase.get(e.cursor)
+        if (clickedBase is SlotHandler) clickedBase.slotClicked(e)
+        if (droppedBase is SlotHandler) droppedBase.slotDropped(e)
     }
 
     @EventHandler

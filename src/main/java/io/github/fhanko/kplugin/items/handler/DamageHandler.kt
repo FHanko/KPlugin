@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 import kotlin.math.max
+import kotlin.math.min
 
 private val itemDurability = ItemData(PersistentDataType.INTEGER_ARRAY, "itemDurability")
 /**
@@ -26,14 +27,15 @@ interface DamageHandler {
     fun durabilityText(durability: Int, maxDurability: Int): Component? = null
 
     fun setDurability(item: ItemStack, durability: Int, maxDurability: Int) {
-        itemDurability.set(item, arrayOf(durability, maxDurability).toIntArray())
+        val dur = min(durability, maxDurability)
+        itemDurability.set(item, arrayOf(dur, maxDurability).toIntArray())
         // Remove old durabilityText and add the new one
-        if (durabilityText(durability, maxDurability) != null) {
+        if (durabilityText(dur, maxDurability) != null) {
             val regex = Regex("[a-zA-Z]+")
             val im = item.itemMeta
             val lore = im.lore() ?: mutableListOf()
-            lore.removeIf { regex.find(mm.serialize(it))?.value == regex.find(mm.serialize(durabilityText(durability, maxDurability)!!))?.value }
-            lore.add(durabilityText(durability, maxDurability))
+            lore.removeIf { regex.find(mm.serialize(it))?.value == regex.find(mm.serialize(durabilityText(dur, maxDurability)!!))?.value }
+            lore.add(durabilityText(dur, maxDurability))
             im.lore(lore)
             item.itemMeta = im
         }
