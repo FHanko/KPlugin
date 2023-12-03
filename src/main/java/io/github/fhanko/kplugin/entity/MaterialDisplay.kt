@@ -3,11 +3,12 @@ package io.github.fhanko.kplugin.entity
 import io.github.fhanko.kplugin.util.Schedulable
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Display
 import org.bukkit.entity.ItemDisplay
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
-class MaterialDisplay(location: Location, material: Material, size: Vector): Schedulable {
+class MaterialDisplay(location: Location, material: Material, size: Vector, brightness: Int = -1): Schedulable {
     val display: ItemDisplay
     init {
         display = location.world.spawn(location, ItemDisplay::class.java)
@@ -16,6 +17,8 @@ class MaterialDisplay(location: Location, material: Material, size: Vector): Sch
         val t = display.transformation
         t.scale.set(size.x, size.y, size.z)
         display.transformation = t
+        display.teleportDuration = 1
+        if (brightness != -1) display.brightness = Display.Brightness(brightness, brightness)
     }
 
     fun remove() {

@@ -57,7 +57,7 @@ abstract class AnimatedBlock(val textures: MutableList<String>, id: Int, materia
         val oldDisplay = getDisplay(block)
         val oldTransformation = oldDisplay?.transformation
         // Remove old cover delayed to avoid the block being naked while the new display loads
-        oldDisplay?.apply { schedule(oldDisplay.uniqueId.toString(), 100, { i -> (i[0] as ItemDisplay).remove() }, this) }
+        oldDisplay?.apply { schedule(oldDisplay.uniqueId.toString(), 2, { i -> (i[0] as ItemDisplay).remove() }, this) }
         // Place new cover
         val newCover = coverBlock(block, skulls[modFrame])
         oldTransformation?.apply { newCover.transformation = this }

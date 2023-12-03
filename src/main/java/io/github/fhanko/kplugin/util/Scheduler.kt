@@ -23,11 +23,11 @@ object Scheduler {
     }
 
     fun remove(key: String) {
-        schedules.values.forEach { it.remove(key) }
+        Bukkit.getScheduler().runTask(KPlugin.instance, Runnable { schedules.values.forEach { m -> m.remove(key) } })
     }
 
     private fun runTick(tick: Long) {
-        schedules[tick]!!.values.forEach { s -> s.action(s.params) }
+        schedules[tick]?.values?.forEach { s -> s.action(s.params) }
     }
 
     /**

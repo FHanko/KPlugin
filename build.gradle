@@ -13,7 +13,7 @@ apply plugin: "kotlin-jpa"
 apply plugin: "maven-publish"
 
 group = 'io.github.fhanko'
-version = '1.3'
+version = '1.4'
 
 repositories {
     mavenCentral()
