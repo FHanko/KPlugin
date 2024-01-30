@@ -4,8 +4,8 @@ import io.github.fhanko.kplugin.gui.handler.InventoryHandler
 import net.kyori.adventure.text.Component
 import net.minecraft.world.item.ItemStack
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
-import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCustom
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory

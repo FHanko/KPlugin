@@ -3,6 +3,7 @@ package io.github.fhanko.kplugin.entity
 import io.github.fhanko.kplugin.util.Schedulable
 import org.bukkit.FluidCollisionMode
 import org.bukkit.block.Block
+import org.bukkit.entity.Damageable
 import org.bukkit.entity.Entity
 import org.bukkit.util.Vector
 
@@ -20,8 +21,8 @@ abstract class Projectile(val source: Entity?, val projectile: Entity, var veloc
         previousVelocity.copy(velocity)
         move(delta)
         val hit = world.rayTrace(
-            projectile.location.subtract(velocity), velocity, velocity.length(), FluidCollisionMode.NEVER, true, 0.01
-        ) { e -> e.uniqueId != source?.uniqueId && e.uniqueId != projectile.uniqueId }
+            projectile.location.subtract(velocity), velocity, velocity.length(), FluidCollisionMode.NEVER, true, 0.2
+        ) { e -> e.uniqueId != source?.uniqueId && e is Damageable }
         if (hit?.hitEntity != null) {
             hitEntity(hit.hitEntity!!, hit.hitPosition)
             disable()

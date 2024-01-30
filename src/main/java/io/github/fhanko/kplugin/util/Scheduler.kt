@@ -23,7 +23,7 @@ object Scheduler {
     }
 
     fun remove(key: String) {
-        Bukkit.getScheduler().runTask(KPlugin.instance, Runnable { schedules.values.forEach { m -> m.remove(key) } })
+        now { schedules.values.forEach { m -> m.remove(key) } }
     }
 
     private fun runTick(tick: Long) {
@@ -35,6 +35,13 @@ object Scheduler {
      */
     fun nextTick(action: (List<Any>) -> Unit, vararg params: Any) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(KPlugin.instance) { action(params.asList()) }
+    }
+
+    /**
+     * Runs the given task on the scheduler.
+     */
+    fun now(action: () -> Unit) {
+        Bukkit.getScheduler().runTask(KPlugin.instance, Runnable { action() } )
     }
 }
 

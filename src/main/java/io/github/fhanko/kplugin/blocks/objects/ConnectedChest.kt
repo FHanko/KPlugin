@@ -10,7 +10,7 @@ import io.github.fhanko.kplugin.util.HibernateUtil
 import io.github.fhanko.kplugin.util.converter.InventoryConverter
 import jakarta.persistence.*
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCustom
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCustom
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
