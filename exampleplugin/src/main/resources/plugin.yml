@@ -1,0 +1,4 @@
+name: ExamplePlugin
+version: '${version}'
+main: io.github.fhanko.ExamplePlugin
+api-version: '1.20'

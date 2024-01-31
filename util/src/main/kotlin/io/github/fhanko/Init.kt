@@ -18,7 +18,10 @@ object Init {
 
         val listeners = Reflections("io.github.fhanko")
         listeners.getSubTypesOf(Listener::class.java).forEach {
-            Bukkit.getPluginManager().registerEvents(it.kotlin.objectInstance!!, PluginInstance.instance)
+            if (it.kotlin.objectInstance != null) {
+                Bukkit.getPluginManager().registerEvents(it.kotlin.objectInstance!!, PluginInstance.instance)
+                Bukkit.getLogger().info("Init Listener ${it.kotlin.objectInstance!!.javaClass.name}")
+            }
         }
     }
 }

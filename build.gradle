@@ -1,9 +1,6 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
-    id 'xyz.jpenilla.run-paper' version '2.2.0'
     id 'org.jetbrains.kotlin.jvm' version '1.9.20-RC2'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'io.papermc.paperweight.userdev' version '1.5.5'
 }
 
@@ -33,22 +30,6 @@ repositories {
     }
 }
 
-shadowJar {
-    relocate 'com.jeff_media.customblockdata', 'io.github.fhanko.kplugin.customblockdata'
-    //minimize()
-}
-
-dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    implementation 'org.reflections:reflections:0.10.2'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.20-RC2'
-
-    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
-    implementation "dev.jorel:commandapi-bukkit-shade:9.3.0"
-    implementation 'com.jeff-media:custom-block-data:2.2.2'
-    implementation 'org.bstats:bstats-bukkit:3.0.2'
-}
-
 def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
@@ -65,26 +46,6 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-tasks {
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.4")
-    }
-}
-
 kotlin {
     jvmToolchain(17)
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = 'kplugin'
-            version = version
-            from components.java
-        }
-    }
 }

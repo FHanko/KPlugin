@@ -22,7 +22,6 @@ interface Cooldownable {
      * Checks if [player] has no cooldown associated with [key] and places this cooldown or sends [cooldownMessage].
      */
     fun useCooldown(player: Player, key: String): Boolean {
-        val persist: Boolean = getCooldown() >= 300000
         val hash = hash("${player.uniqueId}$key")
         val cooldown = CooldownManager.getCooldown(hash) ?: 0
         if (cooldown > 0L) {
