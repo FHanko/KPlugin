@@ -3,3 +3,7 @@ plugins {
 }
 
 rootProject.name = 'KPlugin'
+include 'items'
+include 'blocks'
+include 'util'
+include 'entity'

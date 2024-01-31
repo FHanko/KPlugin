@@ -1,0 +1,5 @@
+dependencies {
+    api project(":items")
+    api project(":entity")
+    api 'com.jeff-media:custom-block-data:2.2.2'
+}
