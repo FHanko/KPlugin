@@ -30,9 +30,10 @@ object ItemListener: Listener {
 
     @EventHandler
     fun onCraft(e: PrepareItemCraftEvent) {
-        e.inventory.forEach { ing ->
-            ItemBase.get(ing)?.also { if (it is CraftHandler) it.craft(e) }
+        e.inventory.matrix.forEach { ing ->
+            ItemBase.get(ing)?.also { if (it is CraftHandler) it.craftComponent(e) }
         }
+        ItemBase.get(e.inventory.result)?.also { if (it is CraftHandler) it.craftResult(e) }
     }
 
     @EventHandler

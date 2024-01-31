@@ -69,6 +69,8 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         player.inventory.addItem(instance(amount, *args))
     }
 
+    fun setCustomModelData(modelData: Int) = item.editMeta { it.setCustomModelData(modelData) }
+
     val item: ItemStack = ItemStack(material)
     protected val key = ItemData(PersistentDataType.INTEGER, "Id")
 

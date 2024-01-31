@@ -8,14 +8,15 @@ import org.bukkit.inventory.ItemStack
  * Implementable for subclasses of ItemBase to set crafting behaviour.
  */
 interface CraftHandler {
-    fun craft(e: PrepareItemCraftEvent) { }
+    fun craftResult(e: PrepareItemCraftEvent) { }
+    fun craftComponent(e: PrepareItemCraftEvent) { }
 }
 
 /**
  * Implementable for subclasses of ItemBase to override the output of crafting with that item to nothing.
  */
 interface DisableCraftHandler: CraftHandler {
-    override fun craft(e: PrepareItemCraftEvent) {
+    override fun craftComponent(e: PrepareItemCraftEvent) {
         e.inventory.result = ItemStack(Material.AIR)
     }
 }
@@ -26,7 +27,7 @@ interface DisableCraftHandler: CraftHandler {
  */
 interface CraftPermissionHandler: CraftHandler {
     fun craftPermission() = ""
-    override fun craft(e: PrepareItemCraftEvent) {
+    override fun craftResult(e: PrepareItemCraftEvent) {
         if (e.viewers.any { !it.hasPermission(craftPermission()) }) e.inventory.result = ItemStack(Material.AIR)
     }
 }
