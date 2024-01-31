@@ -1,0 +1,5 @@
+dependencies {
+    api project(":util")
+    api 'com.h2database:h2:2.2.220'
+    api 'org.hibernate:hibernate-core:6.3.0.CR1'
+}

@@ -5,12 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.20-RC2'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'io.papermc.paperweight.userdev' version '1.5.5'
-    id "org.jetbrains.kotlin.plugin.jpa" version "1.9.20"
-    id "org.jetbrains.kotlin.plugin.allopen" version "1.9.20"
 }
-
-apply plugin: "kotlin-jpa"
-apply plugin: "maven-publish"
 
 allprojects {
     group = 'io.github.fhanko'
@@ -52,9 +47,6 @@ dependencies {
     implementation "dev.jorel:commandapi-bukkit-shade:9.3.0"
     implementation 'com.jeff-media:custom-block-data:2.2.2'
     implementation 'org.bstats:bstats-bukkit:3.0.2'
-
-    implementation 'com.h2database:h2:2.2.220'
-    implementation 'org.hibernate:hibernate-core:6.3.0.CR1'
 }
 
 def targetJavaVersion = 17

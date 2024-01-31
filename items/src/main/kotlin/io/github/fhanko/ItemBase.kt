@@ -85,3 +85,5 @@ data class ItemArgument(val string: String, val integer: Int?, val float: Float?
     constructor(integer: Int): this(integer.toString(), integer, integer.toFloat())
     constructor(float: Float): this(float.toString(), float.toInt(), float)
 }
+
+fun String.toItemArg() = ItemArgument(this)
