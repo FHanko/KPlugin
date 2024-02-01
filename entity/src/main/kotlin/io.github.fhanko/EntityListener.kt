@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Keeps a consistent list of unique(persistent) entity ids mapped to their [Display]s.
  */
-object DisplayListener: Listener {
+object EntityListener: Listener {
     val displayIds = mutableMapOf<UUID, Display>()
 
     @EventHandler

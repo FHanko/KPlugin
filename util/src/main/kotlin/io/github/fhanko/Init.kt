@@ -8,20 +8,19 @@ interface Initializable
 
 /**
  * Initializes objects (avoids lazy initialization) for [Initializable] subtype objects.
+ *
+ * Do not use this in production as the reflection libraries are quite heavy.
  */
 object Init {
-    internal fun initialize(prefix: String) {
+    fun initialize(prefix: String) {
         val reflections = Reflections(prefix)
         reflections.getSubTypesOf(Initializable::class.java).forEach {
             it.kotlin.objectInstance
         }
 
-        val listeners = Reflections("io.github.fhanko")
-        listeners.getSubTypesOf(Listener::class.java).forEach {
-            if (it.kotlin.objectInstance != null) {
-                Bukkit.getPluginManager().registerEvents(it.kotlin.objectInstance!!, PluginInstance.instance)
-                Bukkit.getLogger().info("Init Listener ${it.kotlin.objectInstance!!.javaClass.name}")
-            }
+        reflections.getSubTypesOf(Listener::class.java).forEach {
+            if (it.kotlin.objectInstance != null)
+            Bukkit.getPluginManager().registerEvents(it.kotlin.objectInstance!!, PluginInstance.instance)
         }
     }
 }

@@ -54,7 +54,7 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
      * Returns the [Display] associated with [block].
      */
     protected fun getDisplay(block: Block): ItemDisplay? {
-        return DisplayListener.displayIds.getOrDefault(UUID.fromString(displayId.getBlock(block)), null) as ItemDisplay?
+        return EntityListener.displayIds.getOrDefault(UUID.fromString(displayId.getBlock(block)), null) as ItemDisplay?
     }
 
     /**
@@ -62,7 +62,7 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
      */
     protected fun removeDisplay(block: Block) {
         val id = displayId.getBlock(block) ?: return
-        UUID.fromString(id)?.apply { DisplayListener.displayIds[this]?.remove() }
+        UUID.fromString(id)?.apply { EntityListener.displayIds[this]?.remove() }
         displayId.removeBlock(block)
     }
 

@@ -8,7 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin
 @Suppress("Unused")
 class ExamplePlugin : JavaPlugin() {
     override fun onEnable() {
-        PluginInstance.initialize(this, "io.github.fhanko")
+        PluginInstance.initialize(this)
+        Init.initialize("io.github.fhanko")
         CustomBlockData.registerListener(this)
         HibernateUtil.createSessionFactory("PUnit")
         CommandAPI.onEnable()
