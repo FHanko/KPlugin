@@ -2,7 +2,7 @@ package io.github.fhanko.zones
 
 import io.github.fhanko.Schedulable
 import io.github.fhanko.Zone
-import io.github.fhanko.handler.EnterHandler
+import io.github.fhanko.zonehandler.EnterHandler
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player

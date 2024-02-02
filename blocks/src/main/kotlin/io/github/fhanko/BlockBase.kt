@@ -1,7 +1,7 @@
 package io.github.fhanko
 
 import com.jeff_media.customblockdata.CustomBlockData
-import io.github.fhanko.handler.PlaceHandler
+import io.github.fhanko.blockhandler.PlaceHandler
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -40,7 +40,7 @@ abstract class BlockBase(id: Int, material: Material, name: Component, descripti
         fun get(block: Block?): BlockBase? {
             block ?: return null
             val blockId = readBlock(block, ItemBase.idKey, PersistentDataType.INTEGER) ?: return null
-            return itemList.getOrDefault(blockId, null) as BlockBase
+            return itemMap.getOrDefault(blockId, null) as BlockBase
         }
     }
 

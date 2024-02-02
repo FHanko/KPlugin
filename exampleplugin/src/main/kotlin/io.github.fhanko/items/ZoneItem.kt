@@ -4,8 +4,8 @@ import io.github.fhanko.CubeDisplay
 import io.github.fhanko.ItemBase
 import io.github.fhanko.Schedulable
 import io.github.fhanko.ZoneChunkMap
-import io.github.fhanko.handler.ClickHandler
-import io.github.fhanko.handler.EquipHandler
+import io.github.fhanko.itemhandler.ClickHandler
+import io.github.fhanko.itemhandler.EquipHandler
 import io.github.fhanko.zones.ZoneHeal
 import org.bukkit.Location
 import org.bukkit.Material

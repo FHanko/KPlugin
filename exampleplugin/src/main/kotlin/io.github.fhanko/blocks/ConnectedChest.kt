@@ -3,7 +3,7 @@ package io.github.fhanko.blocks
 
 import io.github.fhanko.*
 import io.github.fhanko.converter.InventoryConverter
-import io.github.fhanko.handler.ClickHandler
+import io.github.fhanko.itemhandler.ClickHandler
 import jakarta.persistence.*
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCustom

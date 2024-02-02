@@ -1,4 +1,4 @@
-package io.github.fhanko.handler
+package io.github.fhanko.zonehandler
 
 import org.bukkit.entity.Player
 

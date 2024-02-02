@@ -16,14 +16,14 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
 
     companion object {
         @JvmStatic protected val idKey = NamespacedKey(PluginInstance.instance, "Id")
-        val itemList = mutableMapOf<Int, ItemBase>()
+        val itemMap = mutableMapOf<Int, ItemBase>()
 
         /**
          * Adds [instance] of [ItemBase] with given [id] to [player]s inventory.
          */
         fun give(player: Player, id: Int, amount: Int = 1, vararg args: ItemArgument) {
-            if (itemList.contains(id))
-                itemList[id]!!.give(player, amount, *args)
+            if (itemMap.contains(id))
+                itemMap[id]!!.give(player, amount, *args)
         }
 
         /**
@@ -50,7 +50,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         fun get(item: ItemStack?): ItemBase? {
             item ?: return null
             val itemId = readItem(item, idKey, PersistentDataType.INTEGER) ?: return null
-            return itemList.getOrDefault(itemId, null)
+            return itemMap.getOrDefault(itemId, null)
         }
     }
 
@@ -74,7 +74,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     init {
         setText(item, name, description)
         key.set(item, id)
-        itemList[id] = this
+        itemMap[id] = this
 
         Bukkit.getLogger().info("Init BaseItem ${mm.serialize(name)}")
     }

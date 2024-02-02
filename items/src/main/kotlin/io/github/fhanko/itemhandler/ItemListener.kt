@@ -1,4 +1,4 @@
-package io.github.fhanko.handler
+package io.github.fhanko.itemhandler
 
 import io.github.fhanko.ItemBase
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent

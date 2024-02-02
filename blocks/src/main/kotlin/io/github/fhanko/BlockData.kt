@@ -2,8 +2,13 @@ package io.github.fhanko
 
 import com.jeff_media.customblockdata.CustomBlockData
 import org.bukkit.block.Block
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
+/**
+ * Wrapper for [Block] [PersistentDataContainer] using [CustomBlockData].
+ */
 class BlockData<T : Any>(private val type: PersistentDataType<out Any, T>, private val name: String) : ItemData<T>(type, name) {
     /**
      * [set] with [Block] [instance].

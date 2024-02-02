@@ -1,7 +1,7 @@
 package io.github.fhanko.items
 
 import io.github.fhanko.*
-import io.github.fhanko.handler.ClickHandler
+import io.github.fhanko.itemhandler.ClickHandler
 import org.bukkit.Material
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack

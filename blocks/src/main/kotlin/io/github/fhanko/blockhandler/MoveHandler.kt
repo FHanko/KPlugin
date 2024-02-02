@@ -1,4 +1,4 @@
-package io.github.fhanko.handler
+package io.github.fhanko.blockhandler
 
 import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent
 

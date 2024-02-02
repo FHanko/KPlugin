@@ -1,10 +1,10 @@
 package io.github.fhanko.items
 
 import io.github.fhanko.ItemBase
-import io.github.fhanko.handler.ClickHandler
-import io.github.fhanko.handler.Cooldownable
-import io.github.fhanko.handler.DropHandler
-import io.github.fhanko.handler.EquipHandler
+import io.github.fhanko.itemhandler.ClickHandler
+import io.github.fhanko.itemhandler.Cooldownable
+import io.github.fhanko.itemhandler.DropHandler
+import io.github.fhanko.itemhandler.EquipHandler
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerDropItemEvent

@@ -1,5 +1,5 @@
 @file:Suppress("unused")
-package io.github.fhanko.handler
+package io.github.fhanko.itemhandler
 
 import org.bukkit.entity.Player
 

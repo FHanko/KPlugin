@@ -4,7 +4,7 @@ import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.AnimatedBlock
 import io.github.fhanko.BlockData
 import io.github.fhanko.ItemArgument
-import io.github.fhanko.handler.ClickHandler
+import io.github.fhanko.itemhandler.ClickHandler
 import io.github.fhanko.items.CurrencyItem
 import net.kyori.adventure.text.Component
 import org.bukkit.Material

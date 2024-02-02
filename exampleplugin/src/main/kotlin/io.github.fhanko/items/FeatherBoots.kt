@@ -1,7 +1,7 @@
 package io.github.fhanko.items
 
 import io.github.fhanko.ItemBase
-import io.github.fhanko.handler.EquipHandler
+import io.github.fhanko.itemhandler.EquipHandler
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect

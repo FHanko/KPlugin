@@ -1,10 +1,14 @@
 package io.github.fhanko
 
 import org.bukkit.NamespacedKey
+import org.bukkit.entity.Entity
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 
+/**
+ * Wrapper for [ItemStack] [PersistentDataContainer].
+ */
 open class ItemData<T : Any>(private val type: PersistentDataType<out Any, T>, private val name: String) {
     protected val key = NamespacedKey(PluginInstance.instance, name)
 

@@ -1,4 +1,4 @@
-package io.github.fhanko.handler
+package io.github.fhanko.itemhandler
 
 import org.bukkit.Material
 import org.bukkit.event.inventory.PrepareItemCraftEvent

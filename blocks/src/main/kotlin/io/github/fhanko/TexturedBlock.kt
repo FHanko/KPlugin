@@ -2,6 +2,7 @@ package io.github.fhanko
 
 import com.destroystokyo.paper.profile.ProfileProperty
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
+import io.github.fhanko.entityhandler.EntityListener
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material

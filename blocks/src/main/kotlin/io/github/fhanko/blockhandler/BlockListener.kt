@@ -1,4 +1,4 @@
-package io.github.fhanko.handler
+package io.github.fhanko.blockhandler
 
 import com.jeff_media.customblockdata.CustomBlockData
 import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent
@@ -7,6 +7,8 @@ import io.github.fhanko.BlockBase
 import io.github.fhanko.ItemBase
 import io.github.fhanko.PluginInstance
 import io.github.fhanko.copyPdc
+import io.github.fhanko.itemhandler.ClickHandler
+import io.github.fhanko.itemhandler.Cooldownable
 import net.kyori.adventure.text.Component
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
