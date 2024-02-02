@@ -8,3 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 interface DamageHandler {
     fun damage(e: EntityDamageEvent) { }
 }
+
+interface NotDamageableHandler: DamageHandler {
+    override fun damage(e: EntityDamageEvent) { e.isCancelled = true }
+}

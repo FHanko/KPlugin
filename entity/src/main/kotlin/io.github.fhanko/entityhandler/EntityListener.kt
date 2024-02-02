@@ -39,6 +39,7 @@ object EntityListener: Listener {
 
     @EventHandler
     fun onEntityDamage(e: EntityDamageEvent) {
+        if (e.isCancelled) return
         EntityBase.get(e.entity)?.also { if (it is DamageHandler) it.damage(e) }
     }
 
