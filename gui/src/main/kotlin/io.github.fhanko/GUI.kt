@@ -9,23 +9,25 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 
-@Suppress("LeakingThis")
-open class GUI(size: Int): InventoryHandler {
-    companion object {
-        fun parse(guiString: String): GUI = GUI(guiString.length).apply { this.guiString = guiString }
-    }
-    fun setCharacter(char: Char, item: GUIItem): GUI = this.apply{
-        guiString.forEachIndexed { i, c -> if (char == c) setItem(i % 9, i / 9, item)}; return this }
+open class GUI(size: Int, title: Component): InventoryHandler {
+    private var guiString = ""
+    fun parse(guiString: String) { this.guiString = guiString }
+    fun setCharacter(char: Char, item: GUIItem) =
+        guiString.forEachIndexed { i, c -> if (char == c) setItem(i % 9, i / 9, item)}
 
-    var guiString = ""
-    var inventory = CraftInventoryCustom(this, size/9*9)
-    val gui = mutableMapOf<Pair<Int, Int>, GUIItem>()
+    protected var inventory = CraftInventoryCustom(this, size/9*9, title)
+    protected val gui = mutableMapOf<Pair<Int, Int>, GUIItem>()
 
     fun setItem(slot:Int, item: List<GUIItem>) = item.forEachIndexed { i, g -> setItem((slot + i) % 9, (slot + i) / 9, g) }
     fun setItem(slot:Int, item: GUIItem) = setItem(slot % 9, slot / 9, item)
     fun setItem(x: Int, y: Int, item: GUIItem) {
         inventory.inventory.setItem(y * 9 + x, item.getItem())
-        gui[Pair(x, y)] = item
+        gui[x to y] = item
+    }
+
+    fun removeItem(x: Int, y: Int) {
+        inventory.inventory.setItem(y * 9 + x, CraftItemStack.asNMSCopy(org.bukkit.inventory.ItemStack(Material.AIR)))
+        gui.remove(x to y)
     }
 
     override fun inventoryClick(e: InventoryClickEvent) {
@@ -48,4 +50,5 @@ class GUIItem(val name: Component, val action: (GUIItem, Player) -> Unit, materi
         item.editMeta { it.displayName(name); it.lore(lore) }
     }
     fun getItem(): ItemStack = CraftItemStack.asNMSCopy(item)
+    fun getItemStack(): org.bukkit.inventory.ItemStack = item
 }
