@@ -24,6 +24,12 @@ open class GUI(val size: Int, val title: String): InventoryHandler, Serializable
         gui[x to y] = item
     }
 
+    fun getItem(x: Int, y: Int) = getInventory().getItem(y * 9 + x)
+    fun clearItems() {
+        getInventory().clear()
+        gui.clear()
+    }
+
     fun removeItem(x: Int, y: Int) {
         getInventory().setItem(y * 9 + x, ItemStack(Material.AIR))
         gui.remove(x to y)

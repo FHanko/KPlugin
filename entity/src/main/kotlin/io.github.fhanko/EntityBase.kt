@@ -12,7 +12,7 @@ import org.bukkit.entity.Villager
 import org.bukkit.persistence.PersistentDataType
 
 
-abstract class EntityBase(val id: Int, val type: EntityType) {
+abstract class EntityBase(val id: Int, var type: EntityType) {
     companion object {
         protected val key = EntityData(PersistentDataType.INTEGER, "id")
         val goals = EntityData(ConfigurationSerializableArrayDataType(Array<EntityGoal>::class.java), "goals")
