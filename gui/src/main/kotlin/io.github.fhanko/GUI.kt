@@ -21,7 +21,7 @@ open class GUI(size: Int, title: Component): InventoryHandler {
     fun setItem(slot:Int, item: List<GUIItem>) = item.forEachIndexed { i, g -> setItem((slot + i) % 9, (slot + i) / 9, g) }
     fun setItem(slot:Int, item: GUIItem) = setItem(slot % 9, slot / 9, item)
     fun setItem(x: Int, y: Int, item: GUIItem) {
-        inventory.inventory.setItem(y * 9 + x, item.getItem())
+        inventory.inventory.setItem(y * 9 + x, item.getNMSItem())
         gui[x to y] = item
     }
 
@@ -32,7 +32,7 @@ open class GUI(size: Int, title: Component): InventoryHandler {
 
     override fun inventoryClick(e: InventoryClickEvent) {
         e.isCancelled = true
-        val loc = Pair(e.slot % 9, e.slot / 9)
+        val loc = (e.slot % 9) to (e.slot / 9)
         if (gui.contains(loc)) {
             gui[loc]!!.action(gui[loc]!!, e.whoClicked as Player)
         }
@@ -41,14 +41,6 @@ open class GUI(size: Int, title: Component): InventoryHandler {
     override fun getInventory(): Inventory = inventory
 }
 
-class GUIItem(val name: Component, val action: (GUIItem, Player) -> Unit, material: Material, lore: List<Component> = mutableListOf()) {
-    constructor(item: org.bukkit.inventory.ItemStack, action: (GUIItem, Player) -> Unit)
-            : this(item.displayName(), action, item.type, item.itemMeta.lore() ?: mutableListOf())
-
-    private val item: org.bukkit.inventory.ItemStack = org.bukkit.inventory.ItemStack(material)
-    init {
-        item.editMeta { it.displayName(name); it.lore(lore) }
-    }
-    fun getItem(): ItemStack = CraftItemStack.asNMSCopy(item)
-    fun getItemStack(): org.bukkit.inventory.ItemStack = item
+class GUIItem(val item: org.bukkit.inventory.ItemStack, val action: (GUIItem, Player) -> Unit) {
+    fun getNMSItem(): ItemStack = CraftItemStack.asNMSCopy(item)
 }

@@ -8,7 +8,7 @@ import org.bukkit.persistence.PersistentDataType
 /**
  * Wrapper for [Entity] [PersistentDataContainer].
  */
-class EntityData<T : Any>(private val type: PersistentDataType<out Any, T>, private val name: String) {
+class EntityData<T : Any>(private val type: PersistentDataType<out Any, T>, name: String) {
     private val key = NamespacedKey(PluginInstance.instance, name)
 
     /**

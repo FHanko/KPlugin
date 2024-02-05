@@ -1,6 +1,7 @@
 package io.github.fhanko.entities
 
 import io.github.fhanko.EntityBase
+import io.github.fhanko.Initializable
 import io.github.fhanko.entityhandler.DeathHandler
 import io.github.fhanko.entityhandler.InteractHandler
 import io.github.fhanko.entityhandler.NotDamageableHandler
@@ -13,7 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 
-object TestEntity: EntityBase(1, EntityType.ZOMBIE), DeathHandler, InteractHandler, NotDamageableHandler {
+object TestEntity: EntityBase(1, EntityType.ZOMBIE), DeathHandler, InteractHandler, NotDamageableHandler, Initializable {
     override fun death(e: EntityDeathEvent) {
         val killer = e.entity.killer
         if (killer !is Player) return
@@ -27,7 +28,7 @@ object TestEntity: EntityBase(1, EntityType.ZOMBIE), DeathHandler, InteractHandl
 
     override fun onSpawn(entity: Entity) {
         if (entity !is Mob) return
-        addGoal(entity, MoveToTargetGoal(entity, entity.location, 1.0), 0)
-        addGoal(entity, LookAtPlayerGoal(entity, 2.0), 1)
+        addGoal(entity, MoveToTargetGoal(entity, entity.location, 1.0, 0))
+        addGoal(entity, LookAtPlayerGoal(entity, 2.0, 1))
     }
 }

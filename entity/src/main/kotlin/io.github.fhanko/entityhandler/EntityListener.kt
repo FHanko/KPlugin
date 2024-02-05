@@ -1,9 +1,14 @@
 package io.github.fhanko.entityhandler
 
+import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent
 import io.github.fhanko.EntityBase
+import io.github.fhanko.PluginInstance
+import io.papermc.paper.chunk.system.scheduling.ChunkLoadTask.EntityDataLoadTask
+import org.bukkit.Bukkit
 import org.bukkit.entity.Display
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Mob
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
@@ -51,5 +56,16 @@ object EntityListener: Listener {
     @EventHandler
     fun onEntityInteract(e: PlayerInteractEntityEvent) {
         EntityBase.get(e.rightClicked)?.also { if (it is InteractHandler) it.onInteract(e) }
+    }
+
+    @EventHandler
+    fun onEntityAddToWorld(e: EntityAddToWorldEvent) {
+        val mob = e.entity
+        if (mob !is Mob) return
+        val goalArray = EntityBase.goals.get(mob)
+        if (goalArray?.isNotEmpty() == true) {
+            Bukkit.getMobGoals().removeAllGoals(mob)
+            goalArray.forEach { Bukkit.getMobGoals().addGoal(mob, it.priority, it) }
+        }
     }
 }

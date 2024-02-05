@@ -1,3 +1,4 @@
 dependencies {
     api project(":util")
+    api 'com.jeff_media:MorePersistentDataTypes:2.4.0'
 }

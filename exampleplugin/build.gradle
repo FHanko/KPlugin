@@ -7,6 +7,7 @@ plugins {
 
 shadowJar {
     relocate 'com.jeff_media.customblockdata', 'io.github.fhanko.exampleplugin.customblockdata'
+    relocate 'com.jeff_media.morepersistentdatatypes', 'io.github.fhanko.exampleplugin.morepersistentdatatypes'
 }
 
 dependencies {
