@@ -10,16 +10,17 @@ import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
 interface FilePersistable<T: Serializable>: Initializable {
-    fun save(path: String, item: T): Boolean {
-        val out = BukkitObjectOutputStream(GZIPOutputStream(FileOutputStream(path)))
+    val saveFile: String
+    fun save(item: T): Boolean {
+        val out = BukkitObjectOutputStream(GZIPOutputStream(FileOutputStream(saveFile)))
         out.writeObject(item)
         out.close()
         return true
     }
 
-    fun load(filePath: String): T? {
-        if (!File(filePath).exists()) return null
-        val item = BukkitObjectInputStream(GZIPInputStream(FileInputStream(filePath)))
+    fun load(): T? {
+        if (!File(saveFile).exists()) return null
+        val item = BukkitObjectInputStream(GZIPInputStream(FileInputStream(saveFile)))
         @Suppress("UNCHECKED_CAST") val data: T = item.readObject() as T
         item.close()
         return data

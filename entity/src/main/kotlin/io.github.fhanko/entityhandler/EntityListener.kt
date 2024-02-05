@@ -64,7 +64,7 @@ object EntityListener: Listener {
         if (mob !is Mob) return
         val goalArray = EntityBase.goals.get(mob)
         if (goalArray?.isNotEmpty() == true) {
-            Bukkit.getMobGoals().removeAllGoals(mob)
+            EntityBase.removeAI(mob)
             goalArray.forEach { Bukkit.getMobGoals().addGoal(mob, it.priority, it) }
         }
     }

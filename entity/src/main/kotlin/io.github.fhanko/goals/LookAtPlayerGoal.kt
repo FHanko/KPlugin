@@ -21,7 +21,6 @@ class LookAtPlayerGoal(mob: Mob, private val maxDistance: Double, priority: Int)
         mob.lookAt(nearest)
     }
 
-    override val type = ConfigurationSerializableDataType(LookAtPlayerGoal::class.java)
     override val primitives: Map<String, Any> = mapOf("id" to mob.uniqueId, "distance" to maxDistance, "priority" to priority)
 
     constructor(map: MutableMap<String, Any>) : this(

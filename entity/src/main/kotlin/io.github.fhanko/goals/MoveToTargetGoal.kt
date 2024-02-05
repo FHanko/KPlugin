@@ -21,7 +21,6 @@ class MoveToTargetGoal(mob: Mob, private val target: Location, private val squar
     override fun stop() = mob.pathfinder.stopPathfinding()
     override fun tick() { mob.pathfinder.moveTo(target) }
 
-    override val type = ConfigurationSerializableDataType(MoveToTargetGoal::class.java)
     override val primitives: Map<String, Any> = mapOf("id" to mob.uniqueId, "target" to target, "distance" to squaredMaxDistance,
         "priority" to priority)
 

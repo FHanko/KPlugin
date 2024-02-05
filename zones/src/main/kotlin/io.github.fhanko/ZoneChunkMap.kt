@@ -3,16 +3,15 @@ package io.github.fhanko
 import org.bukkit.Chunk
 import org.bukkit.Location
 
-private const val SAVE_FILE = "Zones.data"
-
 /**
  * Map Zones to their holding Chunks to allow efficient collision detection via Chunk key.
  */
 object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
     private val grid = mutableMapOf<Pair<Int, Int>, HashSet<Zone>>()
+    override val saveFile = "Zones.data"
 
     init {
-        load(SAVE_FILE)?.forEach { addZone(it, false) }
+        load()?.forEach { addZone(it, false) }
     }
 
     /**
@@ -28,7 +27,7 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
                 grid[it.x to it.z] = mutableSetOf(zone).toHashSet()
             }
         }
-        if (save) save(SAVE_FILE, getZones())
+        if (save) save(getZones())
     }
 
     /**
@@ -40,7 +39,7 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
         chunkList.forEach {
             grid[it.x to it.z]!!.remove(zone)
         }
-        if (save) save(SAVE_FILE, getZones())
+        if (save) save(getZones())
     }
 
     /**

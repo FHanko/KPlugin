@@ -7,7 +7,7 @@ plugins {
 
 allprojects {
     group = 'io.github.fhanko'
-    version = '1.7'
+    version = '1.8'
     apply plugin: 'java-library'
     apply plugin: 'io.papermc.paperweight.userdev'
     apply plugin: 'org.jetbrains.kotlin.jvm'

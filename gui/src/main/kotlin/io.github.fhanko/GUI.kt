@@ -1,32 +1,31 @@
 package io.github.fhanko
 
-import net.kyori.adventure.text.Component
-import net.minecraft.world.item.ItemStack
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCustom
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
+import java.io.Serializable
 
-open class GUI(size: Int, title: Component): InventoryHandler {
+open class GUI(val size: Int, val title: String): InventoryHandler, Serializable {
     private var guiString = ""
     fun parse(guiString: String) { this.guiString = guiString }
     fun setCharacter(char: Char, item: GUIItem) =
         guiString.forEachIndexed { i, c -> if (char == c) setItem(i % 9, i / 9, item)}
 
-    protected var inventory = CraftInventoryCustom(this, size/9*9, title)
+    @Transient protected var craftInventory: Inventory? = CraftInventoryCustom(this, size/9*9, title)
     protected val gui = mutableMapOf<Pair<Int, Int>, GUIItem>()
 
     fun setItem(slot:Int, item: List<GUIItem>) = item.forEachIndexed { i, g -> setItem((slot + i) % 9, (slot + i) / 9, g) }
     fun setItem(slot:Int, item: GUIItem) = setItem(slot % 9, slot / 9, item)
     fun setItem(x: Int, y: Int, item: GUIItem) {
-        inventory.inventory.setItem(y * 9 + x, item.getNMSItem())
+        getInventory().setItem(y * 9 + x, item.item)
         gui[x to y] = item
     }
 
     fun removeItem(x: Int, y: Int) {
-        inventory.inventory.setItem(y * 9 + x, CraftItemStack.asNMSCopy(org.bukkit.inventory.ItemStack(Material.AIR)))
+        getInventory().setItem(y * 9 + x, ItemStack(Material.AIR))
         gui.remove(x to y)
     }
 
@@ -38,9 +37,13 @@ open class GUI(size: Int, title: Component): InventoryHandler {
         }
     }
 
-    override fun getInventory(): Inventory = inventory
+    override fun getInventory(): Inventory {
+        if (craftInventory == null) {
+            craftInventory = CraftInventoryCustom(this, size/9*9, title)
+            gui.forEach { setItem(it.key.first, it.key.second, it.value) }
+        }
+        return craftInventory as Inventory
+    }
 }
 
-class GUIItem(val item: org.bukkit.inventory.ItemStack, val action: (GUIItem, Player) -> Unit) {
-    fun getNMSItem(): ItemStack = CraftItemStack.asNMSCopy(item)
-}
+data class GUIItem(val item: ItemStack, val action: (GUIItem, Player) -> Unit): Serializable

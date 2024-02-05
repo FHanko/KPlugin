@@ -22,11 +22,22 @@ abstract class EntityBase(val id: Int, val type: EntityType) {
             val id = key.get(entity) ?: return null
             return entityMap[id]
         }
+
         fun addGoal(mob: Mob, goal: EntityGoal) {
             Bukkit.getMobGoals().addGoal(mob, goal.priority, goal)
             var goalArray = goals.get(mob) ?: arrayOf()
             goalArray += goal
             goals.set(mob, goalArray)
+        }
+
+        fun removeAI(entity: Entity) {
+            if (entity is Mob) {
+                Bukkit.getMobGoals().removeAllGoals(entity)
+            }
+            if (entity is Villager) {
+                val nmsEntity = (entity as CraftVillager).handle
+                nmsEntity.brain.removeAllBehaviors()
+            }
         }
     }
 
@@ -37,14 +48,7 @@ abstract class EntityBase(val id: Int, val type: EntityType) {
     fun spawn(location: Location): Entity {
         val entity = location.world.spawnEntity(location, type)
         entity.isPersistent = true
-        // Remove AI
-        if (entity is Mob) {
-            Bukkit.getMobGoals().removeAllGoals(entity)
-        }
-        if (entity is Villager) {
-            val nmsEntity = (entity as CraftVillager).handle
-            nmsEntity.brain.removeAllBehaviors()
-        }
+        removeAI(entity)
         key.set(entity, id)
         onSpawn(entity)
         return entity

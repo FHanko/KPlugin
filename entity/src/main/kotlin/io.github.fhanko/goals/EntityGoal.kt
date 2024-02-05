@@ -8,12 +8,13 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.entity.Mob
 import java.util.*
 
+/**
+ * MobGoals are not persisted by default. Instead, make them [ConfigurationSerializable] by implementing this class
+ * and add them to the entity PDC. They can then be loaded back in an EntityAddToWorldEvent.
+ *
+ * EntityGoals need to be registered in the ConfigurationSerialization.
+ */
 abstract class EntityGoal(protected val mob: Mob, val priority: Int): Goal<Mob>, ConfigurationSerializable {
-    abstract val type: ConfigurationSerializableDataType<out EntityGoal>
     abstract val primitives: Map<String, Any>
-    override fun serialize(): MutableMap<String, Any> {
-        val map = mutableMapOf<String, Any>()
-        primitives.forEach { map[it.key] = it.value }
-        return map
-    }
+    override fun serialize() = primitives
 }

@@ -8,7 +8,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-object GiveGUI: GUI(36, mm.deserialize("Give GUI")) {
+object GiveGUI: GUI(36, "Give GUI") {
     init {
         parse(  "#########"+
                         "---------"+
