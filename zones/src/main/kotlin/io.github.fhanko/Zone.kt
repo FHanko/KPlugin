@@ -3,10 +3,10 @@ package io.github.fhanko
 import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.block.Block
+import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.util.BoundingBox
-import java.io.Serializable
 
-abstract class Zone(val start: Location, val end: Location): Serializable {
+abstract class Zone(val start: Location, val end: Location): ConfigurationSerializable {
     private val box: BoundingBox = BoundingBox.of(start, end)
 
     /**
@@ -22,12 +22,13 @@ abstract class Zone(val start: Location, val end: Location): Serializable {
         return ret
     }
 
-    @Transient lateinit var blocks: MutableList<Block>
+    lateinit var blocks: MutableList<Block>
         private set
+
     /**
-     * Called when the zone is added to the chunk map. Call super when overriding
+     * Caches blocks in this zone to [blocks].
      */
-    open fun create() {
+    open fun addBlocks() {
         blocks = mutableListOf()
         for (x in box.minX.rangeTo(box.maxX))
         for (y in box.minY.rangeTo(box.maxY))
@@ -37,12 +38,20 @@ abstract class Zone(val start: Location, val end: Location): Serializable {
     }
 
     /**
-     * Called when the zone is removed from the chunk map.
+     * Called when the zone is created.
+     */
+    open fun create() { }
+
+    /**
+     * Called when the zone is removed.
      */
     open fun remove() { }
 
     /**
-    * Returns true if that location is in the Zone
+    * Returns true if that location is in the Zone.
     */
     fun isIn(that: Location) = box.contains(that.x, that.y, that.z)
+
+    // ConfigurationSerializable serialization.
+    override fun serialize() = mapOf("start" to start, "end" to end)
 }

@@ -9,10 +9,10 @@ import org.bukkit.Particle
 import org.bukkit.block.data.type.Farmland
 
 class ZoneWater(start: Location, end: Location): Zone(start, end), Schedulable {
+    constructor(map: Map<String, Any>): this(map["start"] as Location, map["end"] as Location)
     private val scheduleKey = "${start}${end}"
 
     override fun create() {
-        super.create()
         scheduleRepeat(scheduleKey, 400, ::waterBlocks)
     }
 

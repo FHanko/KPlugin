@@ -5,6 +5,8 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.fhanko.goals.LookAtPlayerGoal
 import io.github.fhanko.goals.MoveToTargetGoal
+import io.github.fhanko.zones.ZoneHeal
+import io.github.fhanko.zones.ZoneWater
 import org.bukkit.configuration.serialization.ConfigurationSerialization
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -14,6 +16,10 @@ class ExamplePlugin : JavaPlugin() {
         ConfigurationSerialization.registerClass(MoveToTargetGoal::class.java, "MoveToTargetGoal")
         ConfigurationSerialization.registerClass(LookAtPlayerGoal::class.java, "LookAtPlayerGoal")
 
+        ConfigurationSerialization.registerClass(ZoneHeal::class.java, "ZoneHeal")
+        ConfigurationSerialization.registerClass(ZoneWater::class.java, "ZoneWater")
+
+
         PluginInstance.initialize(this)
         Init.initialize("io.github.fhanko")
         CustomBlockData.registerListener(this)
@@ -22,6 +28,8 @@ class ExamplePlugin : JavaPlugin() {
 
         Commands.registerGive()
         Commands.registerBal()
+
+        ZoneChunkMap.load()
     }
 
     override fun onLoad()

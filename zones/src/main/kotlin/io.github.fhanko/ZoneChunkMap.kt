@@ -2,44 +2,40 @@ package io.github.fhanko
 
 import org.bukkit.Chunk
 import org.bukkit.Location
+import org.bukkit.configuration.MemorySection
+import org.bukkit.configuration.file.YamlConfiguration
 
 /**
  * Map Zones to their holding Chunks to allow efficient collision detection via Chunk key.
  */
-object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
+object ZoneChunkMap {
     private val grid = mutableMapOf<Pair<Int, Int>, HashSet<Zone>>()
-    override val saveFile = "Zones.data"
-
-    init {
-        load()?.forEach { addZone(it, false) }
-    }
 
     /**
-     * Adds [zone] to the chunk [grid]. Persists the [grid] if [save] is true.
+     * Adds [zone] to the chunk [grid]. Saves zone config if [persist] is true.
      */
-    fun addZone(zone: Zone, save: Boolean = true) {
-        zone.create()
-        val chunkList = zone.chunkList()
-        chunkList.forEach {
+    fun addZone(zone: Zone, persist: Boolean = true) {
+        zone.addBlocks()
+        zone.chunkList().forEach {
             if (grid.containsKey(it.x to it.z)) {
                 grid[it.x to it.z]!!.add(zone)
             } else {
                 grid[it.x to it.z] = mutableSetOf(zone).toHashSet()
             }
         }
-        if (save) save(getZones())
+        zone.create()
+        if (persist) save()
     }
 
     /**
-     * Removes [zone] from the chunk [grid]. Persists the [grid] if [save] is true.
+     * Removes [zone] from the chunk [grid].
      */
-    fun removeZone(zone: Zone, save: Boolean = true) {
+    fun removeZone(zone: Zone) {
         zone.remove()
-        val chunkList = zone.chunkList()
-        chunkList.forEach {
+        zone.chunkList().forEach {
             grid[it.x to it.z]!!.remove(zone)
         }
-        if (save) save(getZones())
+        save()
     }
 
     /**
@@ -55,9 +51,7 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
     /**
      * Returns all [Zone]s contained in [chunk].
      */
-    fun getZones(chunk: Chunk): HashSet<Zone>? {
-        return grid[chunk.x to chunk.z]
-    }
+    fun getZones(chunk: Chunk): HashSet<Zone>? = grid[chunk.x to chunk.z]
 
     /**
      * Returns all [Zone]s contained in [chunk] and further chunks in [radius].
@@ -73,9 +67,19 @@ object ZoneChunkMap: FilePersistable<HashSet<Zone>> {
     /**
      * Returns all [Zone]s from [grid].
      */
-    private fun getZones(): HashSet<Zone> {
-        val ret = mutableSetOf<Zone>().toHashSet()
-        grid.forEach { (_, z) -> z.forEach { ret.add(it) } }
-        return ret
+    private fun getZones(): HashSet<Zone> = grid.values.flatten().toHashSet()
+
+    private val config = YamlConfiguration()
+    private fun save() {
+        config.set("zones", getZones().toList())
+        config.save("zones.yml")
+    }
+
+    fun load() {
+        config.load("zones.yml")
+        if (!config.contains("zones")) return
+        val zones = (config.get("zones") as ArrayList<Zone>)
+        println(zones)
+        zones.map { addZone(it, false) }
     }
 }
