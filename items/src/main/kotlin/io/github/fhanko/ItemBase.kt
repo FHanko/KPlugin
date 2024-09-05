@@ -75,7 +75,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         key.set(item, id)
         itemMap[id] = this
 
-        Bukkit.getLogger().info("Init BaseItem ${mm.serialize(name)}")
+        PluginInstance.instance.logger.info("Init BaseItem ${mm.serialize(name)}")
     }
 }
 

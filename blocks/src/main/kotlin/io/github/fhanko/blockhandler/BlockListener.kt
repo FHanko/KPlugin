@@ -3,10 +3,7 @@ package io.github.fhanko.blockhandler
 import com.jeff_media.customblockdata.CustomBlockData
 import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
-import io.github.fhanko.BlockBase
-import io.github.fhanko.ItemBase
-import io.github.fhanko.PluginInstance
-import io.github.fhanko.copyPdc
+import io.github.fhanko.*
 import io.github.fhanko.itemhandler.ClickHandler
 import io.github.fhanko.itemhandler.Cooldownable
 import net.kyori.adventure.text.Component
@@ -23,7 +20,7 @@ import org.bukkit.inventory.ItemStack
  * Addresses event efficiency concerns by handling them once and firing handler functions
  * instead of firing all events on all blocks.
  */
-object BlockListener: Listener {
+object BlockListener: Listener, Initializable {
     @EventHandler
     fun onPlace(e: BlockPlaceEvent) {
         val base = ItemBase.get(e.itemInHand)

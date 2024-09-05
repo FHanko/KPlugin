@@ -6,7 +6,7 @@ import io.github.fhanko.converter.InventoryConverter
 import io.github.fhanko.itemhandler.ClickHandler
 import jakarta.persistence.*
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCustom
+import org.bukkit.craftbukkit.inventory.CraftInventoryCustom
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory

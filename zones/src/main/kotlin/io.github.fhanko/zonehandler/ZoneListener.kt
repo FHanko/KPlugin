@@ -1,5 +1,6 @@
 package io.github.fhanko.zonehandler
 
+import io.github.fhanko.Initializable
 import io.github.fhanko.Zone
 import io.github.fhanko.ZoneChunkMap
 import org.bukkit.entity.Player
@@ -7,7 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
 
-object ZoneListener : Listener {
+object ZoneListener : Listener, Initializable {
     // Maps Players to zones they are inside of
     private val playerZoneMap = mutableMapOf<Player, HashSet<Zone>>()
 

@@ -11,12 +11,12 @@ object FeatherBoots: ItemBase(2, Material.LEATHER_BOOTS, "Feather Boots", listOf
     , EquipHandler {
     override fun equip(p: Player, e: EquipHandler.EquipType) {
         if (e == EquipHandler.EquipType.Armour)
-            p.player?.addPotionEffect(PotionEffect(PotionEffectType.JUMP, Int.MAX_VALUE, 0))
+            p.player?.addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, Int.MAX_VALUE, 0))
     }
 
     override fun unequip(p: Player, e: EquipHandler.EquipType) {
         if (e == EquipHandler.EquipType.Armour)
-            p.player?.removePotionEffect(PotionEffectType.JUMP)
+            p.player?.removePotionEffect(PotionEffectType.JUMP_BOOST)
     }
 
     override fun armourSlot() = EquipHandler.ArmourSlot.Boots

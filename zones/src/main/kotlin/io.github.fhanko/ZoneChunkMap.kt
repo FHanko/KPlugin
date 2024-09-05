@@ -4,6 +4,7 @@ import org.bukkit.Chunk
 import org.bukkit.Location
 import org.bukkit.configuration.MemorySection
 import org.bukkit.configuration.file.YamlConfiguration
+import java.io.File
 
 /**
  * Map Zones to their holding Chunks to allow efficient collision detection via Chunk key.
@@ -38,6 +39,8 @@ object ZoneChunkMap {
         save()
     }
 
+    fun getZone(id: Int): Zone? = getZones().firstOrNull { it.id == id }
+
     /**
      * Returns a [Zone] in [grid] from its bounds [start] and [end].
      */
@@ -67,19 +70,20 @@ object ZoneChunkMap {
     /**
      * Returns all [Zone]s from [grid].
      */
-    private fun getZones(): HashSet<Zone> = grid.values.flatten().toHashSet()
+    fun getZones(): HashSet<Zone> = grid.values.flatten().toHashSet()
 
-    private val config = YamlConfiguration()
-    private fun save() {
+    fun newId() = getZones().maxOfOrNull { it.id + 1 } ?: 0
+
+    private val config = PluginInstance.instance.config
+    fun save() {
         config.set("zones", getZones().toList())
-        config.save("zones.yml")
+        config.save(File(PluginInstance.instance.dataFolder,"zones.yml"))
     }
 
     fun load() {
-        config.load("zones.yml")
+        if (!File(PluginInstance.instance.dataFolder,"zones.yml").exists()) return
+        config.load(File(PluginInstance.instance.dataFolder,"zones.yml"))
         if (!config.contains("zones")) return
-        val zones = (config.get("zones") as ArrayList<Zone>)
-        println(zones)
-        zones.map { addZone(it, false) }
+        (config.get("zones") as ArrayList<Zone>).map { addZone(it, false) }
     }
 }

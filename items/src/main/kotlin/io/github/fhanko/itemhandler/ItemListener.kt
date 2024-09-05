@@ -1,5 +1,6 @@
 package io.github.fhanko.itemhandler
 
+import io.github.fhanko.Initializable
 import io.github.fhanko.ItemBase
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
 import org.bukkit.entity.Player
@@ -20,7 +21,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent
  * Addresses event efficiency concerns by handling them once and firing handler functions
  * instead of firing all events on all items.
  */
-object ItemListener: Listener {
+object ItemListener: Listener, Initializable {
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
         ItemBase.get(e.item)?.also { if (it is ClickHandler) it.onInteract(e) }

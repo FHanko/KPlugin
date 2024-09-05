@@ -3,8 +3,7 @@ package io.github.fhanko.entityhandler
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent
 import io.github.fhanko.EntityBase
-import io.github.fhanko.PluginInstance
-import io.papermc.paper.chunk.system.scheduling.ChunkLoadTask.EntityDataLoadTask
+import io.github.fhanko.Initializable
 import org.bukkit.Bukkit
 import org.bukkit.entity.Display
 import org.bukkit.entity.Entity
@@ -13,7 +12,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.event.entity.EntityInteractEvent
 import org.bukkit.event.entity.EntitySpawnEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.world.EntitiesLoadEvent
@@ -22,7 +20,7 @@ import java.util.*
 /**
  * Handles [Entity] events. Keeps a consistent list of unique(persistent) entity ids mapped to their [Display]s.
  */
-object EntityListener: Listener {
+object EntityListener: Listener, Initializable {
     val displayIds = mutableMapOf<UUID, Display>()
 
     @EventHandler

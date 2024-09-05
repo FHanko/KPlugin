@@ -25,7 +25,7 @@ object ZoneItem : ItemBase(1, Material.STICK, "Cube Stick", listOf("Creates cube
         val firstLoc = zoneItemMap[e.player]
         if (firstLoc != null) {
             val secondLoc = e.interactionPoint ?: return
-            ZoneChunkMap.addZone(ZoneHeal(firstLoc, secondLoc))
+            ZoneChunkMap.addZone(ZoneHeal(ZoneChunkMap.newId(), firstLoc, secondLoc))
             e.player.sendMessage("Zone added ${firstLoc.x} ${firstLoc.y} ${firstLoc.z} " +
                     "to ${secondLoc.x} ${secondLoc.y} ${secondLoc.z}.")
             zoneItemMap.remove(e.player)

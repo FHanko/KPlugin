@@ -1,10 +1,11 @@
 plugins {
     id 'java-library'
     id 'org.jetbrains.kotlin.jvm' version '1.9.20-RC2'
-    id 'io.papermc.paperweight.userdev' version '1.5.5'
+    id 'io.papermc.paperweight.userdev' version '1.7.2'
     id 'maven-publish'
 }
 
+def targetJavaVersion = 21
 allprojects {
     group = 'io.github.fhanko'
     version = '1.8'
@@ -14,12 +15,12 @@ allprojects {
 
     repositories {
         maven {
-            url = 'https://hub.jeff-media.com/nexus/repository/jeff-media-public/'
+            url = "https://repo.jeff-media.com/public"
         }
     }
 
     dependencies {
-        paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
+        paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     }
 }
@@ -28,33 +29,17 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
-    }
-    maven {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
 }
 
-def targetJavaVersion = 17
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release = targetJavaVersion
-    }
+    toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(targetJavaVersion)
 }
 
 subprojects {

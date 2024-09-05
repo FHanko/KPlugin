@@ -31,7 +31,7 @@ object HibernateUtil {
     fun shutdown() {
         em.flush()
         em.transaction.commit()
-        Bukkit.getLogger().info("Database saved.")
+        PluginInstance.instance.logger.info("Database saved.")
         em.close()
     }
 
@@ -104,8 +104,8 @@ object HibernateUtil {
 
     private fun rollbackTransaction(e: Exception) {
         em.transaction.rollback()
-        Bukkit.getLogger().warning(e.message)
-        Bukkit.getLogger().warning(e.stackTraceToString())
+        PluginInstance.instance.logger.warning(e.message)
+        PluginInstance.instance.logger.warning(e.stackTraceToString())
     }
 
     fun postWorldSave(e: WorldSaveEvent) {
@@ -114,7 +114,7 @@ object HibernateUtil {
             em.flush()
             em.clear()
             em.transaction.commit()
-            Bukkit.getLogger().info("Database saved.")
+            PluginInstance.instance.logger.info("Database saved.")
         } catch (e: Exception) {
             rollbackTransaction(e)
         } finally {

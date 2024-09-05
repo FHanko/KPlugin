@@ -1,7 +1,7 @@
 package io.github.fhanko
 
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCustom
+import org.bukkit.craftbukkit.inventory.CraftInventoryCustom
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory

@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent
  * Addresses event efficiency concerns by handling them once and firing handler functions
  * instead of firing all events on all inventories.
  */
-object GUIListener: Listener {
+object GUIListener: Listener, Initializable {
     @EventHandler
     fun onInventoryClose(e: InventoryCloseEvent) {
         val holder = e.inventory.holder

@@ -65,10 +65,6 @@ fun Location.rem(mod: Int): Vector {
     return Vector(x % mod, y % mod, z % mod)
 }
 
-fun Double.rangeTo(to: Double): IntRange {
-    return this.roundToInt() .. to.roundToInt()
-}
-
 val random = Random()
 
 fun Vector.to3f(): Vector3f = Vector3f(x.toFloat(), y.toFloat(), z.toFloat())

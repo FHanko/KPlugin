@@ -13,7 +13,7 @@ class CubeDisplay(private val l1: Location, private val l2: Location) {
     init {
         val box = BoundingBox.of(l1, l2)
         display = l1.world.spawn(box.center.toLocation(l1.world), ItemDisplay::class.java)
-        display.itemStack = ItemStack(Material.GLASS)
+        display.setItemStack(ItemStack(Material.GLASS))
         display.isGlowing = true
         display.glowColorOverride = Color.GREEN
         display.brightness = Display.Brightness(15,15)

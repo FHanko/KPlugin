@@ -5,8 +5,13 @@ import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.util.BoundingBox
+import kotlin.math.roundToInt
 
-abstract class Zone(val start: Location, val end: Location): ConfigurationSerializable {
+fun Double.rangeTo(to: Double): IntRange {
+    return this.roundToInt() .. to.roundToInt()
+}
+
+abstract class Zone protected constructor(val id: Int, val start: Location, val end: Location): ConfigurationSerializable {
     private val box: BoundingBox = BoundingBox.of(start, end)
 
     /**
@@ -53,5 +58,5 @@ abstract class Zone(val start: Location, val end: Location): ConfigurationSerial
     fun isIn(that: Location) = box.contains(that.x, that.y, that.z)
 
     // ConfigurationSerializable serialization.
-    override fun serialize() = mapOf("start" to start, "end" to end)
+    override fun serialize() = mapOf("id" to id, "start" to start, "end" to end)
 }

@@ -3,7 +3,7 @@ package io.github.fhanko.converter
 import io.github.fhanko.YamlUtil
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftInventoryCustom
+import org.bukkit.craftbukkit.inventory.CraftInventoryCustom
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack

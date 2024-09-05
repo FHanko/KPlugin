@@ -4,7 +4,7 @@ import com.jeff_media.morepersistentdatatypes.datatypes.serializable.Configurati
 import io.github.fhanko.goals.EntityGoal
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftVillager
+import org.bukkit.craftbukkit.entity.CraftVillager
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Mob

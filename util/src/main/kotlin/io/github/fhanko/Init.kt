@@ -16,11 +16,10 @@ object Init {
         val reflections = Reflections(prefix)
         reflections.getSubTypesOf(Initializable::class.java).forEach {
             it.kotlin.objectInstance
-        }
-
-        reflections.getSubTypesOf(Listener::class.java).forEach {
-            if (it.kotlin.objectInstance != null)
-            Bukkit.getPluginManager().registerEvents(it.kotlin.objectInstance!!, PluginInstance.instance)
+            if (it.kotlin.objectInstance is Listener) {
+                val listener = it.kotlin.objectInstance as Listener
+                Bukkit.getPluginManager().registerEvents(listener, PluginInstance.instance)
+            }
         }
     }
 }

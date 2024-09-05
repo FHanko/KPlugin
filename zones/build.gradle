@@ -1,4 +1,3 @@
 dependencies {
     api project(":util")
-    api project(":persistence")
 }

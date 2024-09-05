@@ -8,8 +8,8 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.block.data.type.Farmland
 
-class ZoneWater(start: Location, end: Location): Zone(start, end), Schedulable {
-    constructor(map: Map<String, Any>): this(map["start"] as Location, map["end"] as Location)
+class ZoneWater(id: Int, start: Location, end: Location): Zone(id, start, end), Schedulable {
+    constructor(map: Map<String, Any>): this(map["id"] as Int, map["start"] as Location, map["end"] as Location)
     private val scheduleKey = "${start}${end}"
 
     override fun create() {
@@ -22,7 +22,7 @@ class ZoneWater(start: Location, end: Location): Zone(start, end), Schedulable {
             if (it.type == Material.DIRT || it.type == Material.GRASS_BLOCK) it.type = Material.FARMLAND
             if (it.type == Material.FARMLAND) {
                 it.blockData.apply { this as Farmland; this.moisture = this.maximumMoisture; it.blockData = this }
-                it.world.spawnParticle(Particle.DRIP_WATER, it.location.toCenterLocation().add(0.0, 0.6, 0.0), 1)
+                it.world.spawnParticle(Particle.DRIPPING_WATER, it.location.toCenterLocation().add(0.0, 0.6, 0.0), 1)
             }
         }
     }

@@ -10,7 +10,6 @@ import io.github.fhanko.zones.ZoneWater
 import org.bukkit.configuration.serialization.ConfigurationSerialization
 import org.bukkit.plugin.java.JavaPlugin
 
-@Suppress("Unused")
 class ExamplePlugin : JavaPlugin() {
     override fun onEnable() {
         ConfigurationSerialization.registerClass(MoveToTargetGoal::class.java, "MoveToTargetGoal")
@@ -32,8 +31,7 @@ class ExamplePlugin : JavaPlugin() {
         ZoneChunkMap.load()
     }
 
-    override fun onLoad()
-    {
+    override fun onLoad() {
         CommandAPI.onLoad(CommandAPIBukkitConfig(this).verboseOutput(true))
     }
 

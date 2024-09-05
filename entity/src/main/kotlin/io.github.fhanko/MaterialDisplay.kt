@@ -11,7 +11,7 @@ class MaterialDisplay(location: Location, material: Material, size: Vector, brig
     val display: ItemDisplay
     init {
         display = location.world.spawn(location, ItemDisplay::class.java)
-        display.itemStack = ItemStack(material)
+        display.setItemStack(ItemStack(material))
         display.isPersistent = false
         val t = display.transformation
         t.scale.set(size.x, size.y, size.z)

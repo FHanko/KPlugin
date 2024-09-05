@@ -40,7 +40,7 @@ abstract class TexturedBlock(texture: String, id: Int, private val overrideMater
      */
     protected fun coverBlock(block: Block, coverItem: ItemStack): ItemDisplay {
         val display = block.world.spawn(block.location.add(offset), ItemDisplay::class.java)
-        display.itemStack = coverItem
+        display.setItemStack(coverItem)
         // Avoid any overlap
         val extraOffset = 0.001 * random.nextFloat()
         display.transformation.apply { scale.set(offset.y * 2 + extraOffset); display.transformation = this }

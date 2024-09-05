@@ -15,7 +15,7 @@ object Sprinkler: TexturedBlock(TEXTURE,6, Material.IRON_BLOCK, mm.deserialize("
     override fun place(e: BlockPlaceEvent) {
         super.place(e)
         val bLoc = e.blockPlaced.location.subtract(radius) to e.blockPlaced.location.add(radius)
-        ZoneChunkMap.addZone(ZoneWater(bLoc.first, bLoc.second))
+        ZoneChunkMap.addZone(ZoneWater(ZoneChunkMap.newId(), bLoc.first, bLoc.second))
     }
     override fun destroy(e: CustomBlockDataRemoveEvent) {
         super.destroy(e)

@@ -7,8 +7,8 @@ import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 
-class ZoneHeal(start: Location, end: Location): Zone(start, end), EnterHandler, Schedulable {
-    constructor(map: Map<String, Any>): this(map["start"] as Location, map["end"] as Location)
+class ZoneHeal(id: Int, start: Location, end: Location): Zone(id, start, end), EnterHandler, Schedulable {
+    constructor(map: Map<String, Any>): this(map["id"] as Int, map["start"] as Location, map["end"] as Location)
     override fun enter(p: Player) {
         scheduleRepeat(p.uniqueId.toString(), 20, ::healPlayer, p)
     }
