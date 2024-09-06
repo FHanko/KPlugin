@@ -22,7 +22,7 @@ object ConnectedChest: BlockBase(5, Material.CHEST, "Connected Chest"), ClickHan
      * Adds amount of chests to the players inventory that are connected by incremented chestId.
      */
     override fun instance(amount: Int, vararg args: ItemArgument): ItemStack {
-        var invSize = args.getOrNull(0)?.integer ?: 9
+        var invSize = args.getOrNull(0).toInt(9).int
         if (invSize !in 9..54 step 9) invSize = 9
 
         val i = ItemStack(item)

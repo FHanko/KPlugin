@@ -15,7 +15,7 @@ object CurrencyItem: ItemBase(3, Material.PAPER, "$$$", listOf("Use to add to ba
     override fun instance(amount: Int, vararg args: ItemArgument): ItemStack {
         val i = ItemStack(item)
         i.amount = amount
-        val cash = args.getOrNull(0)?.float ?: 5f
+        val cash = args.getOrNull(0).toFloat(5.0f).float
         setText(i, mm.deserialize("<green>$cash$"), listOf())
         cashAmount.set(i, cash)
         return i

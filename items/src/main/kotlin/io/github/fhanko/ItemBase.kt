@@ -1,7 +1,6 @@
 package io.github.fhanko
 
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -79,10 +78,11 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
     }
 }
 
-data class ItemArgument(val string: String, val integer: Int?, val float: Float?) {
-    constructor(string: String): this(string, string.toIntOrNull(), string.toFloatOrNull())
-    constructor(integer: Int): this(integer.toString(), integer, integer.toFloat())
-    constructor(float: Float): this(float.toString(), float.toInt(), float)
-}
-
+open class ItemArgument(val string: String)
 fun String.toItemArg() = ItemArgument(this)
+
+class FloatArgument(val float: Float): ItemArgument(float.toString())
+fun ItemArgument?.toFloat(default: Float) = FloatArgument(this?.string?.toFloatOrNull() ?: default)
+
+class IntArgument(val int: Int): ItemArgument(int.toString())
+fun ItemArgument?.toInt(default: Int) = IntArgument(this?.string?.toIntOrNull() ?: default)

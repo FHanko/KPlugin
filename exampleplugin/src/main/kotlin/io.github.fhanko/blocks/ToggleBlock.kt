@@ -3,7 +3,7 @@ package io.github.fhanko.blocks
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.AnimatedBlock
 import io.github.fhanko.BlockData
-import io.github.fhanko.ItemArgument
+import io.github.fhanko.FloatArgument
 import io.github.fhanko.itemhandler.ClickHandler
 import io.github.fhanko.items.CurrencyItem
 import net.kyori.adventure.text.Component
@@ -25,7 +25,7 @@ object ToggleBlock: AnimatedBlock(frames, 7, Material.IRON_BLOCK, Component.text
         isOn.setBlock(e.clickedBlock, !on)
 
         if (!on) {
-            val i = CurrencyItem.instance(1, ItemArgument(1f))
+            val i = CurrencyItem.instance(1, FloatArgument(1f))
             val loc = block.location.add(0.0, 0.5, 0.0)
             scheduleRepeat(block.location.toString(), 20,
                 {_ ->
