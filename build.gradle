@@ -31,6 +31,10 @@ allprojects {
     kotlin {
         jvmToolchain(targetJavaVersion)
     }
+
+    jar {
+        setArchiveFileName(project.name + "-" + project.version + ".jar")
+    }
 }
 
 repositories {
