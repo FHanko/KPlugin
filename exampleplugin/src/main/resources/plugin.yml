@@ -1,4 +1,4 @@
 name: ExamplePlugin
 version: '${version}'
-main: com.github.fhanko.ExamplePlugin
+main: com.github.fhanko.exampleplugin.ExamplePlugin
 api-version: '1.20'

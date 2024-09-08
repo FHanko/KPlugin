@@ -4,7 +4,6 @@ import com.jeff_media.customblockdata.CustomBlockData
 import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import com.github.fhanko.blocks.BlockBase
-import io.github.fhanko.*
 import com.github.fhanko.items.itemhandler.ClickHandler
 import com.github.fhanko.items.ItemBase
 import com.github.fhanko.items.itemhandler.DroppedItemEvent

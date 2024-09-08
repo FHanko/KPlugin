@@ -2,7 +2,6 @@ package com.github.fhanko.blocks.blockhandler
 
 import com.github.fhanko.blocks.BlockBase
 import com.github.fhanko.util.Initializable
-import com.github.fhanko.items.itemhandler.ClickHandler
 import com.github.fhanko.items.itemhandler.Cooldownable
 import net.kyori.adventure.text.Component
 import org.bukkit.event.EventHandler

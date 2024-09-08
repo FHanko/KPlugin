@@ -4,7 +4,6 @@ import com.jeff_media.customblockdata.CustomBlockData
 import com.github.fhanko.items.ItemData
 import com.github.fhanko.util.PluginInstance
 import org.bukkit.block.Block
-import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import org.bukkit.persistence.PersistentDataType
 

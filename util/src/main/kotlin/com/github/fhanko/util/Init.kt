@@ -15,6 +15,7 @@ object Init {
     fun initialize(prefix: String) {
         val reflections = Reflections(prefix)
         reflections.getSubTypesOf(Initializable::class.java).forEach {
+            dbg(it.name)
             it.kotlin.objectInstance
             if (it.kotlin.objectInstance is Listener) {
                 dbg("Register $it")

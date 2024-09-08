@@ -5,8 +5,10 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import com.github.fhanko.entity.goals.LookAtPlayerGoal
 import com.github.fhanko.entity.goals.MoveToTargetGoal
+import com.github.fhanko.exampleplugin.items.CurrencyItem
 import com.github.fhanko.exampleplugin.zones.ZoneHeal
 import com.github.fhanko.exampleplugin.zones.ZoneWater
+import com.github.fhanko.items.itemhandler.ItemListener
 import com.github.fhanko.persistence.HibernateUtil
 import com.github.fhanko.util.Init
 import com.github.fhanko.util.PluginInstance
@@ -24,7 +26,7 @@ class ExamplePlugin : JavaPlugin() {
 
 
         PluginInstance.initialize(this)
-        Init.initialize("com/github/fhanko/zones")
+        Init.initialize("com.github.fhanko")
         CustomBlockData.registerListener(this)
         HibernateUtil.createSessionFactory("PUnit")
         CommandAPI.onEnable()
