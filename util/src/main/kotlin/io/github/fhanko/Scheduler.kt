@@ -48,7 +48,7 @@ object Scheduler {
  * Provides functions to run tasks at a later time or repeating.
  */
 interface Schedulable {
-    private fun getHash(key: String): String = hash(key + hashCode())
+    private fun getHash(key: String): String = "$key${hashCode()}"
 
     /**
      * Schedules [action] for running after [delayTicks]. Provide a unique [key] to enable cancellation of the scheduled task.

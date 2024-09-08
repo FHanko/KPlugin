@@ -29,9 +29,9 @@ object TestItem: ItemBase(0, Material.DIAMOND, "Test"), EquipHandler, DropHandle
         p.sendMessage("Picked up test")
     }
 
-    override fun getCooldown() = 300000L
+    override fun getCooldown() = 3000L
     override fun rightClick(e: PlayerInteractEvent) {
-        if (useCooldown(e.player, e.item!!.displayName().toString())) {
+        if (useCooldown(e.player)) {
             e.player.velocity = e.player.location.getDirection().setY(0).normalize().multiply(2).setY(0.3)
         }
     }

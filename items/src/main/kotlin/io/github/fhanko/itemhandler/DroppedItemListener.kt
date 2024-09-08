@@ -5,13 +5,10 @@ import io.github.fhanko.dbg
 import io.github.fhanko.itemhandler.ItemListener.scheduleCancel
 import io.github.fhanko.itemhandler.ItemListener.scheduleTimer
 import org.bukkit.entity.Item
-import org.bukkit.event.Cancellable
-import org.bukkit.event.Event
-import org.bukkit.event.EventHandler
-import org.bukkit.event.HandlerList
-import org.bukkit.event.Listener
+import org.bukkit.event.*
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.util.Vector
 
 /**
  * Event that periodically fires for dropped [item]s in the world.
@@ -39,5 +36,10 @@ object DroppedItemListener: Listener, Initializable {
     @EventHandler
     fun onPickup(e: EntityPickupItemEvent) {
         if (e.remaining == 0) scheduleCancel(e.item.uniqueId.toString())
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun onTick(e: DroppedItemEvent) {
+        if (e.item.velocity == Vector(0, 0, 0)) e.isCancelled = true
     }
 }

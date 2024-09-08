@@ -19,10 +19,10 @@ interface Cooldownable {
     fun cooldownMessage(cooldown: Long) = mm.deserialize("<red>${cooldown.div(1000.0).roundTo(1)}s<reset> cooldown remaining.")
 
     /**
-     * Checks if [player] has no cooldown associated with [key] and places this cooldown or sends [cooldownMessage].
+     * Checks if [player] has no cooldown associated with this object and places this cooldown or sends [cooldownMessage].
      */
-    fun useCooldown(player: Player, key: String): Boolean {
-        val hash = hash("${player.uniqueId}$key")
+    fun useCooldown(player: Player): Boolean {
+        val hash = "${player.uniqueId}${hashCode()}"
         val cooldown = CooldownManager.getCooldown(hash) ?: 0
         if (cooldown > 0L) {
             if (cooldownMessage(cooldown) != Component.text("")) player.sendMessage(cooldownMessage(cooldown))

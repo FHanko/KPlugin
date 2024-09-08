@@ -8,6 +8,10 @@ import io.github.fhanko.itemhandler.ClickHandler
 import io.github.fhanko.itemhandler.Cooldownable
 import io.github.fhanko.itemhandler.DroppedItemEvent
 import net.kyori.adventure.text.Component
+import org.bukkit.Color
+import org.bukkit.Location
+import org.bukkit.Particle
+import org.bukkit.Particle.DustOptions
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -15,6 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.util.Vector
 
 /**
  * Event listener for block handler.
@@ -57,12 +62,6 @@ object BlockListener: Listener, Initializable {
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
         BlockBase.get(e.clickedBlock)?.also { if (it is ClickHandler) it.onBlockInteract(e) }
-
-        if (RayTraceTracker.useCooldown(e.player, RayTraceTracker.hashCode().toString())) {
-            val b = e.player.rayTraceBlocks(MAX_TRACE_DISTANCE)?.hitBlock ?: return
-            val base = BlockBase.get(b)
-            if (base is RayTraceHandler && e.player.location.distance(b.location) <= base.traceDistance()) base.trace(e)
-        }
     }
 
     @EventHandler
@@ -73,13 +72,13 @@ object BlockListener: Listener, Initializable {
 
     @EventHandler
     fun onDroppedOn(e: DroppedItemEvent) {
-        if (!e.item.isOnGround) return
-        val base = BlockBase.get(e.item.location.block.getRelative(BlockFace.DOWN))
-        if (base is DroppedOnHandler) base.droppedOn(e)
+        val midPoint = e.item.location.block.location.toCenterLocation()
+        val vec = e.item.location.subtract(midPoint).multiply(2.0)
+        listOf(Vector(vec.x, 0.0, 0.0), Vector(0.0, vec.y, 0.0), Vector(0.0, 0.0, vec.z)).map {
+            midPoint.clone().add(it).block
+        }.forEach {
+            val base = BlockBase.get(it)
+            if (base is DroppedOnHandler) base.droppedOn(e)
+        }
     }
-}
-
-object RayTraceTracker: Cooldownable {
-    override fun getCooldown(): Long = 300L
-    override fun cooldownMessage(cooldown: Long): Component = Component.text("")
 }
