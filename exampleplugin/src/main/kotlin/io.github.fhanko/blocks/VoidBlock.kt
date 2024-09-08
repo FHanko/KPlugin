@@ -8,6 +8,7 @@ import org.bukkit.Material
 
 object VoidBlock: BlockBase(8, Material.GLASS, Component.text("Void Block")), DroppedOnHandler {
     override fun droppedOn(e: DroppedItemEvent) {
+        e.dropper.sendMessage("Voided")
         e.item.remove()
         e.isCancelled = true
     }

@@ -5,14 +5,7 @@ import com.jeff_media.customblockdata.events.CustomBlockDataMoveEvent
 import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.*
 import io.github.fhanko.itemhandler.ClickHandler
-import io.github.fhanko.itemhandler.Cooldownable
 import io.github.fhanko.itemhandler.DroppedItemEvent
-import net.kyori.adventure.text.Component
-import org.bukkit.Color
-import org.bukkit.Location
-import org.bukkit.Particle
-import org.bukkit.Particle.DustOptions
-import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -74,10 +67,9 @@ object BlockListener: Listener, Initializable {
     fun onDroppedOn(e: DroppedItemEvent) {
         val midPoint = e.item.location.block.location.toCenterLocation()
         val vec = e.item.location.subtract(midPoint).multiply(2.0)
-        listOf(Vector(vec.x, 0.0, 0.0), Vector(0.0, vec.y, 0.0), Vector(0.0, 0.0, vec.z)).map {
-            midPoint.clone().add(it).block
-        }.forEach {
-            val base = BlockBase.get(it)
+        listOf(Vector(vec.x, 0.0, 0.0), Vector(0.0, vec.y, 0.0), Vector(0.0, 0.0, vec.z)).forEach {
+            if (e.isCancelled) return@forEach
+            val base = BlockBase.get(midPoint.clone().add(it).block)
             if (base is DroppedOnHandler) base.droppedOn(e)
         }
     }
