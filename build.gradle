@@ -23,6 +23,14 @@ allprojects {
         paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     }
+
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+    }
+
+    kotlin {
+        jvmToolchain(targetJavaVersion)
+    }
 }
 
 repositories {
@@ -32,14 +40,6 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
-}
-
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
-}
-
-kotlin {
-    jvmToolchain(targetJavaVersion)
 }
 
 subprojects {
