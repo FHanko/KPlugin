@@ -74,7 +74,7 @@ abstract class ItemBase(val id: Int, val material: Material, val name: Component
         key.set(item, id)
         itemMap[id] = this
 
-        PluginInstance.instance.logger.info("Init BaseItem ${mm.serialize(name)}")
+        dbg("Initialize Item ${mm.serialize(name)}")
     }
 }
 

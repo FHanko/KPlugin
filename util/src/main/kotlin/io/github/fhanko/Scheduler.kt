@@ -79,7 +79,6 @@ interface Schedulable {
      * Cancels delayed and repeated tasks associated with [key].
      */
     fun scheduleCancel(key: String) {
-        PluginInstance.instance.logger.info("Cancel hashcode ${hashCode()} $key ${getHash(key)}")
         Scheduler.remove(getHash(key))
         Scheduler.delayedSchedules.find { p -> p.first == getHash(key) }?.also { Bukkit.getScheduler().cancelTask(it.second) }
 

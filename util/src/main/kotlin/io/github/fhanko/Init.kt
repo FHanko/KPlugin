@@ -17,6 +17,7 @@ object Init {
         reflections.getSubTypesOf(Initializable::class.java).forEach {
             it.kotlin.objectInstance
             if (it.kotlin.objectInstance is Listener) {
+                dbg("Register $it")
                 val listener = it.kotlin.objectInstance as Listener
                 Bukkit.getPluginManager().registerEvents(listener, PluginInstance.instance)
             }

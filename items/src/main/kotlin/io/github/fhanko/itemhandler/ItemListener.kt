@@ -4,7 +4,6 @@ import io.github.fhanko.Initializable
 import io.github.fhanko.ItemBase
 import io.github.fhanko.Schedulable
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent
-import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.event.*
 import org.bukkit.event.entity.EntityPickupItemEvent
@@ -17,27 +16,12 @@ import org.bukkit.event.player.PlayerItemDamageEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 
 /**
- * Event that periodically fires for dropped [item]s in the world.
- */
-class DroppedItemTickEvent(val item: Item, private var cancelled: Boolean = false): Event(), Cancellable {
-    companion object {
-        private val HANDLER_LIST = HandlerList()
-        @JvmStatic fun getHandlerList(): HandlerList = HANDLER_LIST
-    }
-    override fun getHandlers(): HandlerList = HANDLER_LIST
-    override fun isCancelled() = cancelled
-    override fun setCancelled(cancel: Boolean) { cancelled = cancel }
-}
-
-/**
  * Event listener for item handler
  *
  * Addresses event efficiency concerns by handling them once and firing handler functions
  * instead of firing all events on all items.
  */
 object ItemListener: Listener, Initializable, Schedulable {
-    var fireDroppedItemTick = false
-
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
         ItemBase.get(e.item)?.also { if (it is ClickHandler) it.onInteract(e) }
@@ -54,17 +38,11 @@ object ItemListener: Listener, Initializable, Schedulable {
     @EventHandler
     fun onDrop(e: PlayerDropItemEvent) {
         ItemBase.get(e.itemDrop.itemStack)?.also { if (it is DropHandler) it.drop(e) }
-
-        if (fireDroppedItemTick) scheduleTimer(e.itemDrop.uniqueId.toString(), 5, 300, {
-            val event = DroppedItemTickEvent(e.itemDrop)
-            if (!event.callEvent()) scheduleCancel(e.itemDrop.uniqueId.toString())
-        })
     }
 
     @EventHandler
     fun onPickup(e: EntityPickupItemEvent) {
         if (e.entity is Player) ItemBase.get(e.item.itemStack)?.also { if (it is DropHandler) it.pickup(e) }
-        if (fireDroppedItemTick && e.remaining == 0) scheduleCancel(e.item.uniqueId.toString())
     }
 
     @EventHandler

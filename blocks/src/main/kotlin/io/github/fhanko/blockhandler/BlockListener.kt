@@ -6,7 +6,7 @@ import com.jeff_media.customblockdata.events.CustomBlockDataRemoveEvent
 import io.github.fhanko.*
 import io.github.fhanko.itemhandler.ClickHandler
 import io.github.fhanko.itemhandler.Cooldownable
-import io.github.fhanko.itemhandler.DroppedItemTickEvent
+import io.github.fhanko.itemhandler.DroppedItemEvent
 import net.kyori.adventure.text.Component
 import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
@@ -72,7 +72,7 @@ object BlockListener: Listener, Initializable {
     }
 
     @EventHandler
-    fun onDroppedOn(e: DroppedItemTickEvent) {
+    fun onDroppedOn(e: DroppedItemEvent) {
         if (!e.item.isOnGround) return
         val base = BlockBase.get(e.item.location.block.getRelative(BlockFace.DOWN))
         if (base is DroppedOnHandler) base.droppedOn(e)

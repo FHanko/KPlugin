@@ -30,8 +30,6 @@ class ExamplePlugin : JavaPlugin() {
         Commands.registerBal()
 
         ZoneChunkMap.load()
-
-        ItemListener.fireDroppedItemTick = true
     }
 
     override fun onLoad() {

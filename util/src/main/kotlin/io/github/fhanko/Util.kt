@@ -11,7 +11,6 @@ import org.joml.Vector3f
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
-import kotlin.math.roundToInt
 
 private val PRIMITIVE_DATA_TYPES = arrayOf(
     PersistentDataType.BYTE,
@@ -51,6 +50,7 @@ fun <T : Any> PersistentDataContainer.setAlt(key: NamespacedKey, type: Persisten
     set(key, type, type.complexType.cast(data))
 
 var mm = MiniMessage.miniMessage()
+fun dbg(string: String) = PluginInstance.instance.componentLogger.info(mm.deserialize(string))
 
 fun hash(input:String): String {
     val md = MessageDigest.getInstance("MD5")
