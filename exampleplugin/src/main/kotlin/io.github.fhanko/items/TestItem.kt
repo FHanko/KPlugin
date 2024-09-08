@@ -7,6 +7,7 @@ import io.github.fhanko.itemhandler.DropHandler
 import io.github.fhanko.itemhandler.EquipHandler
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
@@ -21,6 +22,11 @@ object TestItem: ItemBase(0, Material.DIAMOND, "Test"), EquipHandler, DropHandle
 
     override fun drop(e: PlayerDropItemEvent) {
         e.player.sendMessage("Dropped test")
+    }
+
+    override fun pickup(e: EntityPickupItemEvent) {
+        val p = e.entity as Player
+        p.sendMessage("Picked up test")
     }
 
     override fun getCooldown() = 300000L

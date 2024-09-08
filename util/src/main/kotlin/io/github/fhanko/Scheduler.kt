@@ -63,14 +63,26 @@ interface Schedulable {
      * Schedules [action] for running every [intervalTicks]. Provide a unique [key] to enable cancellation of the scheduled task.
      */
     fun scheduleRepeat(key: String, intervalTicks: Long, action: (List<Any>) -> Unit, vararg params: Any) {
-        Scheduler.add(intervalTicks, key, Schedule(action, params.asList()))
+        Scheduler.add(intervalTicks, getHash(key), Schedule(action, params.asList()))
+    }
+
+    /**
+     * Schedules [action] for running every [intervalTicks] for the next [durationTicks].
+     * Provide a unique [key] to enable cancellation of the scheduled task.
+     */
+    fun scheduleTimer(key: String, intervalTicks: Long, durationTicks: Long, action: (List<Any>) -> Unit, vararg params: Any) {
+        schedule(key, durationTicks, { _ -> scheduleCancel(key) })
+        scheduleRepeat(key, intervalTicks, action, params)
     }
 
     /**
      * Cancels delayed and repeated tasks associated with [key].
      */
     fun scheduleCancel(key: String) {
-        Scheduler.remove(key)
-        Scheduler.delayedSchedules.find { p -> p.first == key }?.also { Bukkit.getScheduler().cancelTask(it.second) }
+        PluginInstance.instance.logger.info("Cancel hashcode ${hashCode()} $key ${getHash(key)}")
+        Scheduler.remove(getHash(key))
+        Scheduler.delayedSchedules.find { p -> p.first == getHash(key) }?.also { Bukkit.getScheduler().cancelTask(it.second) }
+
+        if (Scheduler.delayedSchedules.size > 128) Scheduler.delayedSchedules.removeAll { !Bukkit.getScheduler().isQueued(it.second) }
     }
 }

@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.fhanko.goals.LookAtPlayerGoal
 import io.github.fhanko.goals.MoveToTargetGoal
+import io.github.fhanko.itemhandler.ItemListener
 import io.github.fhanko.zones.ZoneHeal
 import io.github.fhanko.zones.ZoneWater
 import org.bukkit.configuration.serialization.ConfigurationSerialization
@@ -29,6 +30,8 @@ class ExamplePlugin : JavaPlugin() {
         Commands.registerBal()
 
         ZoneChunkMap.load()
+
+        ItemListener.fireDroppedItemTick = true
     }
 
     override fun onLoad() {
