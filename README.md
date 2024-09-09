@@ -4,17 +4,21 @@ A papermc general purpose API.
 [![](https://jitpack.io/v/FHanko/KPlugin.svg)](https://jitpack.io/#FHanko/KPlugin)
 
 ```gradle
-dependencyResolutionManagement {
-  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-  repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-  }
+repositories {
+  maven("https://jitpack.io")
 }
 ```
 ```gradle
 dependencies {
-  implementation 'com.github.FHanko:KPlugin:Tag'
+  api("com.github.FHanko.KPlugin:core:Release:dev-all@jar")
+}
+```
+# Setup
+
+Add KPluginCore.init to your onEnable():
+```kotlin
+override fun onEnable() {
+  KPluginCore.init(this)
 }
 ```
 
@@ -48,7 +52,13 @@ object TestItem: ItemBase(0, Material.DIAMOND, "Test"), EquipHandler, DropHandle
         }
     }
 }
+
+@EventHandler
+fun onJoin(e: PlayerJoinEvent) {
+    TestItem.give(e.player, 1)
+}
 ```
+Note that you need to reference your created items in code before you can use them. It is easiest to just put them in your OnEnable() as well.
 
 ## Blocks
 
@@ -68,4 +78,8 @@ object TestBlock: TexturedBlock(TEXTURE, 4, Material.IRON_BLOCK, Component.text(
     }
 }
 ```
+
+## More Examples
+
+For more examples, and further api functionality, see the exampleplugin module.
 
