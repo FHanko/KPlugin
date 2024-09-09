@@ -26,8 +26,9 @@ override fun onEnable() {
 ## Items
 
 Extend ItemBase for custom items. Implement ItemHandler interfaces like `ClickHandler`, `DropHandler`, `EquipHandler` for extended functionality.
+ItemBase has a give(player, amount) function that can be customized by overriding the instane() ItemStack of an ItemBase.
 ```kotlin
-object TestItem: ItemBase(0, Material.DIAMOND, "Test"), EquipHandler, DropHandler, ClickHandler, Cooldownable {
+object TestItem: ItemBase(0, Material.DIAMOND, "Test Item"), EquipHandler, DropHandler, ClickHandler, Cooldownable {
     override fun equip(p: Player, e: EquipHandler.EquipType) {
         p.sendMessage("Equipped test")
     }
@@ -68,8 +69,9 @@ In addition it has handlers for block placement, removal and breaking.
 Textured blocks load an ItemDisplay with given texture covering the implemented block:
 ```kotlin
 private const val TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMzMTNhOGE1MzE4NjM4OGI5YjVmMDdhOGRhZTg4NThhYTI0YmE4Njk4YzgyZTdlZjdiYTg3NTg4MDlhYWIzNyJ9fX0="
-object TestBlock: TexturedBlock(TEXTURE, 4, Material.IRON_BLOCK, Component.text("Test")), ClickHandler {
+object TestBlock: TexturedBlock(TEXTURE, 1, Material.IRON_BLOCK, Component.text("Test Block")), ClickHandler {
     override fun broke(e: BlockBreakEvent) {
+        super.broke(e) // Removes ItemDisplay
         e.player.sendMessage("Destroyed test")
     }
 
