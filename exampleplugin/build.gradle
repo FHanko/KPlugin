@@ -10,16 +10,9 @@ repositories {
     maven { url = "https://repo.codemc.org/repository/maven-public/" }
 }
 
-shadowJar {
-    relocate "com.jeff_media.customblockdata", "io.github.fhanko.exampleplugin.customblockdata"
-    relocate "com.jeff_media.morepersistentdatatypes", "io.github.fhanko.exampleplugin.morepersistentdatatypes"
-    relocate "dev.jorel.commandapi", "io.github.fhanko.exampleplugin.commandapi"
-}
-
 dependencies {
-    implementation project(":blocks")
+    implementation project(":core")
     implementation project(":persistence")
-    implementation project(":gui")
     implementation project(":zones")
 
     implementation "dev.jorel:commandapi-bukkit-shade-mojang-mapped:9.5.2"

@@ -12,12 +12,12 @@ interface Initializable
  * Do not use this in production as the reflection libraries are quite heavy.
  */
 object Init {
-    fun initialize(prefix: String) {
+    fun initialize(prefix: String, loadListeners: Boolean) {
         val reflections = Reflections(prefix)
         reflections.getSubTypesOf(Initializable::class.java).forEach {
             dbg(it.name)
             it.kotlin.objectInstance
-            if (it.kotlin.objectInstance is Listener) {
+            if (loadListeners && it.kotlin.objectInstance is Listener) {
                 dbg("Register $it")
                 val listener = it.kotlin.objectInstance as Listener
                 Bukkit.getPluginManager().registerEvents(listener, PluginInstance.instance)
