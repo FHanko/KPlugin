@@ -1,0 +1,13 @@
+plugins {
+    id "com.gradleup.shadow"  version "8.3.0"
+}
+
+shadowJar {
+    relocate "com.jeff_media.customblockdata", "io.github.fhanko.customblockdata"
+    relocate "com.jeff_media.morepersistentdatatypes", "io.github.fhanko.morepersistentdatatypes"
+}
+
+dependencies {
+    api project(":blocks")
+    api project(":gui")
+}

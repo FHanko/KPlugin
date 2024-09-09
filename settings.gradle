@@ -1,16 +1,3 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven{
-            url = "https://repo.papermc.io/repository/maven-public/"
-        }
-    }
-}
-
-plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
-}
-
 rootProject.name = 'KPlugin'
 include 'items'
 include 'blocks'
@@ -20,3 +7,4 @@ include 'zones'
 include 'gui'
 include 'persistence'
 include 'exampleplugin'
+include 'core'
