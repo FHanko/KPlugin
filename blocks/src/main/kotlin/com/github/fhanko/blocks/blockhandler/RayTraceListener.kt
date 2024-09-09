@@ -29,7 +29,7 @@ object RayTraceTracker: Cooldownable {
     override fun cooldownMessage(cooldown: Long): Component = Component.text("")
 }
 
-class RayTraceListener: Listener, Initializable {
+object RayTraceListener: Listener, Initializable {
     @EventHandler
     fun onInteract(e: PlayerInteractEvent) {
         if (RayTraceTracker.useCooldown(e.player)) {

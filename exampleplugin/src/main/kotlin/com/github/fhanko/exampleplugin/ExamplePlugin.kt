@@ -1,10 +1,12 @@
 package com.github.fhanko.exampleplugin
 
+import com.github.fhanko.blocks.blockhandler.RayTraceListener
 import com.github.fhanko.core.KPluginCore
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import com.github.fhanko.exampleplugin.zones.ZoneHeal
 import com.github.fhanko.exampleplugin.zones.ZoneWater
+import com.github.fhanko.items.itemhandler.DroppedItemListener
 import com.github.fhanko.persistence.HibernateUtil
 import com.github.fhanko.persistence.PersistenceListener
 import com.github.fhanko.util.Init
@@ -22,6 +24,8 @@ class ExamplePlugin : JavaPlugin() {
 
         server.pluginManager.registerEvents(ZoneListener, this)
         server.pluginManager.registerEvents(PersistenceListener, this)
+        server.pluginManager.registerEvents(RayTraceListener, this)
+        server.pluginManager.registerEvents(DroppedItemListener, this)
         Init.initialize("com.github.fhanko", false)
         HibernateUtil.createSessionFactory("PUnit")
         CommandAPI.onEnable()
