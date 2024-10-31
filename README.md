@@ -4,17 +4,21 @@ A papermc general purpose API.
 [![](https://jitpack.io/v/FHanko/KPlugin.svg)](https://jitpack.io/#FHanko/KPlugin)
 
 ```gradle
-dependencyResolutionManagement {
-  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-  repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-  }
+repositories {
+  maven("https://jitpack.io")
 }
 ```
 ```gradle
 dependencies {
-  implementation 'com.github.FHanko:KPlugin:Tag'
+  api("com.github.FHanko.KPlugin:core:Release:dev-all@jar")
+}
+```
+# Setup
+
+Add KPluginCore.init to your onEnable():
+```kotlin
+override fun onEnable() {
+  KPluginCore.init(this)
 }
 ```
 
@@ -22,8 +26,9 @@ dependencies {
 ## Items
 
 Extend ItemBase for custom items. Implement ItemHandler interfaces like `ClickHandler`, `DropHandler`, `EquipHandler` for extended functionality.
+ItemBase has a give(player, amount) function that can be customized by overriding the instane() ItemStack of an ItemBase.
 ```kotlin
-object TestItem: ItemBase(0, Material.DIAMOND, "Test"), EquipHandler, DropHandler, ClickHandler, Cooldownable {
+object TestItem: ItemBase(0, Material.DIAMOND, "Test Item"), EquipHandler, DropHandler, ClickHandler, Cooldownable {
     override fun equip(p: Player, e: EquipHandler.EquipType) {
         p.sendMessage("Equipped test")
     }
@@ -48,7 +53,13 @@ object TestItem: ItemBase(0, Material.DIAMOND, "Test"), EquipHandler, DropHandle
         }
     }
 }
+
+@EventHandler
+fun onJoin(e: PlayerJoinEvent) {
+    TestItem.give(e.player, 1)
+}
 ```
+Note that you need to reference your created items in code before you can use them. It is easiest to just put them in your OnEnable() as well.
 
 ## Blocks
 
@@ -58,8 +69,9 @@ In addition it has handlers for block placement, removal and breaking.
 Textured blocks load an ItemDisplay with given texture covering the implemented block:
 ```kotlin
 private const val TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmMzMTNhOGE1MzE4NjM4OGI5YjVmMDdhOGRhZTg4NThhYTI0YmE4Njk4YzgyZTdlZjdiYTg3NTg4MDlhYWIzNyJ9fX0="
-object TestBlock: TexturedBlock(TEXTURE, 4, Material.IRON_BLOCK, Component.text("Test")), ClickHandler {
+object TestBlock: TexturedBlock(TEXTURE, 1, Material.IRON_BLOCK, Component.text("Test Block")), ClickHandler {
     override fun broke(e: BlockBreakEvent) {
+        super.broke(e) // Removes ItemDisplay
         e.player.sendMessage("Destroyed test")
     }
 
@@ -68,4 +80,8 @@ object TestBlock: TexturedBlock(TEXTURE, 4, Material.IRON_BLOCK, Component.text(
     }
 }
 ```
+
+## More Examples
+
+For more examples, and further api functionality, see the exampleplugin module.
 
