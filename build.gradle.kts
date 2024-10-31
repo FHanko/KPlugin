@@ -7,7 +7,7 @@ plugins {
 
 val targetJavaVersion = 21
 val pluginGroupId = "com.github.fhanko"
-val pluginVersion = "2.0"
+val pluginVersion = "2.1"
 allprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.papermc.paperweight.userdev")
@@ -19,7 +19,7 @@ allprojects {
     }
 
     dependencies {
-        paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+        paperweight.paperDevBundle("1.21.3-R0.1-SNAPSHOT")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     }
 }

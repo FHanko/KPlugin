@@ -1,7 +1,6 @@
 package com.github.fhanko.items.itemhandler
 
 import com.github.fhanko.util.Initializable
-import com.github.fhanko.util.dbg
 import com.github.fhanko.items.itemhandler.ItemListener.scheduleCancel
 import com.github.fhanko.items.itemhandler.ItemListener.scheduleTimer
 import org.bukkit.entity.Item
